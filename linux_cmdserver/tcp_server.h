@@ -14,5 +14,6 @@ private:
   
 public:  
         tcp_server(long long listen_port);  
+		~tcp_server();
         int recv_msg();  
 };
