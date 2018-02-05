@@ -200,13 +200,13 @@ void MainWindow::hellosocket()
         QObject::connect(pthreadsock,SIGNAL(emitErrInfo(QString,void*)),
                          this,SLOT(procErrMsg(QString,void*)));
         pthreadsock->start();
-        if(ui->textEdit->toPlainText().length() == 0)
-            pthreadsock->sendmsg(CMD_HELLO);
-        else if(autosendstr.length())
+        if(autosendstr.length())
         {
-            pthreadsock->sendmsg(autosendstr);
-            autosendstr.clear();
+           pthreadsock->sendmsg(autosendstr);
+           autosendstr.clear();
         }
+        else if(ui->textEdit->toPlainText().length() == 0)
+            pthreadsock->sendmsg(CMD_HELLO);
         else
             pthreadsock->sendmsg(ui->textEdit->toPlainText());
     }
