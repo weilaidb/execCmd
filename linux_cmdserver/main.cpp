@@ -14,12 +14,14 @@ tcp_server ts(BIND_PORT);
 
 static void atexit_handle_1(void)  
 {  
-        printf("atexit_handle_1\n");  
+        //printf("atexit_handle_1\n");  
+        printf("==============1\n");  
 }  
   
 static void atexit_handle_2(void)  
 {  
-        printf("atexit_handle_2\n");  
+        //printf("atexit_handle_2\n");  
+        printf("==============2\n");  
 }  
 
 void Stop(int signo) 

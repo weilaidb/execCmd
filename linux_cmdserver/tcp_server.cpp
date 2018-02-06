@@ -5,6 +5,7 @@
 #include <string.h>
 #include <sys/types.h>          /* See NOTES */
 #include <sys/socket.h>
+#include <errno.h>
 
 
 tcp_server::tcp_server(long long listen_port) 
@@ -19,10 +20,10 @@ tcp_server::tcp_server(long long listen_port)
 	myserver.sin_addr.s_addr = htonl(INADDR_ANY);  
 	myserver.sin_port = htons(listen_port);  
 
-	// setsockopt(socket_fd,SOL_SOCKET,SO_REUSERADDR,&myserver,sizeof(myserver));
-	bool bReuseaddr=true;
-	setsockopt (socket_fd,SOL_SOCKET ,SO_REUSEADDR,(const char*)&bReuseaddr,sizeof(bool));
-
+	int on = 1;
+    if (setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
+        throw ("setsockopt error");
+	
 	// bool bDontLinger = false;
 	// setsockopt (socket_fd,SOL_SOCKET,SO_DONTLINGER,(const char*)&bDontLinger,sizeof(bool));
 
@@ -30,7 +31,7 @@ tcp_server::tcp_server(long long listen_port)
 			throw "bind() failed";  
 	}  
 
-	if( listen(socket_fd,10) < 0 ) {  
+	if( listen(socket_fd,SOMAXCONN) < 0 ) {  
 			throw "listen() failed";  
 	}  
 }  
@@ -42,8 +43,8 @@ void printbuf(char *str, int len)
 	printf("1 2 3 4 5 6 7 8 9 10\n");
 	for(i = 0; i < len; i++)
 	{
-		// printf("%-02d :%c \n",i + 1, str[i]);
-		printf("%c ",str[i]);
+		printf("%-02d :%c \n",i + 1, str[i]);
+		printf("%c",str[i]);
 	}
 	printf("\n");
 }
@@ -52,7 +53,7 @@ void printbuf(char *str, int len)
 int tcp_server::recv_msg() 
 {  
   
-	int offset = 12;
+	pid_t pid;
 	while( 1 ) 
 	{  
 
@@ -64,29 +65,75 @@ int tcp_server::recv_msg()
 			}  
 			printf("Received a connection from %s\n",(char*) inet_ntoa(remote_addr.sin_addr));  
 
-			if( !fork() ) {  
-					char buffer[MAXSIZE];  
-					char execcmd[MAXSIZE];  
-					memset(buffer,0,MAXSIZE);  
-					memset(execcmd,0,MAXSIZE);  
-					int size = read(accept_fd,buffer,MAXSIZE);
-					if(size < 0 ) {  
-							throw("Read() error!");  
-					} else {  
-							printbuf(buffer, size);
-							printf("Received size   : %d\n",size);  
-							printf("Received message: %s\n",buffer);
-							memcpy(execcmd, buffer + offset, size - offset);
-							printf("execcmd         : %s\n",execcmd);
-							system(execcmd);
-							break;  
-					}  
-					exit(0);  
-			}  
-			close(accept_fd);  
+			pid = fork();
+			if (pid == -1)
+			{
+				perror("fork error");
+				exit(0);
+			}
+			if (pid == 0)
+			{
+				// 子进程
+				close(socket_fd);
+				do_service(accept_fd);
+				exit(EXIT_SUCCESS);
+			}
+			else
+				close(accept_fd); //父进程
 	}  
 	return 0;  
 }  
+
+
+void tcp_server::do_service(int conn)
+{
+	int offset = 12;
+	int status;
+	char recvbuf[MAXSIZE];  
+	char execcmd[MAXSIZE];  
+
+    while (1)
+    {
+		memset(recvbuf,0,MAXSIZE);  
+		memset(execcmd,0,MAXSIZE);  
+        int size = read(conn, recvbuf, sizeof(recvbuf));
+        if (size == 0)   //客户端关闭了
+        {
+            printf("client close\n");
+            break;
+        }
+        else if (size == -1)
+		{
+            perror("read error");
+			break;
+		}
+		// printbuf(recvbuf, size);
+		memcpy(execcmd, recvbuf + offset, size - offset);
+		printf("execcmd  : %s\n",execcmd);
+		printf("-------------cmd list--------------\n");
+		int status = system(execcmd);
+		if(status < 0)
+		{
+			printf("cmd: %s\t error: %s", execcmd, strerror(errno)); // 这里务必要把errno信息输出或记入Log
+			// return -1;
+			exit(0); 
+		}
+		if(WIFEXITED(status))
+		{
+			// printf("normal termination, exit status = %d\n", WEXITSTATUS(status)); //取得cmdstring执行结果 
+		}
+		else if(WIFSIGNALED(status))
+		{
+			printf("abnormal termination,signal number =%d\n", WTERMSIG(status)); //如果cmdstring被信号中断，取得信号值
+		}
+		else if(WIFSTOPPED(status))
+		{
+			printf("process stopped, signal number =%d\n", WSTOPSIG(status)); //如果cmdstring被信号暂停执行，取得信号值
+		}							
+		break;
+    }
+
+}
 
 
 tcp_server::~tcp_server()
@@ -95,4 +142,10 @@ tcp_server::~tcp_server()
 	close(accept_fd); 
 	// shutdown(socket_fd, SHUT_RDWR);
 	// close(socket_fd); 
+}
+
+
+extern "C" void testabc(void)
+{
+	printf("testabc\n");
 }
