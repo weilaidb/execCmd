@@ -238,7 +238,15 @@ void MainWindow::hellosocket()
 void MainWindow::procErrMsg(QString errmsg,void*)
 {
     //    ShowTipsInfo(errmsg);
+    qDebug()<< errmsg;
     ui->pushButton_connect->setEnabled(true);
+    if(socket)
+    {
+        socket->disconnectFromHost();
+        socket->abort();
+        socket->close();
+        socket = NULL;
+    }
 }
 
 void MainWindow::updateListWidgetColor()
