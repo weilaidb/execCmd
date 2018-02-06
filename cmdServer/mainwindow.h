@@ -35,6 +35,7 @@ private:
 
 private:
     QStringList cmdlist;
+    QStringList searchlist;
     QString autosendstr;
 private slots:
     void on_connecting_sendstr(QString sendstr);
@@ -51,6 +52,10 @@ private slots:
     void procDoubleClickItem(QListWidgetItem *item);
 
     void DelItem();
+
+    void updateListWidgetColor();
+
+    void procFindList(QString findstr);
 private:
     QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串

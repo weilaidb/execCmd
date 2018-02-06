@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon Feb 5 22:55:27 2018
+** Created: Tue Feb 6 20:22:31 2018
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -15,6 +15,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QCheckBox>
+#include <QtGui/QComboBox>
 #include <QtGui/QGridLayout>
 #include <QtGui/QGroupBox>
 #include <QtGui/QHBoxLayout>
@@ -24,6 +25,7 @@
 #include <QtGui/QListWidget>
 #include <QtGui/QMainWindow>
 #include <QtGui/QPushButton>
+#include <QtGui/QSplitter>
 #include <QtGui/QStatusBar>
 #include <QtGui/QTextEdit>
 #include <QtGui/QVBoxLayout>
@@ -36,23 +38,28 @@ class Ui_MainWindow
 public:
     QWidget *centralWidget;
     QGridLayout *gridLayout;
-    QVBoxLayout *verticalLayout_2;
+    QSplitter *splitter_2;
+    QSplitter *splitter;
+    QWidget *widget;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_2;
     QLineEdit *lineEdit;
+    QWidget *widget1;
     QVBoxLayout *verticalLayout;
     QLabel *label;
     QTextEdit *textEdit;
     QGroupBox *horizontalGroupBox;
     QHBoxLayout *horizontalLayout;
     QPushButton *pushButton_connect;
+    QLineEdit *lineEdit_sendnum;
     QPushButton *pushButton_clear;
     QPushButton *pushButton_collect;
-    QVBoxLayout *verticalLayout_3;
-    QHBoxLayout *horizontalLayout_3;
+    QListWidget *listWidget_cmdlist;
+    QSplitter *splitter_3;
+    QSplitter *splitter_4;
     QLabel *label_3;
     QCheckBox *checkBox_autosend;
-    QListWidget *listWidget_cmdlist;
+    QComboBox *comboBox_findlist;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *MainWindow)
@@ -66,13 +73,20 @@ public:
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        verticalLayout_2 = new QVBoxLayout();
-        verticalLayout_2->setSpacing(6);
-        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-        horizontalLayout_2 = new QHBoxLayout();
+        splitter_2 = new QSplitter(centralWidget);
+        splitter_2->setObjectName(QString::fromUtf8("splitter_2"));
+        splitter_2->setOrientation(Qt::Vertical);
+        splitter = new QSplitter(splitter_2);
+        splitter->setObjectName(QString::fromUtf8("splitter"));
+        splitter->setOrientation(Qt::Vertical);
+        widget = new QWidget(splitter);
+        widget->setObjectName(QString::fromUtf8("widget"));
+        horizontalLayout_2 = new QHBoxLayout(widget);
         horizontalLayout_2->setSpacing(6);
+        horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        label_2 = new QLabel(centralWidget);
+        horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
+        label_2 = new QLabel(widget);
         label_2->setObjectName(QString::fromUtf8("label_2"));
         label_2->setMinimumSize(QSize(51, 16));
         QFont font;
@@ -84,34 +98,35 @@ public:
 
         horizontalLayout_2->addWidget(label_2);
 
-        lineEdit = new QLineEdit(centralWidget);
+        lineEdit = new QLineEdit(widget);
         lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
         lineEdit->setMinimumSize(QSize(251, 31));
 
         horizontalLayout_2->addWidget(lineEdit);
 
-
-        verticalLayout_2->addLayout(horizontalLayout_2);
-
-        verticalLayout = new QVBoxLayout();
+        splitter->addWidget(widget);
+        widget1 = new QWidget(splitter);
+        widget1->setObjectName(QString::fromUtf8("widget1"));
+        verticalLayout = new QVBoxLayout(widget1);
         verticalLayout->setSpacing(6);
+        verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        label = new QLabel(centralWidget);
+        verticalLayout->setContentsMargins(0, 0, 0, 0);
+        label = new QLabel(widget1);
         label->setObjectName(QString::fromUtf8("label"));
         label->setMinimumSize(QSize(131, 16));
         label->setFont(font);
 
         verticalLayout->addWidget(label);
 
-        textEdit = new QTextEdit(centralWidget);
+        textEdit = new QTextEdit(widget1);
         textEdit->setObjectName(QString::fromUtf8("textEdit"));
 
         verticalLayout->addWidget(textEdit);
 
-
-        verticalLayout_2->addLayout(verticalLayout);
-
-        horizontalGroupBox = new QGroupBox(centralWidget);
+        splitter->addWidget(widget1);
+        splitter_2->addWidget(splitter);
+        horizontalGroupBox = new QGroupBox(splitter_2);
         horizontalGroupBox->setObjectName(QString::fromUtf8("horizontalGroupBox"));
         horizontalLayout = new QHBoxLayout(horizontalGroupBox);
         horizontalLayout->setSpacing(6);
@@ -123,6 +138,14 @@ public:
         pushButton_connect->setMaximumSize(QSize(107, 41));
 
         horizontalLayout->addWidget(pushButton_connect);
+
+        lineEdit_sendnum = new QLineEdit(horizontalGroupBox);
+        lineEdit_sendnum->setObjectName(QString::fromUtf8("lineEdit_sendnum"));
+        lineEdit_sendnum->setMinimumSize(QSize(10, 10));
+        lineEdit_sendnum->setMaximumSize(QSize(25, 41));
+        lineEdit_sendnum->setMaxLength(300);
+
+        horizontalLayout->addWidget(lineEdit_sendnum);
 
         pushButton_clear = new QPushButton(horizontalGroupBox);
         pushButton_clear->setObjectName(QString::fromUtf8("pushButton_clear"));
@@ -138,40 +161,45 @@ public:
 
         horizontalLayout->addWidget(pushButton_collect);
 
+        splitter_2->addWidget(horizontalGroupBox);
 
-        verticalLayout_2->addWidget(horizontalGroupBox);
-
-
-        gridLayout->addLayout(verticalLayout_2, 0, 0, 1, 1);
-
-        verticalLayout_3 = new QVBoxLayout();
-        verticalLayout_3->setSpacing(6);
-        verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
-        horizontalLayout_3 = new QHBoxLayout();
-        horizontalLayout_3->setSpacing(6);
-        horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
-        label_3 = new QLabel(centralWidget);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
-        label_3->setMinimumSize(QSize(0, 0));
-        label_3->setFont(font);
-
-        horizontalLayout_3->addWidget(label_3);
-
-        checkBox_autosend = new QCheckBox(centralWidget);
-        checkBox_autosend->setObjectName(QString::fromUtf8("checkBox_autosend"));
-
-        horizontalLayout_3->addWidget(checkBox_autosend);
-
-
-        verticalLayout_3->addLayout(horizontalLayout_3);
+        gridLayout->addWidget(splitter_2, 0, 0, 2, 1);
 
         listWidget_cmdlist = new QListWidget(centralWidget);
         listWidget_cmdlist->setObjectName(QString::fromUtf8("listWidget_cmdlist"));
+        QFont font1;
+        font1.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
+        font1.setPointSize(16);
+        font1.setBold(false);
+        font1.setItalic(false);
+        font1.setWeight(50);
+        listWidget_cmdlist->setFont(font1);
+        listWidget_cmdlist->setStyleSheet(QString::fromUtf8(""));
 
-        verticalLayout_3->addWidget(listWidget_cmdlist);
+        gridLayout->addWidget(listWidget_cmdlist, 1, 1, 1, 1);
 
+        splitter_3 = new QSplitter(centralWidget);
+        splitter_3->setObjectName(QString::fromUtf8("splitter_3"));
+        splitter_3->setOrientation(Qt::Horizontal);
+        splitter_4 = new QSplitter(splitter_3);
+        splitter_4->setObjectName(QString::fromUtf8("splitter_4"));
+        splitter_4->setOrientation(Qt::Vertical);
+        label_3 = new QLabel(splitter_4);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+        label_3->setMinimumSize(QSize(0, 0));
+        label_3->setFont(font);
+        splitter_4->addWidget(label_3);
+        checkBox_autosend = new QCheckBox(splitter_4);
+        checkBox_autosend->setObjectName(QString::fromUtf8("checkBox_autosend"));
+        checkBox_autosend->setFont(font);
+        splitter_4->addWidget(checkBox_autosend);
+        comboBox_findlist = new QComboBox(splitter_4);
+        comboBox_findlist->setObjectName(QString::fromUtf8("comboBox_findlist"));
+        comboBox_findlist->setEditable(true);
+        splitter_4->addWidget(comboBox_findlist);
+        splitter_3->addWidget(splitter_4);
 
-        gridLayout->addLayout(verticalLayout_3, 0, 1, 1, 1);
+        gridLayout->addWidget(splitter_3, 0, 1, 1, 1);
 
         MainWindow->setCentralWidget(centralWidget);
         statusBar = new QStatusBar(MainWindow);
@@ -189,6 +217,9 @@ public:
         label_2->setText(QApplication::translate("MainWindow", "IP\345\234\260\345\235\200", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "\350\257\267\350\276\223\345\205\245\346\211\247\350\241\214\345\221\275\344\273\244", 0, QApplication::UnicodeUTF8));
         pushButton_connect->setText(QApplication::translate("MainWindow", "\345\217\221\351\200\201", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        lineEdit_sendnum->setToolTip(QApplication::translate("MainWindow", "\346\211\247\350\241\214\346\225\260\351\207\217", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
         pushButton_clear->setText(QApplication::translate("MainWindow", "\346\270\205\347\251\272", 0, QApplication::UnicodeUTF8));
         pushButton_collect->setText(QApplication::translate("MainWindow", "\346\224\266\350\227\217", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainWindow", "\345\221\275\344\273\244\345\210\227\350\241\250", 0, QApplication::UnicodeUTF8));

@@ -21,9 +21,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ReadHistorySettings();
 
     ui->listWidget_cmdlist->addItems(cmdlist);
+    updateListWidgetColor();
     publicSets();
     PopMenu();
     autosendstr.clear();
+    ui->lineEdit_sendnum->setValidator(new QIntValidator(0, 100, this)); ;
+    ui->lineEdit_sendnum->hide();
 }
 
 MainWindow::~MainWindow()
@@ -36,7 +39,9 @@ void MainWindow::publicSets()
 {
 
     connect(ui->listWidget_cmdlist, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(procDoubleClickItem(QListWidgetItem *)));
+    connect(ui->listWidget_cmdlist, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(procDoubleClickItem(QListWidgetItem *)));
 
+    connect(ui->comboBox_findlist, SIGNAL(editTextChanged(QString)), this, SLOT(procFindList(QString)));
 
 }
 
@@ -117,6 +122,21 @@ int MainWindow::CheckIPAddr(QString ipaddr)
 void MainWindow::on_connecting_sendstr(QString sendstr)
 {
     on_pushButton_connect_clicked();
+    return;
+
+    int times = ui->lineEdit_sendnum->text().toInt();
+    int loop = 0;
+    if(ui->lineEdit_sendnum->text().toInt() == 0 )
+    {
+        on_pushButton_connect_clicked();
+    }
+    else
+    {
+//        for(loop = 0; loop < times; loop++)
+//        {
+//           on_pushButton_connect_clicked();
+//        }
+    }
 }
 
 void MainWindow::on_pushButton_connect_clicked()
@@ -221,7 +241,18 @@ void MainWindow::procErrMsg(QString errmsg,void*)
     ui->pushButton_connect->setEnabled(true);
 }
 
-
+void MainWindow::updateListWidgetColor()
+{
+    int count = ui->listWidget_cmdlist->count();
+    int loop = 0;
+    for(loop = 0; loop < count;loop++)
+    {
+        if(loop % 2 )
+            ui->listWidget_cmdlist->item(loop)->setForeground(QColor(Qt::red));
+        else
+            ui->listWidget_cmdlist->item(loop)->setForeground(QColor(Qt::blue));
+    }
+}
 
 void MainWindow::on_pushButton_collect_clicked()
 {
@@ -230,7 +261,7 @@ void MainWindow::on_pushButton_collect_clicked()
         return;
     }
     QString currenttext = ui->textEdit->toPlainText();
-    currenttext.replace("\n"," && ");
+//    currenttext.replace("\n"," && ");
 
     cmdlist.clear();
     int count = ui->listWidget_cmdlist->count();
@@ -245,11 +276,12 @@ void MainWindow::on_pushButton_collect_clicked()
             return;
     }
 
-    QStringList cmdlist;
     cmdlist << currenttext;
+    ui->listWidget_cmdlist->clear();
     ui->listWidget_cmdlist->addItems(cmdlist);
     ui->listWidget_cmdlist->sortItems();
-
+    ui->listWidget_cmdlist->setTextElideMode(Qt::ElideRight);
+    updateListWidgetColor();
 }
 
 void MainWindow::on_pushButton_clear_clicked()
@@ -268,6 +300,34 @@ void MainWindow::procDoubleClickItem(QListWidgetItem * item)
     }
     qDebug() << item->text();
     ui->textEdit->setText(item->text());
+}
+
+void MainWindow::procFindList(QString findstr)
+{
+    if(ui->comboBox_findlist->currentText().simplified().length() == 0)
+    {
+        ui->listWidget_cmdlist->clear();
+        ui->listWidget_cmdlist->addItems(cmdlist);
+        ui->listWidget_cmdlist->sortItems();
+        ui->listWidget_cmdlist->setTextElideMode(Qt::ElideRight);
+        updateListWidgetColor();
+        return;
+    }
+    searchlist.clear();
+    int count = ui->listWidget_cmdlist->count();
+    int loop = 0;
+    for(loop = 0; loop < count;loop++)
+    {
+        if(ui->listWidget_cmdlist->item(loop)->text().contains(findstr))
+            searchlist << ui->listWidget_cmdlist->item(loop)->text();
+    }
+
+    ui->listWidget_cmdlist->clear();
+    ui->listWidget_cmdlist->addItems(searchlist);
+    ui->listWidget_cmdlist->sortItems();
+    ui->listWidget_cmdlist->setTextElideMode(Qt::ElideRight);
+    updateListWidgetColor();
+
 }
 
 
