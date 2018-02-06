@@ -12,6 +12,17 @@
 
 tcp_server ts(BIND_PORT);  
 
+
+
+void handler(int sig)
+{
+    /*  wait(NULL); //只能等待第一个退出的子进程 */
+ 
+    while (waitpid(-1, NULL, WNOHANG) > 0)
+        ;
+}
+
+
 static void atexit_handle_1(void)  
 {  
         //printf("atexit_handle_1\n");  
@@ -34,6 +45,7 @@ void Stop(int signo)
 int main(int argc,char* argv[])  
 {  
 	signal(SIGINT, Stop); 
+	signal(SIGCHLD, handler);
 
 	atexit(atexit_handle_1);  
 	atexit(atexit_handle_2);  
