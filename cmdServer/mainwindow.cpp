@@ -7,6 +7,7 @@
 #include "msgtips.h"
 #include "sockthread.h"
 #include <QMenu>
+#include "version.h"
 
 
 #define BINDPORT (99999)
@@ -20,13 +21,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ReadHistorySettings();
 
-    ui->listWidget_cmdlist->addItems(cmdlist);
+    ui->listWidget_cmdlist->addItems(show_cmdlist);
     updateListWidgetColor();
     publicSets();
     PopMenu();
     autosendstr.clear();
     ui->lineEdit_sendnum->setValidator(new QIntValidator(0, 100, this)); ;
     ui->lineEdit_sendnum->hide();
+    ui->statusBar->showMessage(version);
 }
 
 MainWindow::~MainWindow()
@@ -57,9 +59,9 @@ void MainWindow::ReadHistorySettings()
 {
     QSettings m_settings("weilaidb.com.cn", "cmdserver");
     ui->lineEdit->setText(m_settings.value("LineEditIP").toString());
-    cmdlist.clear();
-    cmdlist = m_settings.value("listWidget_cmdlist").toStringList();
-    m_settings.setValue("listWidget_cmdlist",cmdlist);
+    show_cmdlist.clear();
+    show_cmdlist = m_settings.value("listWidget_cmdlist").toStringList();
+    m_settings.setValue("listWidget_cmdlist",show_cmdlist);
     ui->lineEdit->setText(m_settings.value("LineEditIP").toString());
     ui->checkBox_autosend->setChecked(m_settings.value("checkBox_autosend").toBool());
     this->restoreGeometry(m_settings.value("Cmdserver").toByteArray());
@@ -77,14 +79,14 @@ void MainWindow::WriteCurrentSettings()
 {
     QSettings m_settings("weilaidb.com.cn", "cmdserver");
     m_settings.setValue("LineEditIP",ui->lineEdit->text());
-    cmdlist.clear();
-    int count = ui->listWidget_cmdlist->count();
-    int loop = 0;
-    for(loop = 0; loop < count;loop++)
-    {
-        cmdlist << ui->listWidget_cmdlist->item(loop)->text();
-    }
-    m_settings.setValue("listWidget_cmdlist",cmdlist);
+//    show_cmdlist.clear();
+//    int count = ui->listWidget_cmdlist->count();
+//    int loop = 0;
+//    for(loop = 0; loop < count;loop++)
+//    {
+//        cmdlist << ui->listWidget_cmdlist->item(loop)->text();
+//    }
+    m_settings.setValue("listWidget_cmdlist",show_cmdlist);
     m_settings.setValue("checkBox_autosend",ui->checkBox_autosend->isChecked());
     m_settings.setValue("Cmdserver", this->saveGeometry());
 
@@ -259,6 +261,8 @@ void MainWindow::updateListWidgetColor()
             ui->listWidget_cmdlist->item(loop)->setForeground(QColor(Qt::red));
         else
             ui->listWidget_cmdlist->item(loop)->setForeground(QColor(Qt::blue));
+
+        ui->listWidget_cmdlist->item(loop)->setSizeHint(QSize(120,20));
     }
 }
 
@@ -271,22 +275,22 @@ void MainWindow::on_pushButton_collect_clicked()
     QString currenttext = ui->textEdit->toPlainText();
 //    currenttext.replace("\n"," && ");
 
-    cmdlist.clear();
-    int count = ui->listWidget_cmdlist->count();
-    int loop = 0;
-    for(loop = 0; loop < count;loop++)
-    {
-        cmdlist << ui->listWidget_cmdlist->item(loop)->text();
-    }
+//    cmdlist.clear();
+//    int count = ui->listWidget_cmdlist->count();
+//    int loop = 0;
+//    for(loop = 0; loop < count;loop++)
+//    {
+//        cmdlist << ui->listWidget_cmdlist->item(loop)->text();
+//    }
 
-    foreach (QString str, cmdlist) {
+    foreach (QString str, show_cmdlist) {
         if(str == currenttext)
             return;
     }
 
-    cmdlist << currenttext;
+    show_cmdlist << currenttext;
     ui->listWidget_cmdlist->clear();
-    ui->listWidget_cmdlist->addItems(cmdlist);
+    ui->listWidget_cmdlist->addItems(show_cmdlist);
     ui->listWidget_cmdlist->sortItems();
     ui->listWidget_cmdlist->setTextElideMode(Qt::ElideRight);
     updateListWidgetColor();
@@ -315,20 +319,25 @@ void MainWindow::procFindList(QString findstr)
     if(ui->comboBox_findlist->currentText().simplified().length() == 0)
     {
         ui->listWidget_cmdlist->clear();
-        ui->listWidget_cmdlist->addItems(cmdlist);
+        ui->listWidget_cmdlist->addItems(show_cmdlist);
         ui->listWidget_cmdlist->sortItems();
         ui->listWidget_cmdlist->setTextElideMode(Qt::ElideRight);
         updateListWidgetColor();
         return;
     }
     searchlist.clear();
-    int count = ui->listWidget_cmdlist->count();
-    int loop = 0;
-    for(loop = 0; loop < count;loop++)
-    {
-        if(ui->listWidget_cmdlist->item(loop)->text().contains(findstr))
-            searchlist << ui->listWidget_cmdlist->item(loop)->text();
+
+    foreach (QString str, show_cmdlist) {
+        if(str.contains(findstr))
+            searchlist << str;
     }
+//    int count = ui->listWidget_cmdlist->count();
+//    int loop = 0;
+//    for(loop = 0; loop < count;loop++)
+//    {
+//        if(ui->listWidget_cmdlist->item(loop)->text().contains(findstr))
+//            searchlist << ui->listWidget_cmdlist->item(loop)->text();
+//    }
 
     ui->listWidget_cmdlist->clear();
     ui->listWidget_cmdlist->addItems(searchlist);
@@ -366,6 +375,7 @@ void MainWindow::PopMenu()
 
 void MainWindow::DelItem()
 {
+    show_cmdlist.removeOne(ui->listWidget_cmdlist->currentItem()->text());
     ui->listWidget_cmdlist->takeItem(ui->listWidget_cmdlist->currentRow());
     ui->listWidget_cmdlist->sortItems();
 }

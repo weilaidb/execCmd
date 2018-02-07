@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue Feb 6 20:22:31 2018
+** Created: Wed Feb 7 18:55:08 2018
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -40,11 +40,11 @@ public:
     QGridLayout *gridLayout;
     QSplitter *splitter_2;
     QSplitter *splitter;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_2;
     QLineEdit *lineEdit;
-    QWidget *widget1;
+    QWidget *layoutWidget1;
     QVBoxLayout *verticalLayout;
     QLabel *label;
     QTextEdit *textEdit;
@@ -79,14 +79,14 @@ public:
         splitter = new QSplitter(splitter_2);
         splitter->setObjectName(QString::fromUtf8("splitter"));
         splitter->setOrientation(Qt::Vertical);
-        widget = new QWidget(splitter);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        horizontalLayout_2 = new QHBoxLayout(widget);
+        layoutWidget = new QWidget(splitter);
+        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
+        horizontalLayout_2 = new QHBoxLayout(layoutWidget);
         horizontalLayout_2->setSpacing(6);
         horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
         horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
-        label_2 = new QLabel(widget);
+        label_2 = new QLabel(layoutWidget);
         label_2->setObjectName(QString::fromUtf8("label_2"));
         label_2->setMinimumSize(QSize(51, 16));
         QFont font;
@@ -98,33 +98,40 @@ public:
 
         horizontalLayout_2->addWidget(label_2);
 
-        lineEdit = new QLineEdit(widget);
+        lineEdit = new QLineEdit(layoutWidget);
         lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
         lineEdit->setMinimumSize(QSize(251, 31));
 
         horizontalLayout_2->addWidget(lineEdit);
 
-        splitter->addWidget(widget);
-        widget1 = new QWidget(splitter);
-        widget1->setObjectName(QString::fromUtf8("widget1"));
-        verticalLayout = new QVBoxLayout(widget1);
+        splitter->addWidget(layoutWidget);
+        layoutWidget1 = new QWidget(splitter);
+        layoutWidget1->setObjectName(QString::fromUtf8("layoutWidget1"));
+        verticalLayout = new QVBoxLayout(layoutWidget1);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        label = new QLabel(widget1);
+        label = new QLabel(layoutWidget1);
         label->setObjectName(QString::fromUtf8("label"));
         label->setMinimumSize(QSize(131, 16));
         label->setFont(font);
 
         verticalLayout->addWidget(label);
 
-        textEdit = new QTextEdit(widget1);
+        textEdit = new QTextEdit(layoutWidget1);
         textEdit->setObjectName(QString::fromUtf8("textEdit"));
+        QFont font1;
+        font1.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
+        font1.setPointSize(11);
+        font1.setBold(true);
+        font1.setWeight(75);
+        textEdit->setFont(font1);
+        textEdit->setStyleSheet(QString::fromUtf8("background-color: rgb(170, 227, 255);"));
 
         verticalLayout->addWidget(textEdit);
 
-        splitter->addWidget(widget1);
+        splitter->addWidget(layoutWidget1);
         splitter_2->addWidget(splitter);
         horizontalGroupBox = new QGroupBox(splitter_2);
         horizontalGroupBox->setObjectName(QString::fromUtf8("horizontalGroupBox"));
@@ -167,13 +174,13 @@ public:
 
         listWidget_cmdlist = new QListWidget(centralWidget);
         listWidget_cmdlist->setObjectName(QString::fromUtf8("listWidget_cmdlist"));
-        QFont font1;
-        font1.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
-        font1.setPointSize(16);
-        font1.setBold(false);
-        font1.setItalic(false);
-        font1.setWeight(50);
-        listWidget_cmdlist->setFont(font1);
+        QFont font2;
+        font2.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
+        font2.setPointSize(12);
+        font2.setBold(false);
+        font2.setItalic(false);
+        font2.setWeight(50);
+        listWidget_cmdlist->setFont(font2);
         listWidget_cmdlist->setStyleSheet(QString::fromUtf8(""));
 
         gridLayout->addWidget(listWidget_cmdlist, 1, 1, 1, 1);

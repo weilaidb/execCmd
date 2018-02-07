@@ -34,7 +34,7 @@ private:
     QAction * Act_Normal;
 
 private:
-    QStringList cmdlist;
+    QStringList show_cmdlist;
     QStringList searchlist;
     QString autosendstr;
 private slots:
