@@ -56,6 +56,8 @@ private slots:
     void updateListWidgetColor();
 
     void procFindList(QString findstr);
+
+    void procEnterItem(QListWidgetItem * item);
 private:
     QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串

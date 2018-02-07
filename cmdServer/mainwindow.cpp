@@ -40,9 +40,10 @@ MainWindow::~MainWindow()
 void MainWindow::publicSets()
 {
 
+    ui->listWidget_cmdlist->setMouseTracking(true);
     connect(ui->listWidget_cmdlist, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(procDoubleClickItem(QListWidgetItem *)));
     connect(ui->listWidget_cmdlist, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(procDoubleClickItem(QListWidgetItem *)));
-
+    connect(ui->listWidget_cmdlist, SIGNAL(itemEntered(QListWidgetItem*)),this, SLOT(procEnterItem(QListWidgetItem*)));
     connect(ui->comboBox_findlist, SIGNAL(editTextChanged(QString)), this, SLOT(procFindList(QString)));
 
 }
@@ -312,6 +313,12 @@ void MainWindow::procDoubleClickItem(QListWidgetItem * item)
     }
     qDebug() << item->text();
     ui->textEdit->setText(item->text());
+}
+
+void MainWindow::procEnterItem(QListWidgetItem* item)
+{
+    qDebug() << "enter " << item->text();
+    setToolTip(item->text());
 }
 
 void MainWindow::procFindList(QString findstr)
