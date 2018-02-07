@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Feb 7 18:55:08 2018
+** Created: Wed Feb 7 20:07:25 2018
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -181,7 +181,7 @@ public:
         font2.setItalic(false);
         font2.setWeight(50);
         listWidget_cmdlist->setFont(font2);
-        listWidget_cmdlist->setStyleSheet(QString::fromUtf8(""));
+        listWidget_cmdlist->setStyleSheet(QString::fromUtf8("selection-color: rgb(0, 255, 255);"));
 
         gridLayout->addWidget(listWidget_cmdlist, 1, 1, 1, 1);
 

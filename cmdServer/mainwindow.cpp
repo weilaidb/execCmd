@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ReadHistorySettings();
 
+    ui->listWidget_cmdlist->clear();
     ui->listWidget_cmdlist->addItems(show_cmdlist);
     updateListWidgetColor();
     publicSets();
@@ -263,8 +264,9 @@ void MainWindow::updateListWidgetColor()
         else
             ui->listWidget_cmdlist->item(loop)->setForeground(QColor(Qt::blue));
 
-        ui->listWidget_cmdlist->item(loop)->setSizeHint(QSize(120,20));
+//        ui->listWidget_cmdlist->item(loop)->setSizeHint(QSize(0,0));
     }
+//    ui->listWidget_cmdlist->setShown(true);
 }
 
 void MainWindow::on_pushButton_collect_clicked()
@@ -293,7 +295,7 @@ void MainWindow::on_pushButton_collect_clicked()
     ui->listWidget_cmdlist->clear();
     ui->listWidget_cmdlist->addItems(show_cmdlist);
     ui->listWidget_cmdlist->sortItems();
-    ui->listWidget_cmdlist->setTextElideMode(Qt::ElideRight);
+//    ui->listWidget_cmdlist->setTextElideMode(Qt::ElideRight);
     updateListWidgetColor();
 }
 
@@ -328,7 +330,7 @@ void MainWindow::procFindList(QString findstr)
         ui->listWidget_cmdlist->clear();
         ui->listWidget_cmdlist->addItems(show_cmdlist);
         ui->listWidget_cmdlist->sortItems();
-        ui->listWidget_cmdlist->setTextElideMode(Qt::ElideRight);
+//        ui->listWidget_cmdlist->setTextElideMode(Qt::ElideRight);
         updateListWidgetColor();
         return;
     }
