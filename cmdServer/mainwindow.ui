@@ -15,244 +15,284 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0" rowspan="2">
-     <widget class="QSplitter" name="splitter_2">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
+    <item row="0" column="0">
+     <widget class="QSplitter" name="splitter">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>3</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
       </property>
-      <widget class="QSplitter" name="splitter">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <widget class="QWidget" name="layoutWidget">
-        <layout class="QHBoxLayout" name="horizontalLayout_2">
-         <item>
-          <widget class="QLabel" name="label_2">
-           <property name="minimumSize">
-            <size>
-             <width>51</width>
-             <height>16</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>宋体</family>
-             <pointsize>12</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>IP地址</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLineEdit" name="lineEdit">
-           <property name="minimumSize">
-            <size>
-             <width>251</width>
-             <height>31</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-       <widget class="QWidget" name="layoutWidget">
-        <layout class="QVBoxLayout" name="verticalLayout">
-         <item>
-          <widget class="QLabel" name="label">
-           <property name="minimumSize">
-            <size>
-             <width>131</width>
-             <height>16</height>
-            </size>
-           </property>
-           <property name="font">
-            <font>
-             <family>宋体</family>
-             <pointsize>12</pointsize>
-             <weight>50</weight>
-             <bold>false</bold>
-            </font>
-           </property>
-           <property name="text">
-            <string>请输入执行命令</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QTextEdit" name="textEdit">
-           <property name="font">
-            <font>
-             <family>宋体</family>
-             <pointsize>11</pointsize>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="styleSheet">
-            <string notr="true">background-color: rgb(170, 227, 255);</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </widget>
-      </widget>
-      <widget class="QGroupBox" name="horizontalGroupBox">
-       <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="frameShape">
+       <enum>QFrame::Panel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="childrenCollapsible">
+       <bool>true</bool>
+      </property>
+      <widget class="QWidget" name="">
+       <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QPushButton" name="pushButton_connect">
+         <layout class="QHBoxLayout" name="horizontalLayout_2">
+          <item>
+           <widget class="QLabel" name="label_2">
+            <property name="minimumSize">
+             <size>
+              <width>51</width>
+              <height>16</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>宋体</family>
+              <pointsize>12</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>IP地址</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="lineEdit">
+            <property name="minimumSize">
+             <size>
+              <width>251</width>
+              <height>31</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QLabel" name="label">
           <property name="minimumSize">
            <size>
-            <width>91</width>
-            <height>41</height>
+            <width>131</width>
+            <height>16</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>107</width>
-            <height>41</height>
+            <width>16777215</width>
+            <height>30</height>
            </size>
           </property>
+          <property name="font">
+           <font>
+            <family>宋体</family>
+            <pointsize>12</pointsize>
+            <weight>50</weight>
+            <bold>false</bold>
+           </font>
+          </property>
           <property name="text">
-           <string>发送</string>
+           <string>请输入执行命令</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit_sendnum">
-          <property name="minimumSize">
-           <size>
-            <width>10</width>
-            <height>10</height>
-           </size>
-          </property>
+         <widget class="QTextEdit" name="textEdit">
           <property name="maximumSize">
            <size>
-            <width>25</width>
-            <height>41</height>
+            <width>16777215</width>
+            <height>16777215</height>
            </size>
           </property>
-          <property name="toolTip">
-           <string>执行数量</string>
+          <property name="font">
+           <font>
+            <family>宋体</family>
+            <pointsize>16</pointsize>
+            <weight>75</weight>
+            <bold>true</bold>
+           </font>
           </property>
-          <property name="maxLength">
-           <number>300</number>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(170, 227, 255);</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_clear">
-          <property name="minimumSize">
-           <size>
-            <width>91</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>106</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>清空</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QPushButton" name="pushButton_collect">
-          <property name="minimumSize">
-           <size>
-            <width>91</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>106</width>
-            <height>41</height>
-           </size>
-          </property>
-          <property name="text">
-           <string>收藏</string>
-          </property>
+         <widget class="QGroupBox" name="horizontalGroupBox">
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QPushButton" name="pushButton_connect">
+             <property name="minimumSize">
+              <size>
+               <width>91</width>
+               <height>41</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>107</width>
+               <height>41</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>发送</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QLineEdit" name="lineEdit_sendnum">
+             <property name="minimumSize">
+              <size>
+               <width>10</width>
+               <height>10</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>25</width>
+               <height>41</height>
+              </size>
+             </property>
+             <property name="toolTip">
+              <string>执行数量</string>
+             </property>
+             <property name="maxLength">
+              <number>300</number>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_clear">
+             <property name="minimumSize">
+              <size>
+               <width>91</width>
+               <height>41</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>106</width>
+               <height>41</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>清空</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="pushButton_collect">
+             <property name="minimumSize">
+              <size>
+               <width>91</width>
+               <height>41</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>106</width>
+               <height>41</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>收藏</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
       </widget>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QListWidget" name="listWidget_cmdlist">
-      <property name="font">
-       <font>
-        <family>宋体</family>
-        <pointsize>12</pointsize>
-        <weight>50</weight>
-        <italic>false</italic>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">selection-color: rgb(0, 255, 255);</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QSplitter" name="splitter_3">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <widget class="QSplitter" name="splitter_4">
-       <property name="orientation">
-        <enum>Qt::Vertical</enum>
-       </property>
-       <widget class="QLabel" name="label_3">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>0</height>
-         </size>
-        </property>
-        <property name="font">
-         <font>
-          <family>宋体</family>
-          <pointsize>12</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>命令列表</string>
-        </property>
-       </widget>
-       <widget class="QCheckBox" name="checkBox_autosend">
-        <property name="font">
-         <font>
-          <family>宋体</family>
-          <pointsize>12</pointsize>
-          <weight>50</weight>
-          <bold>false</bold>
-         </font>
-        </property>
-        <property name="text">
-         <string>自动发送</string>
-        </property>
-       </widget>
-       <widget class="QComboBox" name="comboBox_findlist">
-        <property name="font">
-         <font>
-          <family>Times New Roman</family>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="editable">
-         <bool>true</bool>
-        </property>
-       </widget>
+      <widget class="QWidget" name="layoutWidget">
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QSplitter" name="splitter_4">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <widget class="QSplitter" name="splitter_3">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <widget class="QLabel" name="label_3">
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>16777215</width>
+              <height>30</height>
+             </size>
+            </property>
+            <property name="font">
+             <font>
+              <family>宋体</family>
+              <pointsize>12</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>命令列表</string>
+            </property>
+           </widget>
+           <widget class="QCheckBox" name="checkBox_autosend">
+            <property name="font">
+             <font>
+              <family>宋体</family>
+              <pointsize>12</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>自动发送</string>
+            </property>
+           </widget>
+          </widget>
+          <widget class="QComboBox" name="comboBox_findlist">
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>30</height>
+            </size>
+           </property>
+           <property name="font">
+            <font>
+             <family>Times New Roman</family>
+             <pointsize>14</pointsize>
+            </font>
+           </property>
+           <property name="editable">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QListWidget" name="listWidget_cmdlist">
+          <property name="font">
+           <font>
+            <family>宋体</family>
+            <pointsize>12</pointsize>
+            <weight>50</weight>
+            <italic>false</italic>
+            <bold>false</bold>
+           </font>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">selection-color: rgb(0, 255, 255);</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>

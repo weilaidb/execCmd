@@ -2,6 +2,6 @@
 #define VERSION_H
 
 
-const char *version = "v1.9";
+const char *version = "v2.0 Ctrl+F ≤È’“ Ctrl+D «Âø’";
 
 #endif // VERSION_H

@@ -20,6 +20,11 @@ MainWindow::MainWindow(QWidget *parent) :
     uselistTimer(NULL)
 {
     ui->setupUi(this);
+
+//splitte·Ö¸î±ÈÀý
+    ui->splitter->setStretchFactor(0,6);
+    ui->splitter->setStretchFactor(1,4);
+
     ReadHistorySettings();
 
     ui->listWidget_cmdlist->clear();
@@ -32,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     autosendstr.clear();
     ui->lineEdit_sendnum->setValidator(new QIntValidator(0, 100, this)); ;
     ui->lineEdit_sendnum->hide();
-    ui->statusBar->showMessage(version);
+    ui->statusBar->showMessage(QString::fromLocal8Bit(version));
 
     uselistTimer = new QTimer();
     uselistTimer->start(4000);
@@ -332,6 +337,7 @@ void MainWindow::procDoubleClickItem(QListWidgetItem * item)
     if(ui->checkBox_autosend->isChecked())
     {
         autosendstr = item->text();
+        ui->textEdit->setText(item->text());
         on_connecting_sendstr("");
 
         return;
@@ -450,12 +456,13 @@ void MainWindow::procUseListTimerOut()
 void MainWindow::procFindShortCut()
 {
     qDebug() << "procFindShortCut";
+//    ui->comboBox_findlist->setEditText("");
     ui->comboBox_findlist->setFocus();
 }
 void MainWindow::procClearShortCut()
 {
     qDebug() << "procClearShortCut";
-    ui->comboBox_findlist->clear();
+    ui->comboBox_findlist->setEditText("");
 }
 
 
