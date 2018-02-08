@@ -38,8 +38,8 @@ static void atexit_handle_2(void)
 void Stop(int signo) 
 {
     printf("oops! stop!!!\n");
-	ts.~tcp_server();
-    _exit(0);
+	// ts.~tcp_server();
+    // _exit(0);
 }
 
 int main(int argc,char* argv[])  
