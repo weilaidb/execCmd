@@ -7,8 +7,8 @@
 #include "msgtips.h"
 #include "sockthread.h"
 #include <QMenu>
+#include <QShortcut>
 #include "version.h"
-
 
 #define BINDPORT (99999)
 #define CMD_HELLO "hello word"
@@ -16,13 +16,16 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    pthreadsock(NULL)
+    pthreadsock(NULL),
+    uselistTimer(NULL)
 {
     ui->setupUi(this);
     ReadHistorySettings();
 
     ui->listWidget_cmdlist->clear();
     ui->listWidget_cmdlist->addItems(show_cmdlist);
+
+    ui->comboBox_findlist->addItems(commonuselist);
     updateListWidgetColor();
     publicSets();
     PopMenu();
@@ -30,6 +33,23 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->lineEdit_sendnum->setValidator(new QIntValidator(0, 100, this)); ;
     ui->lineEdit_sendnum->hide();
     ui->statusBar->showMessage(version);
+
+    uselistTimer = new QTimer();
+    uselistTimer->start(4000);
+    connect(uselistTimer, SIGNAL(timeout()), this, SLOT(procUseListTimerOut()));
+//    ui->comboBox_findlist->setShortcutEnabled();
+//    ui->comboBox_findlist->setShortcutAutoRepeat();
+//     ui->udpSendButton->setShortcut(tr("Alt+F"));
+
+     QShortcut *findShortCut = new QShortcut(this);
+     findShortCut->setKey(tr("Ctrl+F"));
+     connect(findShortCut, SIGNAL(activated()),this,SLOT(procFindShortCut()));
+
+     QShortcut *findClearShortCut = new QShortcut(this);
+     findClearShortCut->setKey(tr("Ctrl+D"));
+     connect(findClearShortCut, SIGNAL(activated()),this,SLOT(procClearShortCut()));
+
+
 }
 
 MainWindow::~MainWindow()
@@ -63,7 +83,9 @@ void MainWindow::ReadHistorySettings()
     ui->lineEdit->setText(m_settings.value("LineEditIP").toString());
     show_cmdlist.clear();
     show_cmdlist = m_settings.value("listWidget_cmdlist").toStringList();
-    m_settings.setValue("listWidget_cmdlist",show_cmdlist);
+    commonuselist.clear();
+    commonuselist = m_settings.value("comboBox_findlist").toStringList();
+
     ui->lineEdit->setText(m_settings.value("LineEditIP").toString());
     ui->checkBox_autosend->setChecked(m_settings.value("checkBox_autosend").toBool());
     this->restoreGeometry(m_settings.value("Cmdserver").toByteArray());
@@ -89,6 +111,7 @@ void MainWindow::WriteCurrentSettings()
 //        cmdlist << ui->listWidget_cmdlist->item(loop)->text();
 //    }
     m_settings.setValue("listWidget_cmdlist",show_cmdlist);
+    m_settings.setValue("comboBox_findlist",commonuselist);
     m_settings.setValue("checkBox_autosend",ui->checkBox_autosend->isChecked());
     m_settings.setValue("Cmdserver", this->saveGeometry());
 
@@ -335,10 +358,20 @@ void MainWindow::procFindList(QString findstr)
         return;
     }
     searchlist.clear();
-
+    QStringList splitlist = findstr.split(QRegExp("\\s"));
+    int size = splitlist.size();
+    int count = 0;
     foreach (QString str, show_cmdlist) {
-        if(str.contains(findstr))
+        count = 0;
+        foreach (QString splitstr, splitlist) {
+            if(!str.contains(splitstr, Qt::CaseInsensitive))
+                break;
+            count++;
+        }
+        if(size == count)
+        {
             searchlist << str;
+        }
     }
 //    int count = ui->listWidget_cmdlist->count();
 //    int loop = 0;
@@ -388,3 +421,41 @@ void MainWindow::DelItem()
     ui->listWidget_cmdlist->takeItem(ui->listWidget_cmdlist->currentRow());
     ui->listWidget_cmdlist->sortItems();
 }
+
+void MainWindow::procUseListTimerOut()
+{
+    static QString oldstr = ui->comboBox_findlist->currentText().simplified();
+    QString curstr = ui->comboBox_findlist->currentText().simplified();
+    qDebug() << "oldstr:" << oldstr;
+    qDebug() << "curstr:" << curstr;
+    if(oldstr != curstr)
+    {
+        oldstr = curstr;
+        return;
+    }
+    if(ui->listWidget_cmdlist->count() == 0 )
+    {
+        return;
+    }
+    qDebug() << "!!!procUseListTimerOut add uselist:" << curstr;
+    commonuselist.append(curstr);
+    commonuselist.sort();
+    commonuselist.removeDuplicates();
+    ui->comboBox_findlist->clear();
+    ui->comboBox_findlist->addItems(commonuselist);
+    ui->comboBox_findlist->setEditText(curstr);
+    ui->comboBox_findlist->update();
+}
+
+void MainWindow::procFindShortCut()
+{
+    qDebug() << "procFindShortCut";
+    ui->comboBox_findlist->setFocus();
+}
+void MainWindow::procClearShortCut()
+{
+    qDebug() << "procClearShortCut";
+    ui->comboBox_findlist->clear();
+}
+
+

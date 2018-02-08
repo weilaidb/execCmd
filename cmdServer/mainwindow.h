@@ -5,6 +5,7 @@
 #include <QTcpSocket>
 #include <sockthread.h>
 #include <QListWidget>
+#include <QTimer>
 
 namespace Ui {
 class MainWindow;
@@ -37,6 +38,8 @@ private:
     QStringList show_cmdlist;
     QStringList searchlist;
     QString autosendstr;
+    QStringList commonuselist;
+    QTimer *uselistTimer;
 private slots:
     void on_connecting_sendstr(QString sendstr);
     void on_pushButton_connect_clicked();
@@ -58,6 +61,12 @@ private slots:
     void procFindList(QString findstr);
 
     void procEnterItem(QListWidgetItem * item);
+
+    void procUseListTimerOut();
+
+    void procFindShortCut();
+
+    void procClearShortCut();
 private:
     QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串

@@ -243,6 +243,12 @@
         </property>
        </widget>
        <widget class="QComboBox" name="comboBox_findlist">
+        <property name="font">
+         <font>
+          <family>Times New Roman</family>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
         <property name="editable">
          <bool>true</bool>
         </property>

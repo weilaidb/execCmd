@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Wed Feb 7 19:19:44 2018
+** Created: Thu Feb 8 22:19:43 2018
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      12,   14, // methods
+      15,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -43,6 +43,9 @@ static const uint qt_meta_data_MainWindow[] = {
      273,   11,   11,   11, 0x08,
      305,  297,   11,   11, 0x08,
      327,  220,   11,   11, 0x08,
+     359,   11,   11,   11, 0x08,
+     381,   11,   11,   11, 0x08,
+     400,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -58,6 +61,8 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "DelItem()\0updateListWidgetColor()\0"
     "findstr\0procFindList(QString)\0"
     "procEnterItem(QListWidgetItem*)\0"
+    "procUseListTimerOut()\0procFindShortCut()\0"
+    "procClearShortCut()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -78,6 +83,9 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 9: _t->updateListWidgetColor(); break;
         case 10: _t->procFindList((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 11: _t->procEnterItem((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
+        case 12: _t->procUseListTimerOut(); break;
+        case 13: _t->procFindShortCut(); break;
+        case 14: _t->procClearShortCut(); break;
         default: ;
         }
     }
@@ -115,9 +123,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 12)
+        if (_id < 15)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 12;
+        _id -= 15;
     }
     return _id;
 }

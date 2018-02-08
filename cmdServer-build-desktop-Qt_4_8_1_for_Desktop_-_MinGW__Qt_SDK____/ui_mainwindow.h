@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Feb 7 20:07:25 2018
+** Created: Thu Feb 8 22:04:54 2018
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -202,6 +202,10 @@ public:
         splitter_4->addWidget(checkBox_autosend);
         comboBox_findlist = new QComboBox(splitter_4);
         comboBox_findlist->setObjectName(QString::fromUtf8("comboBox_findlist"));
+        QFont font3;
+        font3.setFamily(QString::fromUtf8("Times New Roman"));
+        font3.setPointSize(14);
+        comboBox_findlist->setFont(font3);
         comboBox_findlist->setEditable(true);
         splitter_4->addWidget(comboBox_findlist);
         splitter_3->addWidget(splitter_4);
