@@ -48,6 +48,8 @@ private slots:
     void hellosocket();
     void procErrMsg(QString errmsg,void*);
 
+    void readfromremote(QString msg,void*);
+
     void on_pushButton_collect_clicked();
 
     void on_pushButton_clear_clicked();
@@ -67,6 +69,8 @@ private slots:
     void procFindShortCut();
 
     void procClearShortCut();
+
+    void procSendCmdShortCut();
 private:
     QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串

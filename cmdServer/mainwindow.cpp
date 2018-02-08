@@ -54,6 +54,9 @@ MainWindow::MainWindow(QWidget *parent) :
      findClearShortCut->setKey(tr("Ctrl+D"));
      connect(findClearShortCut, SIGNAL(activated()),this,SLOT(procClearShortCut()));
 
+     QShortcut *SendCmdShortCut = new QShortcut(this);
+     SendCmdShortCut->setKey(tr("Ctrl+S"));
+     connect(SendCmdShortCut, SIGNAL(activated()),this,SLOT(procSendCmdShortCut()));
 
 }
 
@@ -281,6 +284,12 @@ void MainWindow::procErrMsg(QString errmsg,void*)
     }
 }
 
+void MainWindow::readfromremote(QString msg,void*)
+{
+    qDebug() << msg;
+}
+
+
 void MainWindow::updateListWidgetColor()
 {
     int count = ui->listWidget_cmdlist->count();
@@ -439,6 +448,21 @@ void MainWindow::procUseListTimerOut()
         oldstr = curstr;
         return;
     }
+    QString delstr = "delete it";
+    if(curstr.contains(delstr))
+    {
+        QString todel = curstr;
+        todel = todel.replace(delstr, "").simplified();
+        qDebug() << "!!!procUseListTimerOut del uselist:" << todel;
+        commonuselist.removeOne(todel);
+        commonuselist.sort();
+        commonuselist.removeDuplicates();
+        ui->comboBox_findlist->clear();
+        ui->comboBox_findlist->addItems(commonuselist);
+        ui->comboBox_findlist->setEditText(curstr);
+        ui->comboBox_findlist->update();
+        return;
+    }
     if(ui->listWidget_cmdlist->count() == 0 )
     {
         return;
@@ -464,5 +488,12 @@ void MainWindow::procClearShortCut()
     qDebug() << "procClearShortCut";
     ui->comboBox_findlist->setEditText("");
 }
+void MainWindow::procSendCmdShortCut()
+{
+    qDebug() << "procSendCmdShortCut";
+    if(ui->pushButton_connect->isEnabled())
+        on_pushButton_connect_clicked();
+}
+
 
 
