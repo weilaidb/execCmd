@@ -3,7 +3,7 @@
 #include <sys/socket.h>  
 #include <arpa/inet.h>  
   
-#define MAXSIZE 2048  
+#define MAXSIZE 16 * 1024 *1024
   
 class tcp_server  
 {  

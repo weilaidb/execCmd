@@ -84,13 +84,14 @@ int tcp_server::recv_msg()
 	return 0;  
 }  
 
+char recvbuf[MAXSIZE];  
+char execcmd[MAXSIZE];  
 
 void tcp_server::do_service(int conn)
 {
 	int offset = 12;
 	int status;
-	char recvbuf[MAXSIZE];  
-	char execcmd[MAXSIZE];  
+
 
     while (1)
     {

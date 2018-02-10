@@ -35,7 +35,7 @@
       <property name="childrenCollapsible">
        <bool>true</bool>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_2">
@@ -110,7 +110,7 @@
           <property name="font">
            <font>
             <family>宋体</family>
-            <pointsize>16</pointsize>
+            <pointsize>14</pointsize>
             <weight>75</weight>
             <bold>true</bold>
            </font>
@@ -272,6 +272,9 @@
            </property>
            <property name="editable">
             <bool>true</bool>
+           </property>
+           <property name="maxVisibleItems">
+            <number>30</number>
            </property>
           </widget>
          </widget>

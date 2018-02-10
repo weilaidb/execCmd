@@ -17,7 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     pthreadsock(NULL),
-    uselistTimer(NULL)
+    uselistTimer(NULL),
+    bCtrlKeyPressed(FALSE)
 {
     ui->setupUi(this);
 
@@ -50,9 +51,9 @@ MainWindow::MainWindow(QWidget *parent) :
      findShortCut->setKey(tr("Ctrl+F"));
      connect(findShortCut, SIGNAL(activated()),this,SLOT(procFindShortCut()));
 
-     QShortcut *findClearShortCut = new QShortcut(this);
-     findClearShortCut->setKey(tr("Ctrl+D"));
-     connect(findClearShortCut, SIGNAL(activated()),this,SLOT(procClearShortCut()));
+//     QShortcut *findClearShortCut = new QShortcut(this);
+//     findClearShortCut->setKey(tr("Ctrl+D"));
+//     connect(findClearShortCut, SIGNAL(activated()),this,SLOT(procClearShortCut()));
 
      QShortcut *SendCmdShortCut = new QShortcut(this);
      SendCmdShortCut->setKey(tr("Ctrl+S"));
@@ -73,6 +74,7 @@ void MainWindow::publicSets()
     connect(ui->listWidget_cmdlist, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(procDoubleClickItem(QListWidgetItem *)));
     connect(ui->listWidget_cmdlist, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(procDoubleClickItem(QListWidgetItem *)));
     connect(ui->listWidget_cmdlist, SIGNAL(itemEntered(QListWidgetItem*)),this, SLOT(procEnterItem(QListWidgetItem*)));
+    connect(ui->listWidget_cmdlist, SIGNAL(itemSelectionChanged()), this, SLOT(procitemSelectionChanged()));
     connect(ui->comboBox_findlist, SIGNAL(editTextChanged(QString)), this, SLOT(procFindList(QString)));
 
 }
@@ -357,8 +359,17 @@ void MainWindow::procDoubleClickItem(QListWidgetItem * item)
 
 void MainWindow::procEnterItem(QListWidgetItem* item)
 {
-    qDebug() << "enter " << item->text();
-    setToolTip(item->text());
+    QString itemtext = item->text();
+    qDebug() << "enter " << itemtext;
+    setToolTip(itemtext);
+//    ui->textEdit->setText(itemtext);
+}
+
+void MainWindow::procitemSelectionChanged()
+{
+    QString curtext = ui->listWidget_cmdlist->currentItem()->text();
+    setToolTip(curtext);
+    ui->textEdit->setText(curtext);
 }
 
 void MainWindow::procFindList(QString findstr)
@@ -480,7 +491,7 @@ void MainWindow::procUseListTimerOut()
 void MainWindow::procFindShortCut()
 {
     qDebug() << "procFindShortCut";
-//    ui->comboBox_findlist->setEditText("");
+    ui->comboBox_findlist->setEditText("");
     ui->comboBox_findlist->setFocus();
 }
 void MainWindow::procClearShortCut()
@@ -496,4 +507,59 @@ void MainWindow::procSendCmdShortCut()
 }
 
 
+
+
+void MainWindow::wheelEvent(QWheelEvent *event)
+{
+    if(!bCtrlKeyPressed)
+        return;
+    int numberDegrees = event->delta() / 8;
+    int numberSteps = numberDegrees / 15;
+    if(event->orientation() == Qt::Vertical)
+    {   //实现的是横排移动，所以这里把滚轮的上下移动实现为
+//        ui->listWidge `Q1SW23t->horizontalScrollBar()->setValue(ui->listWidget->horizontalScrollBar()->value() + numberSteps);
+    }
+    qDebug() << "numberSteps :"<<numberSteps;
+    if(numberSteps > 0)
+    {
+        QFont font = ui->textEdit->font();
+        font.setPointSize(font.pointSize() + 1);
+
+        ui->textEdit->setFont(font);
+    }
+    else
+    {
+        QFont font = ui->textEdit->font();
+        font.setPointSize(font.pointSize() - 1);
+        ui->textEdit->setFont(font);
+    }
+    event->accept();
+
+}
+
+void MainWindow::keyPressEvent(QKeyEvent *keyevt)
+{
+    switch(keyevt->key())
+    {
+    case Qt::Key_Control:
+        bCtrlKeyPressed = TRUE;
+        qDebug() << "bCtrlKeyPressed TRUE";
+        break;
+    default:
+        break;
+    }
+}
+
+void MainWindow::keyReleaseEvent(QKeyEvent *keyevt)
+{
+    switch(keyevt->key())
+    {
+    case Qt::Key_Control:
+        bCtrlKeyPressed = FALSE;
+        qDebug() << "bCtrlKeyPressed FALSE";
+        break;
+    default:
+        break;
+    }
+}
 

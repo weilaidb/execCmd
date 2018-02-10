@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu Feb 8 23:14:07 2018
+** Created: Sat Feb 10 17:06:26 2018
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -39,7 +39,7 @@ public:
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QSplitter *splitter;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_2;
@@ -52,7 +52,7 @@ public:
     QLineEdit *lineEdit_sendnum;
     QPushButton *pushButton_clear;
     QPushButton *pushButton_collect;
-    QWidget *layoutWidget;
+    QWidget *layoutWidget1;
     QVBoxLayout *verticalLayout_2;
     QSplitter *splitter_4;
     QSplitter *splitter_3;
@@ -84,9 +84,9 @@ public:
         splitter->setFrameShadow(QFrame::Raised);
         splitter->setOrientation(Qt::Horizontal);
         splitter->setChildrenCollapsible(true);
-        widget = new QWidget(splitter);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        verticalLayout = new QVBoxLayout(widget);
+        layoutWidget = new QWidget(splitter);
+        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
+        verticalLayout = new QVBoxLayout(layoutWidget);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -94,7 +94,7 @@ public:
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setSpacing(6);
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        label_2 = new QLabel(widget);
+        label_2 = new QLabel(layoutWidget);
         label_2->setObjectName(QString::fromUtf8("label_2"));
         label_2->setMinimumSize(QSize(51, 16));
         QFont font;
@@ -106,7 +106,7 @@ public:
 
         horizontalLayout_2->addWidget(label_2);
 
-        lineEdit = new QLineEdit(widget);
+        lineEdit = new QLineEdit(layoutWidget);
         lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
         lineEdit->setMinimumSize(QSize(251, 31));
 
@@ -115,7 +115,7 @@ public:
 
         verticalLayout->addLayout(horizontalLayout_2);
 
-        label = new QLabel(widget);
+        label = new QLabel(layoutWidget);
         label->setObjectName(QString::fromUtf8("label"));
         label->setMinimumSize(QSize(131, 16));
         label->setMaximumSize(QSize(16777215, 30));
@@ -123,12 +123,12 @@ public:
 
         verticalLayout->addWidget(label);
 
-        textEdit = new QTextEdit(widget);
+        textEdit = new QTextEdit(layoutWidget);
         textEdit->setObjectName(QString::fromUtf8("textEdit"));
         textEdit->setMaximumSize(QSize(16777215, 16777215));
         QFont font1;
         font1.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
-        font1.setPointSize(16);
+        font1.setPointSize(14);
         font1.setBold(true);
         font1.setWeight(75);
         textEdit->setFont(font1);
@@ -136,7 +136,7 @@ public:
 
         verticalLayout->addWidget(textEdit);
 
-        horizontalGroupBox = new QGroupBox(widget);
+        horizontalGroupBox = new QGroupBox(layoutWidget);
         horizontalGroupBox->setObjectName(QString::fromUtf8("horizontalGroupBox"));
         horizontalLayout = new QHBoxLayout(horizontalGroupBox);
         horizontalLayout->setSpacing(6);
@@ -174,15 +174,15 @@ public:
 
         verticalLayout->addWidget(horizontalGroupBox);
 
-        splitter->addWidget(widget);
-        layoutWidget = new QWidget(splitter);
-        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        verticalLayout_2 = new QVBoxLayout(layoutWidget);
+        splitter->addWidget(layoutWidget);
+        layoutWidget1 = new QWidget(splitter);
+        layoutWidget1->setObjectName(QString::fromUtf8("layoutWidget1"));
+        verticalLayout_2 = new QVBoxLayout(layoutWidget1);
         verticalLayout_2->setSpacing(6);
         verticalLayout_2->setContentsMargins(11, 11, 11, 11);
         verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
         verticalLayout_2->setContentsMargins(0, 0, 0, 0);
-        splitter_4 = new QSplitter(layoutWidget);
+        splitter_4 = new QSplitter(layoutWidget1);
         splitter_4->setObjectName(QString::fromUtf8("splitter_4"));
         splitter_4->setOrientation(Qt::Vertical);
         splitter_3 = new QSplitter(splitter_4);
@@ -207,11 +207,12 @@ public:
         font2.setPointSize(14);
         comboBox_findlist->setFont(font2);
         comboBox_findlist->setEditable(true);
+        comboBox_findlist->setMaxVisibleItems(30);
         splitter_4->addWidget(comboBox_findlist);
 
         verticalLayout_2->addWidget(splitter_4);
 
-        listWidget_cmdlist = new QListWidget(layoutWidget);
+        listWidget_cmdlist = new QListWidget(layoutWidget1);
         listWidget_cmdlist->setObjectName(QString::fromUtf8("listWidget_cmdlist"));
         QFont font3;
         font3.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
@@ -224,7 +225,7 @@ public:
 
         verticalLayout_2->addWidget(listWidget_cmdlist);
 
-        splitter->addWidget(layoutWidget);
+        splitter->addWidget(layoutWidget1);
 
         gridLayout->addWidget(splitter, 0, 0, 1, 1);
 

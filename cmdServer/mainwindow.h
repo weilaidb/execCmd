@@ -28,7 +28,13 @@ public:
     void closeEvent(QCloseEvent *event);
     void contextMenuEvent(QContextMenuEvent *event);
     void PopMenu();
+    void wheelEvent(QWheelEvent *event);
+    void keyPressEvent(QKeyEvent *keyevt);
+    void keyReleaseEvent(QKeyEvent * keyevt);
 
+
+private:
+    bool bCtrlKeyPressed;
 
 private:
     QAction * Act_DelItem;
@@ -71,6 +77,8 @@ private slots:
     void procClearShortCut();
 
     void procSendCmdShortCut();
+
+    void procitemSelectionChanged();
 private:
     QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串
