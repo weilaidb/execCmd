@@ -9,8 +9,6 @@ QT       += network
 
 TARGET = execWinCmdServer2
 TEMPLATE = app
-RESOURCES += \
-    imgs.qrc
 RC_FILE = app.rc
 
 
@@ -26,15 +24,6 @@ HEADERS  += mainwindow.h \
     msgtips.h
 
 FORMS    += mainwindow.ui
-
-OTHER_FILES += \
-    Makefile.Release \
-    Makefile.Debug \
-    Makefile \
-    execWinCmdServer2.pro.user \
-    execWinCmdServer2.pro \
-    app.rc \
-    app.ico
 
 RESOURCES += \
     imgs.qrc

@@ -21,16 +21,17 @@ MainWindow::MainWindow(QWidget *parent) :
     //qt 最小化到托盘
 #if 1
     //fileexist("images/good1.ico");
-    //   QIcon icon2 = QIcon(":/images/title.ico");
+    QIcon icon3 = QIcon(":/app1.ico");
 
     QIcon icon2;
-    icon2.addFile(QString::fromUtf8(":/app.ico"), QSize(), QIcon::Normal, QIcon::Off);
+    icon2.addFile(QString::fromUtf8(":/app1.ico"), QSize(), QIcon::Normal, QIcon::On);
     trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setIcon(icon2);
+    trayIcon->setIcon(icon3);
     trayIcon->setToolTip("win execuate machine");
     createActions();
     createTrayIcon();
     trayIcon->show();
+
     connect(trayIcon,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 #endif
 }
@@ -110,10 +111,11 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
 
     //python.exe
     LPCSTR exepath = "explorer.exe";
-    LPCSTR filepath = cltmsg.toLocal8Bit().data();
+    LPCSTR filepath = cltmsg.toAscii().data();
+    LPCSTR filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
 
-    ShellExecuteA(NULL,"open", exepath,filepath,NULL,SW_SHOWNORMAL);
-    ui->statusBar->showMessage(QString("%1 %2").arg(exepath).arg(QString::fromLocal8Bit(filepath)));
+    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
+    ui->statusBar->showMessage(QString("%1 %2").arg(exepath).arg(QString::fromUtf8(filepath)));
     sockthread *threadsock = (sockthread *)pthread;
     threadsock->closeSocketConnect();
 }
