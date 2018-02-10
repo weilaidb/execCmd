@@ -48,7 +48,7 @@ int MainWindow::InitServer( QString ipaddr, quint16 listenport)
         closeallclientsocket();
         tcpServer->disconnect(this);
         tcpServer->close();
-//        tcpServer->deleteLater();
+        //        tcpServer->deleteLater();
         tcpServer = NULL;
     }
 
@@ -99,7 +99,7 @@ void MainWindow::procClientMessage()
 
     ui->statusBar->showMessage("proc new client message...");
     qDebug() << (QString("got new client(%1)")
-                   .arg(clientConnection->peerAddress().toString()));
+                 .arg(clientConnection->peerAddress().toString()));
 }
 
 
@@ -108,18 +108,36 @@ void MainWindow::procClientMessage()
 void MainWindow::readfromremote(QString cltmsg, void * pthread)
 {
     qDebug() << (QString("read clt msg:%1").arg(cltmsg.toUtf8().data()));
+    bool isCmd = FALSE;
+    if(cltmsg.contains("cmd") && cltmsg.simplified() != "cmd")
+    {
+        isCmd = TRUE;
+    }
 
     //python.exe
-//    LPCSTR exepath = "explorer.exe";
+    //    LPCSTR exepath = "explorer.exe";
     LPCSTR exepath = "";
     LPCSTR filepath = cltmsg.toAscii().data();
     LPCSTR filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
 
-//    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
-    ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWNORMAL);
+    if(isCmd)
+    {
+        cltmsg = "/c " + cltmsg.replace("cmd", "");
+        filepath = cltmsg.toAscii().data();
+        filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
+        ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_HIDE);
+    }
+    else
+    {
+        //    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
+        ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWNORMAL);
+    }
+
     ui->statusBar->showMessage(QString("%1 %2").arg(exepath).arg(QString::fromUtf8(filepath)));
     sockthread *threadsock = (sockthread *)pthread;
     threadsock->closeSocketConnect();
+
+
 }
 
 
@@ -132,14 +150,14 @@ void MainWindow::createActions()
 
     connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
 
-//    savetofileAction= new QAction(tr("savetofile (&S)"), this);
-//    connect(savetofileAction, SIGNAL(triggered()), this, SLOT(savetofile()));
+    //    savetofileAction= new QAction(tr("savetofile (&S)"), this);
+    //    connect(savetofileAction, SIGNAL(triggered()), this, SLOT(savetofile()));
 
-//    startAction= new QAction(tr("start (&S)"), this);
-//    connect(startAction, SIGNAL(triggered()), this, SLOT(startautocollect()));
+    //    startAction= new QAction(tr("start (&S)"), this);
+    //    connect(startAction, SIGNAL(triggered()), this, SLOT(startautocollect()));
 
-//    stopAction= new QAction(tr("stop (&S)"), this);
-//    connect(stopAction, SIGNAL(triggered()), this, SLOT(stopautocollect()));
+    //    stopAction= new QAction(tr("stop (&S)"), this);
+    //    connect(stopAction, SIGNAL(triggered()), this, SLOT(stopautocollect()));
 
     minimizeAction = new QAction(tr("min (&I)"), this);
     connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
@@ -156,9 +174,9 @@ void MainWindow::createTrayIcon()
 {
     trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(restoreAction);
-//    trayIconMenu->addAction(savetofileAction);
-//    trayIconMenu->addAction(startAction);
-//    trayIconMenu->addAction(stopAction);
+    //    trayIconMenu->addAction(savetofileAction);
+    //    trayIconMenu->addAction(startAction);
+    //    trayIconMenu->addAction(stopAction);
 #if 0
     trayIconMenu->addAction(minimizeAction);
     trayIconMenu->addAction(maximizeAction);
@@ -192,9 +210,9 @@ void MainWindow::changeEvent(QEvent *e)
 void MainWindow::closeEvent(QCloseEvent *event)
 {
     qDebug() << "MainWindow closeEvent";
-//    WriteCurrentSettings();
-//    saveResource();
-//    event->accept();
+    //    WriteCurrentSettings();
+    //    saveResource();
+    //    event->accept();
     event->ignore();
     this->hide();
 }
