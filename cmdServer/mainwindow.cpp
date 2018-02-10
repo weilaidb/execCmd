@@ -9,6 +9,7 @@
 #include <QMenu>
 #include <QShortcut>
 #include "version.h"
+#include <QClipboard>
 
 #define BINDPORT (99999)
 #define CMD_HELLO "hello word"
@@ -90,13 +91,14 @@ void MainWindow::publicSets()
 void MainWindow::ReadHistorySettings()
 {
     QSettings m_settings("weilaidb.com.cn", "cmdserver");
-    ui->lineEdit->setText(m_settings.value("LineEditIP").toString());
+    ui->comboBox->addItems(m_settings.value("ComBoxIPList").toStringList());
+    ComBoxIPList = m_settings.value("ComBoxIPList").toStringList();
     show_cmdlist.clear();
     show_cmdlist = m_settings.value("listWidget_cmdlist").toStringList();
     commonuselist.clear();
     commonuselist = m_settings.value("comboBox_findlist").toStringList();
 
-    ui->lineEdit->setText(m_settings.value("LineEditIP").toString());
+//    ui->lineEdit->setText(m_settings.value("LineEditIP").toString());
     ui->checkBox_autosend->setChecked(m_settings.value("checkBox_autosend").toBool());
     this->restoreGeometry(m_settings.value("Cmdserver").toByteArray());
 
@@ -112,7 +114,7 @@ void MainWindow::ReadHistorySettings()
 void MainWindow::WriteCurrentSettings()
 {
     QSettings m_settings("weilaidb.com.cn", "cmdserver");
-    m_settings.setValue("LineEditIP",ui->lineEdit->text());
+    m_settings.setValue("ComBoxIPList",ComBoxIPList);
 //    show_cmdlist.clear();
 //    int count = ui->listWidget_cmdlist->count();
 //    int loop = 0;
@@ -176,13 +178,27 @@ void MainWindow::on_connecting_sendstr(QString sendstr)
     }
 }
 
+void MainWindow::procComBoxIpList(QString ipaddr)
+{
+    ComBoxIPList.append(ipaddr);
+    ComBoxIPList.sort();
+    ComBoxIPList.removeDuplicates();
+    ui->comboBox->clear();
+    ui->comboBox->addItems(ComBoxIPList);
+    ui->comboBox->setEditText(ipaddr);
+
+}
+
+
 void MainWindow::on_pushButton_connect_clicked()
 {
-    QString ipaddr = ui->lineEdit->text();
+    QString ipaddr = ui->comboBox->currentText();
     if(0 != CheckIPAddr(ipaddr))
     {
         return;
     }
+    procComBoxIpList(ipaddr);
+
     ui->pushButton_connect->setEnabled(false);
 
     socket = new QTcpSocket();
@@ -563,3 +579,9 @@ void MainWindow::keyReleaseEvent(QKeyEvent *keyevt)
     }
 }
 
+
+void MainWindow::on_pushButton_paste_clicked()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    ui->textEdit->setText(clipboard->text());
+}

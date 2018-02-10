@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Sat Feb 10 18:03:53 2018
+** Created: Sat Feb 10 21:44:59 2018
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      18,   14, // methods
+      20,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -49,6 +49,8 @@ static const uint qt_meta_data_MainWindow[] = {
      435,   11,   11,   11, 0x08,
      455,   11,   11,   11, 0x08,
      477,   11,   11,   11, 0x08,
+     504,   83,   11,   11, 0x08,
+     530,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -68,6 +70,8 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "procUseListTimerOut()\0procFindShortCut()\0"
     "procClearShortCut()\0procSendCmdShortCut()\0"
     "procitemSelectionChanged()\0"
+    "procComBoxIpList(QString)\0"
+    "on_pushButton_paste_clicked()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -94,6 +98,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 15: _t->procClearShortCut(); break;
         case 16: _t->procSendCmdShortCut(); break;
         case 17: _t->procitemSelectionChanged(); break;
+        case 18: _t->procComBoxIpList((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 19: _t->on_pushButton_paste_clicked(); break;
         default: ;
         }
     }
@@ -131,9 +137,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 18)
+        if (_id < 20)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 18;
+        _id -= 20;
     }
     return _id;
 }

@@ -79,6 +79,10 @@ private slots:
     void procSendCmdShortCut();
 
     void procitemSelectionChanged();
+
+    void procComBoxIpList(QString ipaddr);
+    void on_pushButton_paste_clicked();
+
 private:
     QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串
@@ -87,6 +91,8 @@ private:
 
 private:
     Ui::MainWindow *ui;
+
+    QStringList ComBoxIPList;
 };
 
 #endif // MAINWINDOW_H

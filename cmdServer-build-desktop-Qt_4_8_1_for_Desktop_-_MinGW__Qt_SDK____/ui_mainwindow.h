@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat Feb 10 17:06:26 2018
+** Created: Sat Feb 10 21:44:52 2018
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -43,13 +43,14 @@ public:
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_2;
-    QLineEdit *lineEdit;
+    QComboBox *comboBox;
     QLabel *label;
     QTextEdit *textEdit;
     QGroupBox *horizontalGroupBox;
     QHBoxLayout *horizontalLayout;
     QPushButton *pushButton_connect;
     QLineEdit *lineEdit_sendnum;
+    QPushButton *pushButton_paste;
     QPushButton *pushButton_clear;
     QPushButton *pushButton_collect;
     QWidget *layoutWidget1;
@@ -96,7 +97,12 @@ public:
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
         label_2 = new QLabel(layoutWidget);
         label_2->setObjectName(QString::fromUtf8("label_2"));
-        label_2->setMinimumSize(QSize(51, 16));
+        QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(label_2->sizePolicy().hasHeightForWidth());
+        label_2->setSizePolicy(sizePolicy1);
+        label_2->setMinimumSize(QSize(60, 16));
         QFont font;
         font.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
         font.setPointSize(12);
@@ -106,11 +112,12 @@ public:
 
         horizontalLayout_2->addWidget(label_2);
 
-        lineEdit = new QLineEdit(layoutWidget);
-        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
-        lineEdit->setMinimumSize(QSize(251, 31));
+        comboBox = new QComboBox(layoutWidget);
+        comboBox->setObjectName(QString::fromUtf8("comboBox"));
+        comboBox->setMinimumSize(QSize(251, 31));
+        comboBox->setEditable(true);
 
-        horizontalLayout_2->addWidget(lineEdit);
+        horizontalLayout_2->addWidget(comboBox);
 
 
         verticalLayout->addLayout(horizontalLayout_2);
@@ -156,6 +163,13 @@ public:
         lineEdit_sendnum->setMaxLength(300);
 
         horizontalLayout->addWidget(lineEdit_sendnum);
+
+        pushButton_paste = new QPushButton(horizontalGroupBox);
+        pushButton_paste->setObjectName(QString::fromUtf8("pushButton_paste"));
+        pushButton_paste->setMinimumSize(QSize(91, 41));
+        pushButton_paste->setMaximumSize(QSize(106, 41));
+
+        horizontalLayout->addWidget(pushButton_paste);
 
         pushButton_clear = new QPushButton(horizontalGroupBox);
         pushButton_clear->setObjectName(QString::fromUtf8("pushButton_clear"));
@@ -248,6 +262,7 @@ public:
 #ifndef QT_NO_TOOLTIP
         lineEdit_sendnum->setToolTip(QApplication::translate("MainWindow", "\346\211\247\350\241\214\346\225\260\351\207\217", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
+        pushButton_paste->setText(QApplication::translate("MainWindow", "\347\262\230\350\264\264", 0, QApplication::UnicodeUTF8));
         pushButton_clear->setText(QApplication::translate("MainWindow", "\346\270\205\347\251\272", 0, QApplication::UnicodeUTF8));
         pushButton_collect->setText(QApplication::translate("MainWindow", "\346\224\266\350\227\217", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainWindow", "\345\221\275\344\273\244\345\210\227\350\241\250", 0, QApplication::UnicodeUTF8));
