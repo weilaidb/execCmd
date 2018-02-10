@@ -107,14 +107,16 @@ void MainWindow::procClientMessage()
 
 void MainWindow::readfromremote(QString cltmsg, void * pthread)
 {
-    qDebug() << (QString("read clt msg:%1").arg(cltmsg));
+    qDebug() << (QString("read clt msg:%1").arg(cltmsg.toUtf8().data()));
 
     //python.exe
-    LPCSTR exepath = "explorer.exe";
+//    LPCSTR exepath = "explorer.exe";
+    LPCSTR exepath = "";
     LPCSTR filepath = cltmsg.toAscii().data();
     LPCSTR filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
 
-    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
+//    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
+    ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWNORMAL);
     ui->statusBar->showMessage(QString("%1 %2").arg(exepath).arg(QString::fromUtf8(filepath)));
     sockthread *threadsock = (sockthread *)pthread;
     threadsock->closeSocketConnect();
