@@ -27,13 +27,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->splitter->setStretchFactor(0,6);
     ui->splitter->setStretchFactor(1,4);
 
-    ReadHistorySettings();
+    mapIpAndContent.clear();
 
-    ui->listWidget_cmdlist->clear();
-    ui->listWidget_cmdlist->addItems(show_cmdlist);
+    ReadHistorySettings();
+    UpdateShowCmdListWidget(show_cmdlist);
 
     ui->comboBox_findlist->addItems(commonuselist);
-    updateListWidgetColor();
     publicSets();
     PopMenu();
     autosendstr.clear();
@@ -98,6 +97,8 @@ void MainWindow::ReadHistorySettings()
     commonuselist.clear();
     commonuselist = m_settings.value("comboBox_findlist").toStringList();
 
+    QMap<QString, QVariant> maptmp = m_settings.value("mapIpAndContent").toMap();
+//    mapIpAndContent
 //    ui->lineEdit->setText(m_settings.value("LineEditIP").toString());
     ui->checkBox_autosend->setChecked(m_settings.value("checkBox_autosend").toBool());
     this->restoreGeometry(m_settings.value("Cmdserver").toByteArray());
@@ -125,7 +126,14 @@ void MainWindow::WriteCurrentSettings()
     m_settings.setValue("listWidget_cmdlist",show_cmdlist);
     m_settings.setValue("comboBox_findlist",commonuselist);
     m_settings.setValue("checkBox_autosend",ui->checkBox_autosend->isChecked());
+
+
     m_settings.setValue("Cmdserver", this->saveGeometry());
+
+//    QSettings::SettingsMap
+//    QSettings::SettingsMap
+//    m_settings.setValue("mapIpAndContent",mapIpAndContent);
+
 
 }
 
@@ -315,13 +323,10 @@ void MainWindow::updateListWidgetColor()
     for(loop = 0; loop < count;loop++)
     {
         if(loop % 2 )
-            ui->listWidget_cmdlist->item(loop)->setForeground(QColor(Qt::red));
+            ui->listWidget_cmdlist->item(loop)->setForeground(QColor(Qt::black));
         else
             ui->listWidget_cmdlist->item(loop)->setForeground(QColor(Qt::blue));
-
-//        ui->listWidget_cmdlist->item(loop)->setSizeHint(QSize(0,0));
     }
-//    ui->listWidget_cmdlist->setShown(true);
 }
 
 void MainWindow::on_pushButton_collect_clicked()
@@ -347,11 +352,9 @@ void MainWindow::on_pushButton_collect_clicked()
     }
 
     show_cmdlist << currenttext;
-    ui->listWidget_cmdlist->clear();
-    ui->listWidget_cmdlist->addItems(show_cmdlist);
-    ui->listWidget_cmdlist->sortItems();
-//    ui->listWidget_cmdlist->setTextElideMode(Qt::ElideRight);
-    updateListWidgetColor();
+
+    UpdateShowCmdListWidget(show_cmdlist);
+
 }
 
 void MainWindow::on_pushButton_clear_clicked()
@@ -392,11 +395,7 @@ void MainWindow::procFindList(QString findstr)
 {
     if(ui->comboBox_findlist->currentText().simplified().length() == 0)
     {
-        ui->listWidget_cmdlist->clear();
-        ui->listWidget_cmdlist->addItems(show_cmdlist);
-        ui->listWidget_cmdlist->sortItems();
-//        ui->listWidget_cmdlist->setTextElideMode(Qt::ElideRight);
-        updateListWidgetColor();
+        UpdateShowCmdListWidget(show_cmdlist);
         return;
     }
     searchlist.clear();
@@ -415,19 +414,8 @@ void MainWindow::procFindList(QString findstr)
             searchlist << str;
         }
     }
-//    int count = ui->listWidget_cmdlist->count();
-//    int loop = 0;
-//    for(loop = 0; loop < count;loop++)
-//    {
-//        if(ui->listWidget_cmdlist->item(loop)->text().contains(findstr))
-//            searchlist << ui->listWidget_cmdlist->item(loop)->text();
-//    }
 
-    ui->listWidget_cmdlist->clear();
-    ui->listWidget_cmdlist->addItems(searchlist);
-    ui->listWidget_cmdlist->sortItems();
-    ui->listWidget_cmdlist->setTextElideMode(Qt::ElideRight);
-    updateListWidgetColor();
+    UpdateShowCmdListWidget(searchlist);
 
 }
 
@@ -584,4 +572,23 @@ void MainWindow::on_pushButton_paste_clicked()
 {
     QClipboard *clipboard = QApplication::clipboard();
     ui->textEdit->setText(clipboard->text());
+}
+
+
+void MainWindow::UpdateShowCmdListWidget(QStringList list)
+{
+    ui->listWidget_cmdlist->clear();
+    foreach (QString item, list) {
+        QListWidgetItem *lst = new QListWidgetItem(QIcon("images/floder.png"),
+                                                           item,
+                                                           ui->listWidget_cmdlist);
+        QStringList countstr = item.split("\n");
+        int showheight = (countstr.size() >= 4) ? 4 : countstr.size();
+        if(showheight == 0)
+            showheight = 1;
+        lst->setSizeHint(QSize(200,showheight * 20));
+
+    }
+    ui->listWidget_cmdlist->sortItems();
+//    updateListWidgetColor();
 }

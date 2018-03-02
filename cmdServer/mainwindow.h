@@ -6,6 +6,7 @@
 #include <sockthread.h>
 #include <QListWidget>
 #include <QTimer>
+#include <QMap>
 
 namespace Ui {
 class MainWindow;
@@ -31,6 +32,7 @@ public:
     void wheelEvent(QWheelEvent *event);
     void keyPressEvent(QKeyEvent *keyevt);
     void keyReleaseEvent(QKeyEvent * keyevt);
+    void UpdateShowCmdListWidget(QStringList list);
 
 
 private:
@@ -93,6 +95,8 @@ private:
     Ui::MainWindow *ui;
 
     QStringList ComBoxIPList;
+
+    QMap<QString, QStringList> mapIpAndContent;
 };
 
 #endif // MAINWINDOW_H

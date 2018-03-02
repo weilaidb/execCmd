@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat Feb 10 21:44:52 2018
+** Created: Sat Mar 3 02:46:29 2018
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -40,6 +40,14 @@ public:
     QGridLayout *gridLayout;
     QSplitter *splitter;
     QWidget *layoutWidget;
+    QVBoxLayout *verticalLayout_2;
+    QSplitter *splitter_4;
+    QSplitter *splitter_3;
+    QLabel *label_3;
+    QCheckBox *checkBox_autosend;
+    QComboBox *comboBox_findlist;
+    QListWidget *listWidget_cmdlist;
+    QWidget *layoutWidget1;
     QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_2;
@@ -53,21 +61,13 @@ public:
     QPushButton *pushButton_paste;
     QPushButton *pushButton_clear;
     QPushButton *pushButton_collect;
-    QWidget *layoutWidget1;
-    QVBoxLayout *verticalLayout_2;
-    QSplitter *splitter_4;
-    QSplitter *splitter_3;
-    QLabel *label_3;
-    QCheckBox *checkBox_autosend;
-    QComboBox *comboBox_findlist;
-    QListWidget *listWidget_cmdlist;
     QStatusBar *statusBar;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(742, 397);
+        MainWindow->resize(796, 479);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -76,18 +76,66 @@ public:
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         splitter = new QSplitter(centralWidget);
         splitter->setObjectName(QString::fromUtf8("splitter"));
-        QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy.setHorizontalStretch(3);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(splitter->sizePolicy().hasHeightForWidth());
-        splitter->setSizePolicy(sizePolicy);
-        splitter->setFrameShape(QFrame::Panel);
-        splitter->setFrameShadow(QFrame::Raised);
         splitter->setOrientation(Qt::Horizontal);
-        splitter->setChildrenCollapsible(true);
         layoutWidget = new QWidget(splitter);
         layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        verticalLayout = new QVBoxLayout(layoutWidget);
+        verticalLayout_2 = new QVBoxLayout(layoutWidget);
+        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
+        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
+        verticalLayout_2->setContentsMargins(0, 0, 0, 0);
+        splitter_4 = new QSplitter(layoutWidget);
+        splitter_4->setObjectName(QString::fromUtf8("splitter_4"));
+        splitter_4->setOrientation(Qt::Vertical);
+        splitter_3 = new QSplitter(splitter_4);
+        splitter_3->setObjectName(QString::fromUtf8("splitter_3"));
+        splitter_3->setOrientation(Qt::Horizontal);
+        label_3 = new QLabel(splitter_3);
+        label_3->setObjectName(QString::fromUtf8("label_3"));
+        label_3->setMinimumSize(QSize(0, 0));
+        label_3->setMaximumSize(QSize(16777215, 30));
+        QFont font;
+        font.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
+        font.setPointSize(12);
+        font.setBold(false);
+        font.setWeight(50);
+        label_3->setFont(font);
+        splitter_3->addWidget(label_3);
+        checkBox_autosend = new QCheckBox(splitter_3);
+        checkBox_autosend->setObjectName(QString::fromUtf8("checkBox_autosend"));
+        checkBox_autosend->setFont(font);
+        splitter_3->addWidget(checkBox_autosend);
+        splitter_4->addWidget(splitter_3);
+        comboBox_findlist = new QComboBox(splitter_4);
+        comboBox_findlist->setObjectName(QString::fromUtf8("comboBox_findlist"));
+        comboBox_findlist->setMaximumSize(QSize(16777215, 30));
+        QFont font1;
+        font1.setFamily(QString::fromUtf8("Times New Roman"));
+        font1.setPointSize(14);
+        comboBox_findlist->setFont(font1);
+        comboBox_findlist->setEditable(true);
+        comboBox_findlist->setMaxVisibleItems(30);
+        splitter_4->addWidget(comboBox_findlist);
+
+        verticalLayout_2->addWidget(splitter_4);
+
+        listWidget_cmdlist = new QListWidget(layoutWidget);
+        listWidget_cmdlist->setObjectName(QString::fromUtf8("listWidget_cmdlist"));
+        QFont font2;
+        font2.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
+        font2.setPointSize(12);
+        font2.setBold(false);
+        font2.setItalic(false);
+        font2.setWeight(50);
+        listWidget_cmdlist->setFont(font2);
+        listWidget_cmdlist->setStyleSheet(QString::fromUtf8("selection-color: rgb(0, 255, 255);"));
+
+        verticalLayout_2->addWidget(listWidget_cmdlist);
+
+        splitter->addWidget(layoutWidget);
+        layoutWidget1 = new QWidget(splitter);
+        layoutWidget1->setObjectName(QString::fromUtf8("layoutWidget1"));
+        verticalLayout = new QVBoxLayout(layoutWidget1);
         verticalLayout->setSpacing(6);
         verticalLayout->setContentsMargins(11, 11, 11, 11);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
@@ -95,24 +143,19 @@ public:
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setSpacing(6);
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        label_2 = new QLabel(layoutWidget);
+        label_2 = new QLabel(layoutWidget1);
         label_2->setObjectName(QString::fromUtf8("label_2"));
-        QSizePolicy sizePolicy1(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(label_2->sizePolicy().hasHeightForWidth());
-        label_2->setSizePolicy(sizePolicy1);
+        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(label_2->sizePolicy().hasHeightForWidth());
+        label_2->setSizePolicy(sizePolicy);
         label_2->setMinimumSize(QSize(60, 16));
-        QFont font;
-        font.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
-        font.setPointSize(12);
-        font.setBold(false);
-        font.setWeight(50);
         label_2->setFont(font);
 
         horizontalLayout_2->addWidget(label_2);
 
-        comboBox = new QComboBox(layoutWidget);
+        comboBox = new QComboBox(layoutWidget1);
         comboBox->setObjectName(QString::fromUtf8("comboBox"));
         comboBox->setMinimumSize(QSize(251, 31));
         comboBox->setEditable(true);
@@ -122,7 +165,7 @@ public:
 
         verticalLayout->addLayout(horizontalLayout_2);
 
-        label = new QLabel(layoutWidget);
+        label = new QLabel(layoutWidget1);
         label->setObjectName(QString::fromUtf8("label"));
         label->setMinimumSize(QSize(131, 16));
         label->setMaximumSize(QSize(16777215, 30));
@@ -130,20 +173,15 @@ public:
 
         verticalLayout->addWidget(label);
 
-        textEdit = new QTextEdit(layoutWidget);
+        textEdit = new QTextEdit(layoutWidget1);
         textEdit->setObjectName(QString::fromUtf8("textEdit"));
         textEdit->setMaximumSize(QSize(16777215, 16777215));
-        QFont font1;
-        font1.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
-        font1.setPointSize(14);
-        font1.setBold(true);
-        font1.setWeight(75);
-        textEdit->setFont(font1);
-        textEdit->setStyleSheet(QString::fromUtf8("background-color: rgb(170, 227, 255);"));
+        textEdit->setFont(font);
+        textEdit->setStyleSheet(QString::fromUtf8(""));
 
         verticalLayout->addWidget(textEdit);
 
-        horizontalGroupBox = new QGroupBox(layoutWidget);
+        horizontalGroupBox = new QGroupBox(layoutWidget1);
         horizontalGroupBox->setObjectName(QString::fromUtf8("horizontalGroupBox"));
         horizontalLayout = new QHBoxLayout(horizontalGroupBox);
         horizontalLayout->setSpacing(6);
@@ -188,57 +226,6 @@ public:
 
         verticalLayout->addWidget(horizontalGroupBox);
 
-        splitter->addWidget(layoutWidget);
-        layoutWidget1 = new QWidget(splitter);
-        layoutWidget1->setObjectName(QString::fromUtf8("layoutWidget1"));
-        verticalLayout_2 = new QVBoxLayout(layoutWidget1);
-        verticalLayout_2->setSpacing(6);
-        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-        verticalLayout_2->setContentsMargins(0, 0, 0, 0);
-        splitter_4 = new QSplitter(layoutWidget1);
-        splitter_4->setObjectName(QString::fromUtf8("splitter_4"));
-        splitter_4->setOrientation(Qt::Vertical);
-        splitter_3 = new QSplitter(splitter_4);
-        splitter_3->setObjectName(QString::fromUtf8("splitter_3"));
-        splitter_3->setOrientation(Qt::Horizontal);
-        label_3 = new QLabel(splitter_3);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
-        label_3->setMinimumSize(QSize(0, 0));
-        label_3->setMaximumSize(QSize(16777215, 30));
-        label_3->setFont(font);
-        splitter_3->addWidget(label_3);
-        checkBox_autosend = new QCheckBox(splitter_3);
-        checkBox_autosend->setObjectName(QString::fromUtf8("checkBox_autosend"));
-        checkBox_autosend->setFont(font);
-        splitter_3->addWidget(checkBox_autosend);
-        splitter_4->addWidget(splitter_3);
-        comboBox_findlist = new QComboBox(splitter_4);
-        comboBox_findlist->setObjectName(QString::fromUtf8("comboBox_findlist"));
-        comboBox_findlist->setMaximumSize(QSize(16777215, 30));
-        QFont font2;
-        font2.setFamily(QString::fromUtf8("Times New Roman"));
-        font2.setPointSize(14);
-        comboBox_findlist->setFont(font2);
-        comboBox_findlist->setEditable(true);
-        comboBox_findlist->setMaxVisibleItems(30);
-        splitter_4->addWidget(comboBox_findlist);
-
-        verticalLayout_2->addWidget(splitter_4);
-
-        listWidget_cmdlist = new QListWidget(layoutWidget1);
-        listWidget_cmdlist->setObjectName(QString::fromUtf8("listWidget_cmdlist"));
-        QFont font3;
-        font3.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
-        font3.setPointSize(12);
-        font3.setBold(false);
-        font3.setItalic(false);
-        font3.setWeight(50);
-        listWidget_cmdlist->setFont(font3);
-        listWidget_cmdlist->setStyleSheet(QString::fromUtf8("selection-color: rgb(0, 255, 255);"));
-
-        verticalLayout_2->addWidget(listWidget_cmdlist);
-
         splitter->addWidget(layoutWidget1);
 
         gridLayout->addWidget(splitter, 0, 0, 1, 1);
@@ -256,6 +243,8 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "\345\221\275\344\273\244\345\256\242\346\210\267\347\253\257", 0, QApplication::UnicodeUTF8));
+        label_3->setText(QApplication::translate("MainWindow", "\345\221\275\344\273\244\345\210\227\350\241\250", 0, QApplication::UnicodeUTF8));
+        checkBox_autosend->setText(QApplication::translate("MainWindow", "\350\207\252\345\212\250\345\217\221\351\200\201", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("MainWindow", "IP\345\234\260\345\235\200", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "\350\257\267\350\276\223\345\205\245\346\211\247\350\241\214\345\221\275\344\273\244", 0, QApplication::UnicodeUTF8));
         pushButton_connect->setText(QApplication::translate("MainWindow", "\345\217\221\351\200\201", 0, QApplication::UnicodeUTF8));
@@ -265,8 +254,6 @@ public:
         pushButton_paste->setText(QApplication::translate("MainWindow", "\347\262\230\350\264\264", 0, QApplication::UnicodeUTF8));
         pushButton_clear->setText(QApplication::translate("MainWindow", "\346\270\205\347\251\272", 0, QApplication::UnicodeUTF8));
         pushButton_collect->setText(QApplication::translate("MainWindow", "\346\224\266\350\227\217", 0, QApplication::UnicodeUTF8));
-        label_3->setText(QApplication::translate("MainWindow", "\345\221\275\344\273\244\345\210\227\350\241\250", 0, QApplication::UnicodeUTF8));
-        checkBox_autosend->setText(QApplication::translate("MainWindow", "\350\207\252\345\212\250\345\217\221\351\200\201", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
