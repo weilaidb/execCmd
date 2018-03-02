@@ -19,18 +19,20 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     pthreadsock(NULL),
     uselistTimer(NULL),
+    savetimer(NULL),
     bCtrlKeyPressed(FALSE)
 {
     ui->setupUi(this);
 
 //splitte·Ö¸î±ÈÀý
-    ui->splitter->setStretchFactor(0,6);
-    ui->splitter->setStretchFactor(1,4);
+    ui->splitter->setStretchFactor(0,5);
+    ui->splitter->setStretchFactor(1,5);
 
     mapIpAndContent.clear();
+    map_showcmd.clear();
 
     ReadHistorySettings();
-    UpdateShowCmdListWidget(show_cmdlist);
+    UpdateShowCmdListWidgetByMap();
 
     ui->comboBox_findlist->addItems(commonuselist);
     publicSets();
@@ -43,6 +45,13 @@ MainWindow::MainWindow(QWidget *parent) :
     uselistTimer = new QTimer();
     uselistTimer->start(4000);
     connect(uselistTimer, SIGNAL(timeout()), this, SLOT(procUseListTimerOut()));
+
+
+    savetimer = new QTimer();
+    savetimer->start(10000);
+    connect(savetimer, SIGNAL(timeout()), this, SLOT(procSaveTimerOut()));
+
+
 //    ui->comboBox_findlist->setShortcutEnabled();
 //    ui->comboBox_findlist->setShortcutAutoRepeat();
 //     ui->udpSendButton->setShortcut(tr("Alt+F"));
@@ -92,12 +101,21 @@ void MainWindow::ReadHistorySettings()
     QSettings m_settings("weilaidb.com.cn", "cmdserver");
     ui->comboBox->addItems(m_settings.value("ComBoxIPList").toStringList());
     ComBoxIPList = m_settings.value("ComBoxIPList").toStringList();
-    show_cmdlist.clear();
-    show_cmdlist = m_settings.value("listWidget_cmdlist").toStringList();
+    ui->comboBox->setEditText(m_settings.value("curkey").toString());
+//    show_cmdlist.clear();
+//    show_cmdlist = m_settings.value("listWidget_cmdlist").toStringList();
     commonuselist.clear();
     commonuselist = m_settings.value("comboBox_findlist").toStringList();
 
-    QMap<QString, QVariant> maptmp = m_settings.value("mapIpAndContent").toMap();
+    QMap<QString, QVariant> maptmp = m_settings.value("map_showcmd").toMap();
+
+//map_showcmd
+    QMapIterator<QString, QVariant> i(maptmp);
+    while (i.hasNext()) {
+        QString key = i.next().key();
+        QVariant val = i.value();
+        map_showcmd.insert(key, val.toStringList());
+    }
 //    mapIpAndContent
 //    ui->lineEdit->setText(m_settings.value("LineEditIP").toString());
     ui->checkBox_autosend->setChecked(m_settings.value("checkBox_autosend").toBool());
@@ -116,6 +134,7 @@ void MainWindow::WriteCurrentSettings()
 {
     QSettings m_settings("weilaidb.com.cn", "cmdserver");
     m_settings.setValue("ComBoxIPList",ComBoxIPList);
+    m_settings.setValue("curkey", ui->comboBox->currentText());
 //    show_cmdlist.clear();
 //    int count = ui->listWidget_cmdlist->count();
 //    int loop = 0;
@@ -124,6 +143,18 @@ void MainWindow::WriteCurrentSettings()
 //        cmdlist << ui->listWidget_cmdlist->item(loop)->text();
 //    }
     m_settings.setValue("listWidget_cmdlist",show_cmdlist);
+    QMap<QString, QVariant> maptmp;
+    maptmp.clear();
+    QMapIterator<QString, QStringList> i(map_showcmd);
+    while (i.hasNext()) {
+        QString key = i.next().key();
+        QVariant val = i.value();
+        maptmp.insert(key, val);
+    }
+
+    m_settings.setValue("map_showcmd", maptmp);
+
+
     m_settings.setValue("comboBox_findlist",commonuselist);
     m_settings.setValue("checkBox_autosend",ui->checkBox_autosend->isChecked());
 
@@ -331,29 +362,50 @@ void MainWindow::updateListWidgetColor()
 
 void MainWindow::on_pushButton_collect_clicked()
 {
+    qDebug() << "on_pushButton_collect_clicked";
     if(ui->textEdit->toPlainText().length() == 0)
     {
         return;
     }
+    if(getMapKey().isEmpty())
+    {
+        qDebug() << "get map key empty!!";
+        return;
+    }
+
+    QMapIterator<QString, QStringList> i(map_showcmd);
+
+    quint8 found = FALSE;
+    QStringList findlist;
+    findlist.clear();
+    while (i.hasNext()) {
+        if(i.next().key() == getMapKey())
+        {
+            qDebug() << i.value();
+            found = TRUE;
+            findlist = i.value();
+            break;
+        }
+    }
+    if(found == FALSE)
+    {
+        QStringList nulllist;
+        nulllist.clear();
+        map_showcmd.insert(getMapKey(), nulllist);
+        findlist = nulllist;
+    }
+
     QString currenttext = ui->textEdit->toPlainText();
-//    currenttext.replace("\n"," && ");
 
-//    cmdlist.clear();
-//    int count = ui->listWidget_cmdlist->count();
-//    int loop = 0;
-//    for(loop = 0; loop < count;loop++)
-//    {
-//        cmdlist << ui->listWidget_cmdlist->item(loop)->text();
-//    }
-
-    foreach (QString str, show_cmdlist) {
+    foreach (QString str, findlist) {
         if(str == currenttext)
             return;
     }
 
-    show_cmdlist << currenttext;
+    findlist << currenttext;
+    map_showcmd.insert(getMapKey(), findlist);
 
-    UpdateShowCmdListWidget(show_cmdlist);
+    UpdateShowCmdListWidgetByMap();
 
 }
 
@@ -395,14 +447,15 @@ void MainWindow::procFindList(QString findstr)
 {
     if(ui->comboBox_findlist->currentText().simplified().length() == 0)
     {
-        UpdateShowCmdListWidget(show_cmdlist);
+        UpdateShowCmdListWidgetByMap();
         return;
     }
     searchlist.clear();
     QStringList splitlist = findstr.split(QRegExp("\\s"));
     int size = splitlist.size();
     int count = 0;
-    foreach (QString str, show_cmdlist) {
+    QStringList curcmdlist = GetCurrentMapValue();
+    foreach (QString str, curcmdlist) {
         count = 0;
         foreach (QString splitstr, splitlist) {
             if(!str.contains(splitstr, Qt::CaseInsensitive))
@@ -447,9 +500,18 @@ void MainWindow::PopMenu()
 
 void MainWindow::DelItem()
 {
-    show_cmdlist.removeOne(ui->listWidget_cmdlist->currentItem()->text());
-    ui->listWidget_cmdlist->takeItem(ui->listWidget_cmdlist->currentRow());
-    ui->listWidget_cmdlist->sortItems();
+    QStringList cmdlist = GetCurrentMapValue();
+    cmdlist.removeOne(ui->listWidget_cmdlist->currentItem()->text());
+    map_showcmd.insert(getMapKey(), cmdlist);
+    if(ui->listWidget_cmdlist->count() == 1)
+    {
+        ui->listWidget_cmdlist->clear();
+    }
+    else
+    {
+        ui->listWidget_cmdlist->takeItem(ui->listWidget_cmdlist->currentRow());
+        ui->listWidget_cmdlist->sortItems();
+    }
 }
 
 void MainWindow::procUseListTimerOut()
@@ -591,4 +653,91 @@ void MainWindow::UpdateShowCmdListWidget(QStringList list)
     }
     ui->listWidget_cmdlist->sortItems();
 //    updateListWidgetColor();
+}
+
+void MainWindow::UpdateShowCmdListWidgetByMap()
+{
+    ui->listWidget_cmdlist->clear();
+    QMapIterator<QString, QStringList> i(map_showcmd);
+
+    quint8 found = FALSE;
+    QStringList findlist;
+    findlist.clear();
+    while (i.hasNext()) {
+        if(i.next().key() == getMapKey())
+        {
+            qDebug() << i.value();
+            found = TRUE;
+            findlist = i.value();
+            break;
+        }
+    }
+    if(found == FALSE)
+    {
+       return;
+    }
+
+    foreach (QString item, findlist) {
+        QListWidgetItem *lst = new QListWidgetItem(QIcon("images/floder.png"),
+                                                           item,
+                                                           ui->listWidget_cmdlist);
+        QStringList countstr = item.split("\n");
+        int showheight = (countstr.size() >= 4) ? 4 : countstr.size();
+        if(showheight == 0)
+            showheight = 1;
+        lst->setSizeHint(QSize(200,showheight * 20));
+
+    }
+    ui->listWidget_cmdlist->sortItems();
+}
+
+
+QStringList MainWindow::GetCurrentMapValue()
+{
+    QMapIterator<QString, QStringList> i(map_showcmd);
+
+    QStringList findlist;
+    findlist.clear();
+    while (i.hasNext()) {
+        if(i.next().key() == getMapKey())
+        {
+            qDebug() << i.value();
+            findlist = i.value();
+            break;
+        }
+    }
+    return findlist;
+}
+
+void MainWindow::procSaveTimerOut()
+{
+    qDebug() << "procSaveTimerOut...";
+//    static int orgcount = show_cmdlist.size();
+//    if(show_cmdlist.size() == orgcount)
+//    {
+//        return;
+//    }
+//    orgcount = show_cmdlist.size();
+    WriteCurrentSettings();
+}
+
+
+QString MainWindow::getMapKey()
+{
+    return ui->comboBox->currentText().simplified();
+}
+
+void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
+{
+    if(arg1.isEmpty())
+    {
+        ui->listWidget_cmdlist->clear();
+        return;
+    }
+    UpdateShowCmdListWidgetByMap();
+}
+
+void MainWindow::on_comboBox_editTextChanged(const QString &arg1)
+{
+    on_comboBox_currentIndexChanged(arg1);
 }

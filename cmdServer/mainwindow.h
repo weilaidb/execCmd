@@ -33,7 +33,8 @@ public:
     void keyPressEvent(QKeyEvent *keyevt);
     void keyReleaseEvent(QKeyEvent * keyevt);
     void UpdateShowCmdListWidget(QStringList list);
-
+    void UpdateShowCmdListWidgetByMap();
+    QStringList GetCurrentMapValue();
 
 private:
     bool bCtrlKeyPressed;
@@ -43,11 +44,13 @@ private:
     QAction * Act_Normal;
 
 private:
+    QMap<QString, QStringList> map_showcmd;
     QStringList show_cmdlist;
     QStringList searchlist;
     QString autosendstr;
     QStringList commonuselist;
     QTimer *uselistTimer;
+    QTimer *savetimer;
 private slots:
     void on_connecting_sendstr(QString sendstr);
     void on_pushButton_connect_clicked();
@@ -74,6 +77,10 @@ private slots:
 
     void procUseListTimerOut();
 
+    void procSaveTimerOut();
+
+    QString getMapKey();
+
     void procFindShortCut();
 
     void procClearShortCut();
@@ -85,6 +92,10 @@ private slots:
     void procComBoxIpList(QString ipaddr);
     void on_pushButton_paste_clicked();
 
+    void on_comboBox_currentIndexChanged(const QString &arg1);
+
+    void on_comboBox_editTextChanged(const QString &arg1);
+
 private:
     QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串
@@ -95,6 +106,7 @@ private:
     Ui::MainWindow *ui;
 
     QStringList ComBoxIPList;
+    QString curkey;
 
     QMap<QString, QStringList> mapIpAndContent;
 };

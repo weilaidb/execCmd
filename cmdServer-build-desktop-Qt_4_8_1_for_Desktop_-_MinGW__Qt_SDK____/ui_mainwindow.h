@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat Mar 3 02:46:29 2018
+** Created: Sat Mar 3 03:11:56 2018
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -189,7 +189,7 @@ public:
         horizontalLayout->setObjectName(QString::fromUtf8("horizontalLayout"));
         pushButton_connect = new QPushButton(horizontalGroupBox);
         pushButton_connect->setObjectName(QString::fromUtf8("pushButton_connect"));
-        pushButton_connect->setMinimumSize(QSize(91, 41));
+        pushButton_connect->setMinimumSize(QSize(60, 41));
         pushButton_connect->setMaximumSize(QSize(107, 41));
 
         horizontalLayout->addWidget(pushButton_connect);
@@ -204,21 +204,23 @@ public:
 
         pushButton_paste = new QPushButton(horizontalGroupBox);
         pushButton_paste->setObjectName(QString::fromUtf8("pushButton_paste"));
-        pushButton_paste->setMinimumSize(QSize(91, 41));
+        pushButton_paste->setMinimumSize(QSize(60, 41));
         pushButton_paste->setMaximumSize(QSize(106, 41));
 
         horizontalLayout->addWidget(pushButton_paste);
 
         pushButton_clear = new QPushButton(horizontalGroupBox);
         pushButton_clear->setObjectName(QString::fromUtf8("pushButton_clear"));
-        pushButton_clear->setMinimumSize(QSize(91, 41));
+        pushButton_clear->setMinimumSize(QSize(60, 41));
         pushButton_clear->setMaximumSize(QSize(106, 41));
 
         horizontalLayout->addWidget(pushButton_clear);
 
         pushButton_collect = new QPushButton(horizontalGroupBox);
         pushButton_collect->setObjectName(QString::fromUtf8("pushButton_collect"));
-        pushButton_collect->setMinimumSize(QSize(91, 41));
+        sizePolicy.setHeightForWidth(pushButton_collect->sizePolicy().hasHeightForWidth());
+        pushButton_collect->setSizePolicy(sizePolicy);
+        pushButton_collect->setMinimumSize(QSize(60, 41));
         pushButton_collect->setMaximumSize(QSize(106, 41));
 
         horizontalLayout->addWidget(pushButton_collect);

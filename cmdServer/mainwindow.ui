@@ -211,7 +211,7 @@
             <widget class="QPushButton" name="pushButton_connect">
              <property name="minimumSize">
               <size>
-               <width>91</width>
+               <width>60</width>
                <height>41</height>
               </size>
              </property>
@@ -252,7 +252,7 @@
             <widget class="QPushButton" name="pushButton_paste">
              <property name="minimumSize">
               <size>
-               <width>91</width>
+               <width>60</width>
                <height>41</height>
               </size>
              </property>
@@ -271,7 +271,7 @@
             <widget class="QPushButton" name="pushButton_clear">
              <property name="minimumSize">
               <size>
-               <width>91</width>
+               <width>60</width>
                <height>41</height>
               </size>
              </property>
@@ -288,9 +288,15 @@
            </item>
            <item>
             <widget class="QPushButton" name="pushButton_collect">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="minimumSize">
               <size>
-               <width>91</width>
+               <width>60</width>
                <height>41</height>
               </size>
              </property>

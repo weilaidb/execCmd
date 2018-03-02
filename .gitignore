@@ -1,3 +1,4 @@
 /cmdServer-build-desktop-Qt_4_8_1_for_Desktop_-_MinGW__Qt_SDK____/debug/*.o
 /cmdServer-build-desktop-Qt_4_8_1_for_Desktop_-_MinGW__Qt_SDK____/release/*.o
 /linux_cmdserver/tmp/*.o
+/git0.log
