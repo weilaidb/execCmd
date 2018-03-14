@@ -219,13 +219,19 @@ void MainWindow::on_connecting_sendstr(QString sendstr)
 
 void MainWindow::procComBoxIpList(QString ipaddr)
 {
+    foreach (QString inner, ComBoxIPList) {
+        if(inner == ipaddr)
+        {
+            return;
+        }
+    }
     ComBoxIPList.append(ipaddr);
     ComBoxIPList.sort();
     ComBoxIPList.removeDuplicates();
+
     ui->comboBox->clear();
     ui->comboBox->addItems(ComBoxIPList);
     ui->comboBox->setEditText(ipaddr);
-
 }
 
 
@@ -569,7 +575,11 @@ void MainWindow::procSendCmdShortCut()
 {
     qDebug() << "procSendCmdShortCut";
     if(ui->pushButton_connect->isEnabled())
+    {
+        autosendstr.clear();
+        autosendstr = ui->textEdit->toPlainText();
         on_pushButton_connect_clicked();
+    }
 }
 
 
@@ -740,4 +750,9 @@ void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
 void MainWindow::on_comboBox_editTextChanged(const QString &arg1)
 {
     on_comboBox_currentIndexChanged(arg1);
+}
+
+void MainWindow::on_comboBox_findlist_currentIndexChanged(const QString &arg1)
+{
+
 }

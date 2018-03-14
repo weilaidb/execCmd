@@ -114,6 +114,7 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
         isCmd = TRUE;
     }
 
+
     //python.exe
     //    LPCSTR exepath = "explorer.exe";
     LPCSTR exepath = "";
@@ -125,15 +126,17 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
         cltmsg = "/c " + cltmsg.replace("cmd", "");
         filepath = cltmsg.toAscii().data();
         filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
-        ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_HIDE);
+        ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_NORMAL);
     }
     else
     {
         //    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
         ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWNORMAL);
     }
+    QString showtext = (QString("%1 %2").arg(exepath).arg(QString::fromUtf8(filepath)));
+    ui->statusBar->showMessage(showtext);
+    ui->label_receive->setText(showtext);
 
-    ui->statusBar->showMessage(QString("%1 %2").arg(exepath).arg(QString::fromUtf8(filepath)));
     sockthread *threadsock = (sockthread *)pthread;
     threadsock->closeSocketConnect();
 
