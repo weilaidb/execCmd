@@ -87,6 +87,9 @@ private slots:
 
     void procSendCmdShortCut();
 
+    QString filterInvalidText(QString orgt);
+    void filterText();
+
     void procitemSelectionChanged();
 
     void procComBoxIpList(QString ipaddr);

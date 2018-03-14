@@ -237,11 +237,13 @@ void MainWindow::procComBoxIpList(QString ipaddr)
 
 void MainWindow::on_pushButton_connect_clicked()
 {
+    filterText();
     QString ipaddr = ui->comboBox->currentText();
     if(0 != CheckIPAddr(ipaddr))
     {
         return;
     }
+
     procComBoxIpList(ipaddr);
 
     ui->pushButton_connect->setEnabled(false);
@@ -379,6 +381,8 @@ void MainWindow::on_pushButton_collect_clicked()
         return;
     }
 
+    QString oldstring = ui->textEdit->toPlainText();
+
     QMapIterator<QString, QStringList> i(map_showcmd);
 
     quint8 found = FALSE;
@@ -412,6 +416,8 @@ void MainWindow::on_pushButton_collect_clicked()
     map_showcmd.insert(getMapKey(), findlist);
 
     UpdateShowCmdListWidgetByMap();
+
+    ui->textEdit->setText(oldstring); //恢复原来文本的显示
 
 }
 
@@ -576,10 +582,68 @@ void MainWindow::procSendCmdShortCut()
     qDebug() << "procSendCmdShortCut";
     if(ui->pushButton_connect->isEnabled())
     {
-        autosendstr.clear();
-        autosendstr = ui->textEdit->toPlainText();
         on_pushButton_connect_clicked();
     }
+}
+
+void MainWindow::filterText()
+{
+    autosendstr.clear();
+    autosendstr = filterInvalidText(ui->textEdit->toPlainText());
+    qDebug() << "autosendstr:" << autosendstr;
+}
+
+QString MainWindow::filterInvalidText(QString orgt)
+{
+    //过滤如【,[,# 开始的内容
+    QStringList list = orgt.split("\n");
+    QString result = "";
+    int lastline = 0;
+    foreach (QString line, list) {
+        QString dealline = line.simplified();
+        if(dealline.contains(QRegExp("^\\#"))
+                ||dealline.contains(QRegExp("^\\["))
+            )
+        {
+            continue;
+        }
+
+
+#define BREAKSIGN  0x3010  // 跳过此符号 【  unicode编码
+        ushort uni = 0;
+        int nCount = dealline.count();
+        for(int i = 0 ; i < nCount ; i++)
+        {
+            QChar cha = dealline.at(i);
+            uni = cha.unicode();
+//            qDebug() << "uni:" << uni;
+            //查编码网址 http://www.qqxiuzi.cn/bianma/zifuji.php
+            if(uni == BREAKSIGN) // unicode编码
+            {
+                qDebug() << "break uni:" << uni;
+                break;
+            }
+            if(uni >= 0x4E00 && uni <= 0x9FA5)
+            {
+                //这个字符是中文
+            }
+        }
+//        qDebug() << "uni last:" << uni;
+        if(uni == BREAKSIGN)// unicode编码
+        {
+            continue;
+        }
+
+        if(++lastline == list.size())
+        {
+            result += line;
+        }
+        else
+        {
+            result += line + "\n";
+        }
+    }
+    return result;
 }
 
 

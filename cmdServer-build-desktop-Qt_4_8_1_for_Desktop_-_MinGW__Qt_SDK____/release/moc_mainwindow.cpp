@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Wed Mar 14 21:57:03 2018
+** Created: Wed Mar 14 22:58:21 2018
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      25,   14, // methods
+      27,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -50,12 +50,14 @@ static const uint qt_meta_data_MainWindow[] = {
      455,   11,   11,   11, 0x08,
      474,   11,   11,   11, 0x08,
      494,   11,   11,   11, 0x08,
-     516,   11,   11,   11, 0x08,
-     543,   83,   11,   11, 0x08,
-     569,   11,   11,   11, 0x08,
-     604,  599,   11,   11, 0x08,
-     645,  599,   11,   11, 0x08,
-     682,  599,   11,   11, 0x08,
+     521,  516,  435,   11, 0x08,
+     548,   11,   11,   11, 0x08,
+     561,   11,   11,   11, 0x08,
+     588,   83,   11,   11, 0x08,
+     614,   11,   11,   11, 0x08,
+     649,  644,   11,   11, 0x08,
+     690,  644,   11,   11, 0x08,
+     727,  644,   11,   11, 0x08,
 
        0        // eod
 };
@@ -75,7 +77,8 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "procUseListTimerOut()\0procSaveTimerOut()\0"
     "QString\0getMapKey()\0procFindShortCut()\0"
     "procClearShortCut()\0procSendCmdShortCut()\0"
-    "procitemSelectionChanged()\0"
+    "orgt\0filterInvalidText(QString)\0"
+    "filterText()\0procitemSelectionChanged()\0"
     "procComBoxIpList(QString)\0"
     "on_pushButton_paste_clicked()\0arg1\0"
     "on_comboBox_currentIndexChanged(QString)\0"
@@ -109,12 +112,15 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 16: _t->procFindShortCut(); break;
         case 17: _t->procClearShortCut(); break;
         case 18: _t->procSendCmdShortCut(); break;
-        case 19: _t->procitemSelectionChanged(); break;
-        case 20: _t->procComBoxIpList((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 21: _t->on_pushButton_paste_clicked(); break;
-        case 22: _t->on_comboBox_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 23: _t->on_comboBox_editTextChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 24: _t->on_comboBox_findlist_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 19: { QString _r = _t->filterInvalidText((*reinterpret_cast< QString(*)>(_a[1])));
+            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
+        case 20: _t->filterText(); break;
+        case 21: _t->procitemSelectionChanged(); break;
+        case 22: _t->procComBoxIpList((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 23: _t->on_pushButton_paste_clicked(); break;
+        case 24: _t->on_comboBox_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 25: _t->on_comboBox_editTextChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 26: _t->on_comboBox_findlist_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -152,9 +158,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 25)
+        if (_id < 27)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 25;
+        _id -= 27;
     }
     return _id;
 }
