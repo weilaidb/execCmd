@@ -101,6 +101,8 @@ private slots:
 
     void on_comboBox_findlist_currentIndexChanged(const QString &arg1);
 
+    void on_pushButton_clicked();
+
 private:
     QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串
