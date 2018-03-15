@@ -417,6 +417,8 @@ void MainWindow::on_pushButton_collect_clicked()
 
     UpdateShowCmdListWidgetByMap();
 
+    procFindList(ui->comboBox_findlist->currentText());
+
     ui->textEdit->setText(oldstring); //恢复原来文本的显示
 
 }
@@ -424,6 +426,7 @@ void MainWindow::on_pushButton_collect_clicked()
 void MainWindow::on_pushButton_clear_clicked()
 {
     ui->textEdit->clear();
+    ui->textEdit->setFocus();
 }
 
 void MainWindow::procDoubleClickItem(QListWidgetItem * item)
