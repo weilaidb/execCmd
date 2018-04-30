@@ -126,12 +126,12 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
         cltmsg = "/c " + cltmsg.replace("cmd", "");
         filepath = cltmsg.toAscii().data();
         filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
-        ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_NORMAL);
+        ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
     }
     else
     {
         //    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
-        ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWNORMAL);
+        ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWMAXIMIZED);
     }
     QString showtext = (QString("%1 %2").arg(exepath).arg(QString::fromUtf8(filepath)));
     ui->statusBar->showMessage(showtext);

@@ -68,6 +68,10 @@ MainWindow::MainWindow(QWidget *parent) :
      SendCmdShortCut->setKey(tr("Ctrl+S"));
      connect(SendCmdShortCut, SIGNAL(activated()),this,SLOT(procSendCmdShortCut()));
 
+
+//     setPlaceholderText()设置提示文字
+//     QLineEdit *edit;
+//     edit->setPlaceholderText("niahoma");
 }
 
 MainWindow::~MainWindow()
