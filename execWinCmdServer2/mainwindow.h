@@ -30,10 +30,12 @@ public:
 public:
     int InitServer( QString ipaddr, quint16 listenport);
     void closeallclientsocket();
+    void showversion();
 
 private slots:
     void procClientMessage();
     void readfromremote(QString cltmsg, void * pthread);
+    void singstep(const char *org, bool isCmd, QString single);
 
 private:
     Ui::MainWindow *ui;

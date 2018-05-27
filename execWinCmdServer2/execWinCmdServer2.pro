@@ -21,7 +21,8 @@ SOURCES += main.cpp\
 HEADERS  += mainwindow.h \
     sockthread.h \
     msgtipsautoshut.h \
-    msgtips.h
+    msgtips.h \
+    version.h
 
 FORMS    += mainwindow.ui
 

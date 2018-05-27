@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QProcess>
 #include <windows.h>
+#include <version.h>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -34,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(trayIcon,SIGNAL(activated(QSystemTrayIcon::ActivationReason)),this,SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 #endif
+
+    showversion();
 }
 
 MainWindow::~MainWindow()
@@ -108,34 +112,48 @@ void MainWindow::procClientMessage()
 void MainWindow::readfromremote(QString cltmsg, void * pthread)
 {
     qDebug() << (QString("read clt msg:%1").arg(cltmsg.toUtf8().data()));
-    bool isCmd = FALSE;
-    if(cltmsg.contains("cmd") && cltmsg.simplified() != "cmd")
-    {
-        isCmd = TRUE;
-    }
+
 
 
     //python.exe
     //    LPCSTR exepath = "explorer.exe";
     LPCSTR exepath = "";
-    LPCSTR filepath = cltmsg.toAscii().data();
-    LPCSTR filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
+//    LPCSTR filepath = cltmsg.toAscii().data();
 
-    if(isCmd)
-    {
-        cltmsg = "/c " + cltmsg.replace("cmd", "");
-        filepath = cltmsg.toAscii().data();
-        filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
-        ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
+    QStringList splitdata = cltmsg.split('\n');
+    foreach (QString single, splitdata) {
+        if(single.simplified().length() == 0)
+            continue;
+        bool isCmd = FALSE;
+        if(single.contains("cmd") && single.simplified() != "cmd")
+        {
+            isCmd = TRUE;
+        }
+        LPCSTR filepath = single.toAscii().data();
+        singstep(filepath, isCmd, single);
+        QString showtext = (QString("%1 %2").arg(exepath).arg(QString::fromUtf8(filepath)));
+        ui->statusBar->showMessage(showtext);
+        ui->label_receive->setText(showtext);
     }
-    else
-    {
-        //    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
-        ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWMAXIMIZED);
-    }
-    QString showtext = (QString("%1 %2").arg(exepath).arg(QString::fromUtf8(filepath)));
-    ui->statusBar->showMessage(showtext);
-    ui->label_receive->setText(showtext);
+
+
+//    LPCSTR filepath2 = QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
+//    qDebug() << "filepath2:" << QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
+//    if(isCmd)
+//    {
+//        cltmsg = "/c " + cltmsg.replace("cmd", "");
+//        filepath = cltmsg.toAscii().data();
+//        filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
+//        ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
+//    }
+//    else
+//    {
+//        //    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
+//        ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWMAXIMIZED);
+//    }
+
+
+
 
     sockthread *threadsock = (sockthread *)pthread;
     threadsock->closeSocketConnect();
@@ -219,3 +237,28 @@ void MainWindow::closeEvent(QCloseEvent *event)
     event->ignore();
     this->hide();
 }
+
+void MainWindow::showversion()
+{
+    ui->statusBar->showMessage(QString("version %1").arg(VERSION));
+}
+
+void MainWindow::singstep(const char *org,bool isCmd,QString single)
+{
+    LPCSTR filepath = LPCSTR(org);
+    LPCSTR filepath2 = QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
+    qDebug() << "filepath2:" << QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
+    if(isCmd)
+    {
+        single = "/c " + single.replace("cmd", "");
+        filepath = single.toAscii().data();
+        filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
+        ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
+    }
+    else
+    {
+        //    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
+        ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWMAXIMIZED);
+    }
+}
+
