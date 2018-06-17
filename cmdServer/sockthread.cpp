@@ -101,6 +101,7 @@ void sockthread::updateReadMsgProgress()
         if((clientConnection->bytesAvailable() >= sizeof(qint64)*1)){
             in>>TotalReadBytes;
 //            bytesReceived += sizeof(qint64)*1;
+//            qDebug() << "TotalReadBytes   :"<< TotalReadBytes;
             inBlock.resize(0);
             recvdone = READING;
         }
@@ -124,6 +125,7 @@ void sockthread::updateReadMsgProgress()
     }
 
     if (bytesReceived == TotalReadBytes) {
+//        ShowMsg(inBlock);
         QString  bigmsg = inBlock.mid(4); //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
         //入库
 //        readfromremote(bigmsg);
@@ -220,3 +222,21 @@ void sockthread::setSocketConnect(QTcpSocket *cltConnet)
 
 }
 
+
+void sockthread::ShowMsg(QByteArray array)
+{
+    qDebug() << "show message, size:" << array.size() << endl;
+//    QByteArray array("Hello world");
+    char *data = array.data();
+//    while (*data) {
+//        qDebug()<<  "[" << *data << "]" << endl;
+//        ++data;
+//    }
+
+    unsigned int loop = 0;
+    for(loop = 0; loop < array.size();loop++)
+    {
+        qDebug() << "No-" << loop + 1 << ":" << (unsigned char )data[loop] << endl;
+    }
+
+}

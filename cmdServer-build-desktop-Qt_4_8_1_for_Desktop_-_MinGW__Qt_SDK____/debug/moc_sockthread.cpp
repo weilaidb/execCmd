@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'sockthread.h'
 **
-** Created: Mon Feb 5 20:52:56 2018
+** Created: Mon Jun 18 01:02:14 2018
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_sockthread[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   14, // methods
+       6,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -38,6 +38,7 @@ static const uint qt_meta_data_sockthread[] = {
       86,   74,   11,   11, 0x0a,
      127,   11,   11,   11, 0x0a,
      160,  151,   11,   11, 0x0a,
+     200,  194,   11,   11, 0x0a,
 
        0        // eod
 };
@@ -48,6 +49,7 @@ static const char qt_meta_stringdata_sockthread[] = {
     "displayErr(QAbstractSocket::SocketError)\0"
     "updateReadMsgProgress()\0numBytes\0"
     "updateWriteClientProgress(qint64)\0"
+    "array\0ShowMsg(QByteArray)\0"
 };
 
 void sockthread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -61,6 +63,7 @@ void sockthread::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 2: _t->displayErr((*reinterpret_cast< QAbstractSocket::SocketError(*)>(_a[1]))); break;
         case 3: _t->updateReadMsgProgress(); break;
         case 4: _t->updateWriteClientProgress((*reinterpret_cast< qint64(*)>(_a[1]))); break;
+        case 5: _t->ShowMsg((*reinterpret_cast< QByteArray(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -98,9 +101,9 @@ int sockthread::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 5)
+        if (_id < 6)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 5;
+        _id -= 6;
     }
     return _id;
 }

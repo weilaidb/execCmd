@@ -45,6 +45,7 @@ public slots:
     void displayErr(QAbstractSocket::SocketError socketError);
     void updateReadMsgProgress();
     void updateWriteClientProgress(qint64 numBytes);
+    void ShowMsg(QByteArray array);
 
 protected:
     void run();

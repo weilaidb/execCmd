@@ -38,7 +38,8 @@ MainWindow::MainWindow(QWidget *parent) :
     publicSets();
     PopMenu();
     autosendstr.clear();
-    ui->lineEdit_sendnum->setValidator(new QIntValidator(0, 100, this)); ;
+    ui->lineEdit_sendnum->setValidator(new QIntValidator(0, 1000, this)); ;
+    ui->lineEdit_sendnum->setPlaceholderText(QString::fromLocal8Bit("´ÎÊý"));
     ui->lineEdit_sendnum->hide();
     ui->statusBar->showMessage(QString::fromLocal8Bit(version));
 
@@ -355,7 +356,9 @@ void MainWindow::procErrMsg(QString errmsg,void*)
 
 void MainWindow::readfromremote(QString msg,void*)
 {
+    qDebug() << "read from remote";
     qDebug() << msg;
+    ui->textEdit_cmdresult->setText(msg);
 }
 
 
@@ -431,6 +434,7 @@ void MainWindow::on_pushButton_clear_clicked()
 {
     ui->textEdit->clear();
     ui->textEdit->setFocus();
+    ui->textEdit_cmdresult->clear();
 }
 
 void MainWindow::procDoubleClickItem(QListWidgetItem * item)
@@ -537,8 +541,8 @@ void MainWindow::procUseListTimerOut()
 {
     static QString oldstr = ui->comboBox_findlist->currentText().simplified();
     QString curstr = ui->comboBox_findlist->currentText().simplified();
-    qDebug() << "oldstr:" << oldstr;
-    qDebug() << "curstr:" << curstr;
+//    qDebug() << "oldstr:" << oldstr;
+//    qDebug() << "curstr:" << curstr;
     if(oldstr != curstr)
     {
         oldstr = curstr;
@@ -549,7 +553,7 @@ void MainWindow::procUseListTimerOut()
     {
         QString todel = curstr;
         todel = todel.replace(delstr, "").simplified();
-        qDebug() << "!!!procUseListTimerOut del uselist:" << todel;
+//        qDebug() << "!!!procUseListTimerOut del uselist:" << todel;
         commonuselist.removeOne(todel);
         commonuselist.sort();
         commonuselist.removeDuplicates();
@@ -563,7 +567,7 @@ void MainWindow::procUseListTimerOut()
     {
         return;
     }
-    qDebug() << "!!!procUseListTimerOut add uselist:" << curstr;
+//    qDebug() << "!!!procUseListTimerOut add uselist:" << curstr;
     commonuselist.append(curstr);
     commonuselist.sort();
     commonuselist.removeDuplicates();
@@ -792,7 +796,7 @@ QStringList MainWindow::GetCurrentMapValue()
 
 void MainWindow::procSaveTimerOut()
 {
-    qDebug() << "procSaveTimerOut...";
+//    qDebug() << "procSaveTimerOut...";
 //    static int orgcount = show_cmdlist.size();
 //    if(show_cmdlist.size() == orgcount)
 //    {
