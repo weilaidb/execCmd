@@ -25,8 +25,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
 //splitte分割比例
-    ui->splitter->setStretchFactor(0,5);
-    ui->splitter->setStretchFactor(1,5);
+    ui->splitter->setStretchFactor(0,2);
+    ui->splitter->setStretchFactor(1,8);
+
+//splitte分割比例
+    ui->splitter_2->setStretchFactor(0,5);
+    ui->splitter_2->setStretchFactor(1,5);
+
 
     mapIpAndContent.clear();
     map_showcmd.clear();
@@ -252,6 +257,7 @@ void MainWindow::on_pushButton_connect_clicked()
     procComBoxIpList(ipaddr);
 
     ui->pushButton_connect->setEnabled(false);
+    ui->textEdit_cmdresult->clear();
 
     socket = new QTcpSocket();
 
@@ -358,7 +364,9 @@ void MainWindow::readfromremote(QString msg,void*)
 {
     qDebug() << "read from remote";
     qDebug() << msg;
-    ui->textEdit_cmdresult->setText(msg);
+//    ui->textEdit_cmdresult->setText(msg);
+    ui->textEdit_cmdresult->append(QString::fromUtf8(msg.toAscii().data()));
+//    ui->textEdit_cmdresult->append(QString::fromLocal8Bit(msg.toAscii().data()));
 }
 
 

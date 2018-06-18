@@ -62,7 +62,8 @@ MKDIR = mkdir -p
 
 
 
-
+bind:all aaa
+	@echo bind ok
 
 all:$(TARGET)
 	@echo current path is $(shell basename $(COMPILE_DIR))

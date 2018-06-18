@@ -7,6 +7,9 @@
 #include <sys/socket.h>
 #include <errno.h>
 #include <sys/wait.h>
+#include <sys/fcntl.h>
+#include <sys/socket.h>
+
 
 char printbuf[MAXSIZE];
 int printlen = 0;
@@ -45,7 +48,7 @@ unsigned long long convert64word(unsigned long long writelen)
 	box_out.st64.u32_l = htonl(box_in.st64.u32_h);  
 	u64_net = box_out.u64;  
 
-	printf("htonll : %016llx\n", u64_net);
+	// printf("htonll : %016llx\n", u64_net);
 	return u64_net;
 }
 
@@ -135,12 +138,77 @@ int mysystem(char* cmdstring, char* buf, int len)
       return 0;
 }
 
-typedef union
+// 设置一个文件描述符为nonblock  
+int set_nonblocking(int fd)  
+{  
+    int flags;  
+    if ((flags = fcntl(fd, F_GETFL, 0)) == -1)  
+        flags = 0;  
+    return fcntl(fd, F_SETFL, flags | O_NONBLOCK);  
+}  
+
+int set_blocking(int fd)  
+{  
+    int flags;  
+    if ((flags = fcntl(fd, F_GETFL, 0)) == -1)  
+        flags = 0;  
+    return fcntl(fd, F_SETFL, flags & ~O_NONBLOCK);  
+}  
+
+
+// int sendmsg(int socket, char *buf, unsigned int count)
+// {
+	// char *msg = (char *)malloc(count);
+	// if(!msg)
+		// return -1;
+	// set_blocking(socket);
+	// memset(msg, 0, count);
+	// memcpy(msg, buf, count);
+
+	// // int n = write(socket, msg,count);	
+	// int n = send(socket, msg,count,0);	
+	// printf("write socket len:%d, todo len:%d\n", n, count);
+	// free(msg);
+	// // usleep(1000);
+	// // sleep(1);
+	// return 0;
+// }
+
+// int writecnta(int &sock,char *buf)
+int sendmsg(int &sock,char *buf, int length)
 {
-	char len[8];
-	long long length;
-	// char printbuf[1024];
-}combinebuf;
+    // int length;
+    int wlength;
+    int tmpLength;
+    tmpLength=0;
+	set_nonblocking(sock);
+    // length=strlen(buf);
+    while(tmpLength != length)
+    {
+        wlength=write(sock,&buf[tmpLength],length-tmpLength);
+        if(wlength < 0)
+        {
+            if( errno == EINTR )
+            {
+                wlength=0;
+            }
+            else
+            {
+                close(sock);
+                return 1;
+            }
+        }
+        else
+        {
+            tmpLength+=wlength;
+			usleep(500000);
+        }
+    }
+	// sleep(1);
+	// usleep(800000);
+    return 0;
+}
+
   
 int tcp_server::recv_msg() 
 {  
@@ -199,30 +267,27 @@ int tcp_server::recv_msg()
 				count = 0;
 				memset(printbuf,0 ,sizeof(printbuf));
 				printlen = sizeof(printbuf);
+				const int wpos = 8;
 				
-				
-				while ((n = read(fd[0], printbuf + count, printlen)) > 0)
+				while ((n = read(fd[0], printbuf + wpos, printlen)) > 0)
 				{
-				  count += n;
-				  printf("n :%d\n", n);
+					count += n;
+					// printf("n :%d\n", n);
+					// printf("in get child out printbuf:%s\n", printbuf + wpos);
+					unsigned long long writelen = n;
+					unsigned int sendsum = n + 8;
+					writelen = convert64word(n);
+					memcpy(printbuf, &writelen, sizeof(writelen));
+					// write(accept_fd, printbuf,sendsum);
+					sendmsg(accept_fd, printbuf,sendsum);
+					// usleep(20);
+					//clear buf
+					memset(printbuf,0 ,sizeof(printbuf));					
 				  // write(accept_fd, printbuf + count,n);
 				}
 				close(fd[0]);
 				printf("get child out msg len :%d\n", count);
-				printf("get child out printbuf:%s\n", printbuf);
-				// printf("sizeof(long long):%d\n", sizeof(long long));
-				// printf("sizeof( unsigned long long):%d\n", sizeof( unsigned long long));
-				// memmove(printbuf + 8, printbuf, count);
-				memcpy(tmpbuf, printbuf, sizeof(printbuf));
-				memset(printbuf, 0, sizeof(printbuf));
-				unsigned long long writelen = count;
-				writelen = convert64word(writelen);
-				memcpy(printbuf, &writelen, sizeof(writelen));
-				
-				memcpy(printbuf + sizeof(writelen), tmpbuf, count);
-				// *(long long *)printbuf = count;
-				// showmsg(printbuf, count + 8);
-				write(accept_fd, printbuf,count + 8);
+				// printf("get child out printbuf:%s\n", printbuf);
 				close(accept_fd); //父进程
 			}
 #else
