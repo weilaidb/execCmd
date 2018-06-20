@@ -406,7 +406,7 @@ void MainWindow::on_pushButton_collect_clicked()
     while (i.hasNext()) {
         if(i.next().key() == getMapKey())
         {
-            qDebug() << i.value();
+//            qDebug() << i.value();
             found = TRUE;
             findlist = i.value();
             break;
@@ -455,7 +455,7 @@ void MainWindow::procDoubleClickItem(QListWidgetItem * item)
 
         return;
     }
-    qDebug() << item->text();
+//    qDebug() << item->text();
     ui->textEdit->setText(item->text());
 }
 
@@ -745,6 +745,12 @@ void MainWindow::UpdateShowCmdListWidget(QStringList list)
 
     }
     ui->listWidget_cmdlist->sortItems();
+    //show first item if find result
+    qDebug() << "find list result size:" << list.size();
+    if(list.size() > 0)
+    {
+        ui->textEdit->setText(list.at(0));
+    }
 //    updateListWidgetColor();
 }
 
@@ -759,7 +765,7 @@ void MainWindow::UpdateShowCmdListWidgetByMap()
     while (i.hasNext()) {
         if(i.next().key() == getMapKey())
         {
-            qDebug() << i.value();
+//            qDebug() << i.value();
             found = TRUE;
             findlist = i.value();
             break;
@@ -782,6 +788,13 @@ void MainWindow::UpdateShowCmdListWidgetByMap()
 
     }
     ui->listWidget_cmdlist->sortItems();
+
+//    qDebug() << "ui->listWidget_cmdlist count:" << ui->listWidget_cmdlist->count();
+
+//    if(findlist.size() == 1)
+//    {
+//        ui->textEdit_cmdresult->setText(findlist.at(0));
+//    }
 }
 
 
@@ -794,7 +807,7 @@ QStringList MainWindow::GetCurrentMapValue()
     while (i.hasNext()) {
         if(i.next().key() == getMapKey())
         {
-            qDebug() << i.value();
+//            qDebug() << i.value();
             findlist = i.value();
             break;
         }
