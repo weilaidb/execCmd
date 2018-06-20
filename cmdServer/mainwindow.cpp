@@ -49,7 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->statusBar->showMessage(QString::fromLocal8Bit(version));
 
     uselistTimer = new QTimer();
-    uselistTimer->start(4000);
+    uselistTimer->start(10000);
     connect(uselistTimer, SIGNAL(timeout()), this, SLOT(procUseListTimerOut()));
 
 
@@ -547,6 +547,7 @@ void MainWindow::DelItem()
 
 void MainWindow::procUseListTimerOut()
 {
+    return;
     static QString oldstr = ui->comboBox_findlist->currentText().simplified();
     QString curstr = ui->comboBox_findlist->currentText().simplified();
 //    qDebug() << "oldstr:" << oldstr;

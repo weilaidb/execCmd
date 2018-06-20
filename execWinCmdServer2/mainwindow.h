@@ -13,6 +13,7 @@
 #include <QUdpSocket>
 #include <QSystemTrayIcon>
 #include <QCloseEvent>
+#include <windows.h>
 
 
 namespace Ui {
@@ -35,7 +36,7 @@ public:
 private slots:
     void procClientMessage();
     void readfromremote(QString cltmsg, void * pthread);
-    void singstep(const char *org, bool isCmd, QString single);
+    LPCSTR singstep(const char *org, bool isCmd, QString single);
 
 private:
     Ui::MainWindow *ui;

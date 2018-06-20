@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Sun May 27 11:30:47 2018
+** Created: Wed Jun 20 23:17:41 2018
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -33,7 +33,7 @@ static const uint qt_meta_data_MainWindow[] = {
  // slots: signature, parameters, type, tag, flags
       12,   11,   11,   11, 0x08,
       47,   32,   11,   11, 0x08,
-      94,   77,   11,   11, 0x08,
+     101,   84,   77,   11, 0x08,
 
        0        // eod
 };
@@ -41,7 +41,8 @@ static const uint qt_meta_data_MainWindow[] = {
 static const char qt_meta_stringdata_MainWindow[] = {
     "MainWindow\0\0procClientMessage()\0"
     "cltmsg,pthread\0readfromremote(QString,void*)\0"
-    "org,isCmd,single\0singstep(const char*,bool,QString)\0"
+    "LPCSTR\0org,isCmd,single\0"
+    "singstep(const char*,bool,QString)\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -52,7 +53,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         switch (_id) {
         case 0: _t->procClientMessage(); break;
         case 1: _t->readfromremote((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< void*(*)>(_a[2]))); break;
-        case 2: _t->singstep((*reinterpret_cast< const char*(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3]))); break;
+        case 2: { LPCSTR _r = _t->singstep((*reinterpret_cast< const char*(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3])));
+            if (_a[0]) *reinterpret_cast< LPCSTR*>(_a[0]) = _r; }  break;
         default: ;
         }
     }

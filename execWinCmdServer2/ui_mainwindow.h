@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat Mar 3 13:48:18 2018
+** Created: Wed Jun 20 23:26:20 2018
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -14,6 +14,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QApplication>
 #include <QtGui/QButtonGroup>
+#include <QtGui/QGridLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QLabel>
 #include <QtGui/QMainWindow>
@@ -28,6 +29,7 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralWidget;
+    QGridLayout *gridLayout;
     QLabel *label;
     QLabel *label_receive;
     QMenuBar *menuBar;
@@ -41,16 +43,28 @@ public:
         MainWindow->resize(561, 295);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
+        gridLayout = new QGridLayout(centralWidget);
+        gridLayout->setSpacing(6);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         label = new QLabel(centralWidget);
         label->setObjectName(QString::fromUtf8("label"));
-        label->setGeometry(QRect(40, 20, 54, 12));
+        label->setMinimumSize(QSize(54, 12));
+        label->setMaximumSize(QSize(54, 12));
+
+        gridLayout->addWidget(label, 0, 0, 1, 1);
+
         label_receive = new QLabel(centralWidget);
         label_receive->setObjectName(QString::fromUtf8("label_receive"));
-        label_receive->setGeometry(QRect(70, 50, 431, 191));
+        label_receive->setMinimumSize(QSize(431, 191));
         QFont font;
         font.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
         font.setPointSize(12);
         label_receive->setFont(font);
+        label_receive->setWordWrap(true);
+
+        gridLayout->addWidget(label_receive, 1, 0, 1, 1);
+
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));

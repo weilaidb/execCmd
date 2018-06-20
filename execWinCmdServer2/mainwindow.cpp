@@ -130,11 +130,12 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
             isCmd = TRUE;
         }
         LPCSTR filepath = single.toAscii().data();
-        singstep(filepath, isCmd, single);
+        LPCSTR resstring = singstep(filepath, isCmd, single);
+        qDebug() << "resstring:" << resstring;
         QString showtext = (QString("%1 %2").arg(exepath).arg(QString::fromUtf8(filepath)));
-        ui->statusBar->showMessage(showtext);
-        ui->label_receive->setText(showtext);
     }
+    ui->statusBar->showMessage(cltmsg);
+    ui->label_receive->setText(cltmsg);
 
 
 //    LPCSTR filepath2 = QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
@@ -243,22 +244,44 @@ void MainWindow::showversion()
     ui->statusBar->showMessage(QString("version %1").arg(VERSION));
 }
 
-void MainWindow::singstep(const char *org,bool isCmd,QString single)
+LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single)
 {
     LPCSTR filepath = LPCSTR(org);
     LPCSTR filepath2 = QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
-    qDebug() << "filepath2:" << QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
+    qDebug() <<"iscmd:" << isCmd << "filepath2:" << QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
     if(isCmd)
     {
-        single = "/c " + single.replace("cmd", "");
+//        single = "/c "/* + single.replace("cmd", 3, "", 3)*/;
+        QString strTmp = "";
+        int idx = 0;
+
+        strTmp = single;
+        //only replace the first find cmd
+        idx = strTmp.indexOf("cmd ", 0);
+        if (-1 != idx)
+        {
+            strTmp.replace(idx, 4, "");
+//            m_Button->setText(strTmp);
+        }
+        single = "/C " + strTmp;
+//        single = strTmp;
+        qDebug() << "cmd order:" << single;
+
         filepath = single.toAscii().data();
         filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
-        ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
+        qDebug() << "filepath2 last:" << filepath2;
+        HINSTANCE ret = ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
+//        HINSTANCE ret = ShellExecuteA(NULL, "open", "C:\windows\system32\cmd.exe", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
+//        HINSTANCE ret = ShellExecuteA(NULL, "open", NULL, filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
+        qDebug() << "ret:" << ret;
+//        SW_MINIMIZE
     }
     else
     {
         //    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
         ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWMAXIMIZED);
     }
+
+    return filepath2;
 }
 
