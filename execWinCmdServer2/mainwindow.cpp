@@ -135,7 +135,8 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
         QString showtext = (QString("%1 %2").arg(exepath).arg(QString::fromUtf8(filepath)));
     }
     ui->statusBar->showMessage(cltmsg);
-    ui->label_receive->setText(cltmsg);
+//    ui->textEdit_receive->adjustSize();
+    ui->textEdit_receive->setText(cltmsg);
 
 
 //    LPCSTR filepath2 = QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
@@ -249,37 +250,49 @@ LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single)
     LPCSTR filepath = LPCSTR(org);
     LPCSTR filepath2 = QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
     qDebug() <<"iscmd:" << isCmd << "filepath2:" << QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
-    if(isCmd)
-    {
-//        single = "/c "/* + single.replace("cmd", 3, "", 3)*/;
-        QString strTmp = "";
-        int idx = 0;
 
-        strTmp = single;
-        //only replace the first find cmd
-        idx = strTmp.indexOf("cmd ", 0);
-        if (-1 != idx)
+    try
+    {
+        // 这里的程序代码完成真正复杂的计算工作，这些代码在执行过程中
+        // 有可能抛出DataType1、DataType2和DataType3类型的异常对象。
+
+        if(isCmd)
         {
-            strTmp.replace(idx, 4, "");
-//            m_Button->setText(strTmp);
-        }
-        single = "/C " + strTmp;
-//        single = strTmp;
-        qDebug() << "cmd order:" << single;
+    //        single = "/c "/* + single.replace("cmd", 3, "", 3)*/;
+            QString strTmp = "";
+            int idx = 0;
 
-        filepath = single.toAscii().data();
-        filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
-        qDebug() << "filepath2 last:" << filepath2;
-        HINSTANCE ret = ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
-//        HINSTANCE ret = ShellExecuteA(NULL, "open", "C:\windows\system32\cmd.exe", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
-//        HINSTANCE ret = ShellExecuteA(NULL, "open", NULL, filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
-        qDebug() << "ret:" << ret;
-//        SW_MINIMIZE
+            strTmp = single;
+            //only replace the first find cmd
+            idx = strTmp.indexOf("cmd ", 0);
+            if (-1 != idx)
+            {
+                strTmp.replace(idx, 4, "");
+    //            m_Button->setText(strTmp);
+            }
+            single = "/C " + strTmp;
+    //        single = strTmp;
+            qDebug() << "cmd order:" << single;
+
+            filepath = single.toAscii().data();
+            filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
+            qDebug() << "filepath2 last:" << filepath2;
+            HINSTANCE ret = ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
+    //        HINSTANCE ret = ShellExecuteA(NULL, "open", "C:\windows\system32\cmd.exe", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
+    //        HINSTANCE ret = ShellExecuteA(NULL, "open", NULL, filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
+            qDebug() << "ret:" << ret;
+    //        SW_MINIMIZE
+        }
+        else
+        {
+            //    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
+            ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWMAXIMIZED);
+        }
+
     }
-    else
+    catch(QString & d1)
     {
-        //    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
-        ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWMAXIMIZED);
+        qDebug() << " filepaths too long ?";
     }
 
     return filepath2;

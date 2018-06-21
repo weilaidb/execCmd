@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Jun 20 23:26:20 2018
+** Created: Wed Jun 20 23:44:05 2018
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -20,6 +20,7 @@
 #include <QtGui/QMainWindow>
 #include <QtGui/QMenuBar>
 #include <QtGui/QStatusBar>
+#include <QtGui/QTextEdit>
 #include <QtGui/QToolBar>
 #include <QtGui/QWidget>
 
@@ -31,7 +32,7 @@ public:
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QLabel *label;
-    QLabel *label_receive;
+    QTextEdit *textEdit_receive;
     QMenuBar *menuBar;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -40,7 +41,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(561, 295);
+        MainWindow->resize(592, 342);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -54,21 +55,15 @@ public:
 
         gridLayout->addWidget(label, 0, 0, 1, 1);
 
-        label_receive = new QLabel(centralWidget);
-        label_receive->setObjectName(QString::fromUtf8("label_receive"));
-        label_receive->setMinimumSize(QSize(431, 191));
-        QFont font;
-        font.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
-        font.setPointSize(12);
-        label_receive->setFont(font);
-        label_receive->setWordWrap(true);
+        textEdit_receive = new QTextEdit(centralWidget);
+        textEdit_receive->setObjectName(QString::fromUtf8("textEdit_receive"));
 
-        gridLayout->addWidget(label_receive, 1, 0, 1, 1);
+        gridLayout->addWidget(textEdit_receive, 1, 0, 1, 1);
 
         MainWindow->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QString::fromUtf8("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 561, 23));
+        menuBar->setGeometry(QRect(0, 0, 592, 23));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QString::fromUtf8("mainToolBar"));
@@ -86,7 +81,6 @@ public:
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "Win\345\221\275\344\273\244\346\211\247\350\241\214\345\231\250", 0, QApplication::UnicodeUTF8));
         label->setText(QApplication::translate("MainWindow", "\346\216\245\346\224\266\345\221\275\344\273\244", 0, QApplication::UnicodeUTF8));
-        label_receive->setText(QString());
     } // retranslateUi
 
 };
