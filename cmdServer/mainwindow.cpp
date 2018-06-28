@@ -10,6 +10,7 @@
 #include <QShortcut>
 #include "version.h"
 #include <QClipboard>
+#include <windows.h>
 
 #define BINDPORT (99999)
 #define CMD_HELLO "hello word"
@@ -73,6 +74,13 @@ MainWindow::MainWindow(QWidget *parent) :
      QShortcut *SendCmdShortCut = new QShortcut(this);
      SendCmdShortCut->setKey(tr("Ctrl+S"));
      connect(SendCmdShortCut, SIGNAL(activated()),this,SLOT(procSendCmdShortCut()));
+
+
+
+     TodoCmdExecList.clear();
+     exectimer = new QTimer();
+     exectimer->start(2000);
+     connect(exectimer, SIGNAL(timeout()), this, SLOT(CheckTodoListTimerOut()));
 
 
 //     setPlaceholderText()设置提示文字
@@ -244,10 +252,9 @@ void MainWindow::procComBoxIpList(QString ipaddr)
     ui->comboBox->setEditText(ipaddr);
 }
 
-
-void MainWindow::on_pushButton_connect_clicked()
+void MainWindow::checkoneitem_execcmd(QString text)
 {
-    filterText();
+    filterText(text);
     QString ipaddr = ui->comboBox->currentText();
     if(0 != CheckIPAddr(ipaddr))
     {
@@ -265,6 +272,11 @@ void MainWindow::on_pushButton_connect_clicked()
 
 
     qDebug() << "on connecting";
+}
+
+void MainWindow::on_pushButton_connect_clicked()
+{
+    checkoneitem_execcmd(ui->textEdit->toPlainText());
 }
 
 void MainWindow::newConnect(QString ipaddr)
@@ -443,6 +455,8 @@ void MainWindow::on_pushButton_clear_clicked()
     ui->textEdit->clear();
     ui->textEdit->setFocus();
     ui->textEdit_cmdresult->clear();
+
+    TodoCmdExecList.clear();
 }
 
 void MainWindow::procDoubleClickItem(QListWidgetItem * item)
@@ -462,7 +476,7 @@ void MainWindow::procDoubleClickItem(QListWidgetItem * item)
 void MainWindow::procEnterItem(QListWidgetItem* item)
 {
     QString itemtext = item->text();
-    qDebug() << "enter " << itemtext;
+//    qDebug() << "enter " << itemtext;
     setToolTip(itemtext);
 //    ui->textEdit->setText(itemtext);
 }
@@ -606,10 +620,10 @@ void MainWindow::procSendCmdShortCut()
     }
 }
 
-void MainWindow::filterText()
+void MainWindow::filterText(QString text)
 {
     autosendstr.clear();
-    autosendstr = filterInvalidText(ui->textEdit->toPlainText());
+    autosendstr = filterInvalidText(text);
     qDebug() << "autosendstr:" << autosendstr;
 }
 
@@ -857,4 +871,44 @@ void MainWindow::on_comboBox_findlist_currentIndexChanged(const QString &arg1)
 void MainWindow::on_pushButton_clicked()
 {
     ui->comboBox_findlist->clear();
+}
+
+void MainWindow::on_pushButton_push2box_clicked()
+{
+    QString execCmd = ui->textEdit->toPlainText();
+    if(execCmd.simplified().length() == 0)
+        return;
+    TodoCmdExecList.append(execCmd);
+    qDebug() << "Todo cmd exec list size:" << TodoCmdExecList.size();
+}
+
+
+void MainWindow::CheckTodoListTimerOut()
+{
+    if(TodoCmdExecList.size() == 0)
+        return;
+    static bool isdoing = FALSE;
+
+    if(isdoing == TRUE)
+        return;
+
+    isdoing = TRUE;
+End:
+        foreach (QString str, TodoCmdExecList) {
+            if(!ui->pushButton_connect->isEnabled())
+            {
+                Sleep(1000);
+                continue;
+            }
+            qApp->processEvents();
+            ui->statusBar->showMessage(QString::fromLocal8Bit("待处理的命令数量:%1").arg(TodoCmdExecList.size()));
+            checkoneitem_execcmd(str);
+            qApp->processEvents();
+            TodoCmdExecList.removeAt(0);
+            if(TodoCmdExecList.size() > 0)
+                goto End;
+        }
+
+    isdoing = FALSE;
+    ui->statusBar->showMessage("");
 }

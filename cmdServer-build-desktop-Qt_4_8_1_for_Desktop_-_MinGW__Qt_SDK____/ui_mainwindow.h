@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri Jun 22 07:28:10 2018
+** Created: Thu Jun 28 21:43:56 2018
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -25,6 +25,7 @@
 #include <QtGui/QListWidget>
 #include <QtGui/QMainWindow>
 #include <QtGui/QPushButton>
+#include <QtGui/QSpacerItem>
 #include <QtGui/QSplitter>
 #include <QtGui/QStatusBar>
 #include <QtGui/QTextEdit>
@@ -57,10 +58,12 @@ public:
     QGroupBox *horizontalGroupBox;
     QHBoxLayout *horizontalLayout;
     QPushButton *pushButton_connect;
-    QLineEdit *lineEdit_sendnum;
+    QPushButton *pushButton_push2box;
     QPushButton *pushButton_paste;
     QPushButton *pushButton_clear;
     QPushButton *pushButton_collect;
+    QLineEdit *lineEdit_sendnum;
+    QSpacerItem *horizontalSpacer;
     QLabel *label;
     QSplitter *splitter;
     QTextEdit *textEdit;
@@ -197,15 +200,17 @@ public:
 
         horizontalLayout->addWidget(pushButton_connect);
 
-        lineEdit_sendnum = new QLineEdit(horizontalGroupBox);
-        lineEdit_sendnum->setObjectName(QString::fromUtf8("lineEdit_sendnum"));
-        sizePolicy.setHeightForWidth(lineEdit_sendnum->sizePolicy().hasHeightForWidth());
-        lineEdit_sendnum->setSizePolicy(sizePolicy);
-        lineEdit_sendnum->setMinimumSize(QSize(50, 30));
-        lineEdit_sendnum->setMaximumSize(QSize(25, 41));
-        lineEdit_sendnum->setMaxLength(300);
+        pushButton_push2box = new QPushButton(horizontalGroupBox);
+        pushButton_push2box->setObjectName(QString::fromUtf8("pushButton_push2box"));
+        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(pushButton_push2box->sizePolicy().hasHeightForWidth());
+        pushButton_push2box->setSizePolicy(sizePolicy1);
+        pushButton_push2box->setMinimumSize(QSize(20, 41));
+        pushButton_push2box->setMaximumSize(QSize(30, 41));
 
-        horizontalLayout->addWidget(lineEdit_sendnum);
+        horizontalLayout->addWidget(pushButton_push2box);
 
         pushButton_paste = new QPushButton(horizontalGroupBox);
         pushButton_paste->setObjectName(QString::fromUtf8("pushButton_paste"));
@@ -229,6 +234,20 @@ public:
         pushButton_collect->setMaximumSize(QSize(106, 41));
 
         horizontalLayout->addWidget(pushButton_collect);
+
+        lineEdit_sendnum = new QLineEdit(horizontalGroupBox);
+        lineEdit_sendnum->setObjectName(QString::fromUtf8("lineEdit_sendnum"));
+        sizePolicy.setHeightForWidth(lineEdit_sendnum->sizePolicy().hasHeightForWidth());
+        lineEdit_sendnum->setSizePolicy(sizePolicy);
+        lineEdit_sendnum->setMinimumSize(QSize(50, 30));
+        lineEdit_sendnum->setMaximumSize(QSize(25, 41));
+        lineEdit_sendnum->setMaxLength(300);
+
+        horizontalLayout->addWidget(lineEdit_sendnum);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+
+        horizontalLayout->addItem(horizontalSpacer);
 
 
         verticalLayout->addWidget(horizontalGroupBox);
@@ -285,11 +304,15 @@ public:
         label_2->setText(QApplication::translate("MainWindow", "IP\345\234\260\345\235\200", 0, QApplication::UnicodeUTF8));
         pushButton_connect->setText(QApplication::translate("MainWindow", "\345\217\221\351\200\201", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
-        lineEdit_sendnum->setToolTip(QApplication::translate("MainWindow", "\346\211\247\350\241\214\346\225\260\351\207\217", 0, QApplication::UnicodeUTF8));
+        pushButton_push2box->setToolTip(QApplication::translate("MainWindow", "\346\267\273\345\212\240\345\210\260\346\211\247\350\241\214\345\210\227\350\241\250", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
+        pushButton_push2box->setText(QApplication::translate("MainWindow", "+", 0, QApplication::UnicodeUTF8));
         pushButton_paste->setText(QApplication::translate("MainWindow", "\347\262\230\350\264\264", 0, QApplication::UnicodeUTF8));
         pushButton_clear->setText(QApplication::translate("MainWindow", "\346\270\205\347\251\272", 0, QApplication::UnicodeUTF8));
         pushButton_collect->setText(QApplication::translate("MainWindow", "\346\224\266\350\227\217", 0, QApplication::UnicodeUTF8));
+#ifndef QT_NO_TOOLTIP
+        lineEdit_sendnum->setToolTip(QApplication::translate("MainWindow", "\346\211\247\350\241\214\346\225\260\351\207\217", 0, QApplication::UnicodeUTF8));
+#endif // QT_NO_TOOLTIP
         label->setText(QApplication::translate("MainWindow", "\350\257\267\350\276\223\345\205\245\346\211\247\350\241\214\345\221\275\344\273\244", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 

@@ -55,6 +55,8 @@ private slots:
     void on_connecting_sendstr(QString sendstr);
     void on_pushButton_connect_clicked();
 
+    void checkoneitem_execcmd(QString text);
+
     void newConnect(QString ipaddr);
     void hellosocket();
     void procErrMsg(QString errmsg,void*);
@@ -88,7 +90,7 @@ private slots:
     void procSendCmdShortCut();
 
     QString filterInvalidText(QString orgt);
-    void filterText();
+    void filterText(QString text);
 
     void procitemSelectionChanged();
 
@@ -103,6 +105,10 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_pushButton_push2box_clicked();
+
+    void CheckTodoListTimerOut();
+
 private:
     QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串
@@ -116,6 +122,10 @@ private:
     QString curkey;
 
     QMap<QString, QStringList> mapIpAndContent;
+
+private:
+    QStringList TodoCmdExecList;
+    QTimer *exectimer;
 };
 
 #endif // MAINWINDOW_H
