@@ -888,6 +888,7 @@ void MainWindow::on_comboBox_findlist_currentIndexChanged(const QString &arg1)
 void MainWindow::on_pushButton_clicked()
 {
     ui->comboBox_findlist->setEditText("");
+    ui->comboBox_findlist->setFocus();
 }
 
 void MainWindow::on_pushButton_push2box_clicked()
