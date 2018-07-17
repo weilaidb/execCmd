@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu Jun 28 21:43:56 2018
+** Created: Tue Jul 17 22:06:55 2018
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -45,6 +45,7 @@ public:
     QSplitter *splitter_3;
     QLabel *label_3;
     QCheckBox *checkBox_autosend;
+    QPushButton *pushButton_delkey;
     QHBoxLayout *horizontalLayout_3;
     QComboBox *comboBox_findlist;
     QPushButton *pushButton;
@@ -109,6 +110,15 @@ public:
         checkBox_autosend->setObjectName(QString::fromUtf8("checkBox_autosend"));
         checkBox_autosend->setFont(font);
         splitter_3->addWidget(checkBox_autosend);
+        pushButton_delkey = new QPushButton(splitter_3);
+        pushButton_delkey->setObjectName(QString::fromUtf8("pushButton_delkey"));
+        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(pushButton_delkey->sizePolicy().hasHeightForWidth());
+        pushButton_delkey->setSizePolicy(sizePolicy);
+        pushButton_delkey->setMinimumSize(QSize(20, 0));
+        splitter_3->addWidget(pushButton_delkey);
 
         verticalLayout_2->addWidget(splitter_3);
 
@@ -129,9 +139,6 @@ public:
 
         pushButton = new QPushButton(layoutWidget);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
-        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
         pushButton->setSizePolicy(sizePolicy);
         pushButton->setMinimumSize(QSize(20, 0));
@@ -300,6 +307,7 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "\345\221\275\344\273\244\345\256\242\346\210\267\347\253\257", 0, QApplication::UnicodeUTF8));
         label_3->setText(QApplication::translate("MainWindow", "\345\221\275\344\273\244\345\210\227\350\241\250", 0, QApplication::UnicodeUTF8));
         checkBox_autosend->setText(QApplication::translate("MainWindow", "\350\207\252\345\212\250\345\217\221\351\200\201", 0, QApplication::UnicodeUTF8));
+        pushButton_delkey->setText(QApplication::translate("MainWindow", "\345\210\240\351\231\244\345\205\263\351\224\256\345\255\227", 0, QApplication::UnicodeUTF8));
         pushButton->setText(QApplication::translate("MainWindow", "\346\270\205\347\251\272", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("MainWindow", "IP\345\234\260\345\235\200", 0, QApplication::UnicodeUTF8));
         pushButton_connect->setText(QApplication::translate("MainWindow", "\345\217\221\351\200\201", 0, QApplication::UnicodeUTF8));

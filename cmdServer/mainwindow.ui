@@ -65,6 +65,23 @@
             <string>自动发送</string>
            </property>
           </widget>
+          <widget class="QPushButton" name="pushButton_delkey">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>20</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>删除关键字</string>
+           </property>
+          </widget>
          </widget>
         </item>
         <item>

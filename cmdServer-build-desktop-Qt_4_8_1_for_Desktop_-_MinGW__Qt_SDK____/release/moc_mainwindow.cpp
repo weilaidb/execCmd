@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Thu Jun 28 22:01:58 2018
+** Created: Tue Jul 17 22:14:50 2018
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      31,   14, // methods
+      33,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -46,22 +46,24 @@ static const uint qt_meta_data_MainWindow[] = {
      375,  367,   11,   11, 0x08,
      397,  290,   11,   11, 0x08,
      429,   11,   11,   11, 0x08,
-     451,   11,   11,   11, 0x08,
-     478,   11,  470,   11, 0x08,
-     490,   11,   11,   11, 0x08,
-     509,   11,   11,   11, 0x08,
-     529,   11,   11,   11, 0x08,
-     556,  551,  470,   11, 0x08,
-     583,   83,   11,   11, 0x08,
-     603,   11,   11,   11, 0x08,
-     630,  118,   11,   11, 0x08,
-     656,   11,   11,   11, 0x08,
-     691,  686,   11,   11, 0x08,
-     732,  686,   11,   11, 0x08,
-     769,  686,   11,   11, 0x08,
-     819,   11,   11,   11, 0x08,
-     843,   11,   11,   11, 0x08,
-     876,   11,   11,   11, 0x08,
+     471,  456,  451,   11, 0x08,
+     496,   11,   11,   11, 0x08,
+     523,   11,  515,   11, 0x08,
+     535,   11,   11,   11, 0x08,
+     554,   11,   11,   11, 0x08,
+     574,   11,   11,   11, 0x08,
+     601,  596,  515,   11, 0x08,
+     628,   83,   11,   11, 0x08,
+     648,   11,   11,   11, 0x08,
+     675,  118,   11,   11, 0x08,
+     701,   11,   11,   11, 0x08,
+     736,  731,   11,   11, 0x08,
+     777,  731,   11,   11, 0x08,
+     814,  731,   11,   11, 0x08,
+     864,   11,   11,   11, 0x08,
+     888,   11,   11,   11, 0x08,
+     921,   11,   11,   11, 0x08,
+     945,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -79,7 +81,8 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "DelItem()\0updateListWidgetColor()\0"
     "findstr\0procFindList(QString)\0"
     "procEnterItem(QListWidgetItem*)\0"
-    "procUseListTimerOut()\0procSaveTimerOut()\0"
+    "procUseListTimerOut()\0bool\0curstr,setnull\0"
+    "delKeyWord(QString,bool)\0procSaveTimerOut()\0"
     "QString\0getMapKey()\0procFindShortCut()\0"
     "procClearShortCut()\0procSendCmdShortCut()\0"
     "orgt\0filterInvalidText(QString)\0"
@@ -92,6 +95,7 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "on_pushButton_clicked()\0"
     "on_pushButton_push2box_clicked()\0"
     "CheckTodoListTimerOut()\0"
+    "on_pushButton_delkey_clicked()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -115,24 +119,27 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 12: _t->procFindList((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 13: _t->procEnterItem((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
         case 14: _t->procUseListTimerOut(); break;
-        case 15: _t->procSaveTimerOut(); break;
-        case 16: { QString _r = _t->getMapKey();
+        case 15: { bool _r = _t->delKeyWord((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2])));
+            if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = _r; }  break;
+        case 16: _t->procSaveTimerOut(); break;
+        case 17: { QString _r = _t->getMapKey();
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
-        case 17: _t->procFindShortCut(); break;
-        case 18: _t->procClearShortCut(); break;
-        case 19: _t->procSendCmdShortCut(); break;
-        case 20: { QString _r = _t->filterInvalidText((*reinterpret_cast< QString(*)>(_a[1])));
+        case 18: _t->procFindShortCut(); break;
+        case 19: _t->procClearShortCut(); break;
+        case 20: _t->procSendCmdShortCut(); break;
+        case 21: { QString _r = _t->filterInvalidText((*reinterpret_cast< QString(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
-        case 21: _t->filterText((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 22: _t->procitemSelectionChanged(); break;
-        case 23: _t->procComBoxIpList((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 24: _t->on_pushButton_paste_clicked(); break;
-        case 25: _t->on_comboBox_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 26: _t->on_comboBox_editTextChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 27: _t->on_comboBox_findlist_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 28: _t->on_pushButton_clicked(); break;
-        case 29: _t->on_pushButton_push2box_clicked(); break;
-        case 30: _t->CheckTodoListTimerOut(); break;
+        case 22: _t->filterText((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 23: _t->procitemSelectionChanged(); break;
+        case 24: _t->procComBoxIpList((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 25: _t->on_pushButton_paste_clicked(); break;
+        case 26: _t->on_comboBox_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 27: _t->on_comboBox_editTextChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 28: _t->on_comboBox_findlist_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 29: _t->on_pushButton_clicked(); break;
+        case 30: _t->on_pushButton_push2box_clicked(); break;
+        case 31: _t->CheckTodoListTimerOut(); break;
+        case 32: _t->on_pushButton_delkey_clicked(); break;
         default: ;
         }
     }
@@ -170,9 +177,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 31)
+        if (_id < 33)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 31;
+        _id -= 33;
     }
     return _id;
 }

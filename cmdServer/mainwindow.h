@@ -79,6 +79,8 @@ private slots:
 
     void procUseListTimerOut();
 
+    bool delKeyWord(QString curstr, bool setnull);
+
     void procSaveTimerOut();
 
     QString getMapKey();
@@ -109,6 +111,8 @@ private slots:
 
     void CheckTodoListTimerOut();
 
+    void on_pushButton_delkey_clicked();
+
 private:
     QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串
@@ -124,7 +128,7 @@ private:
     QMap<QString, QStringList> mapIpAndContent;
 
 private:
-    QStringList TodoCmdExecList;
+    QStringList TodoCmdExecList;//待处理的命令个数
     QTimer *exectimer;
 };
 

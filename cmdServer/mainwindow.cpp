@@ -14,6 +14,7 @@
 
 #define BINDPORT (99999)
 #define CMD_HELLO "hello word"
+#define KEY_DELETEWORD "delete it"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -559,6 +560,33 @@ void MainWindow::DelItem()
     }
 }
 
+bool MainWindow::delKeyWord(QString curstr, bool setnull)
+{
+    QString delstr = KEY_DELETEWORD;
+    if(curstr.contains(delstr))
+    {
+        QString todel = curstr;
+        todel = todel.replace(delstr, "").simplified();
+//        qDebug() << "!!!procUseListTimerOut del uselist:" << todel;
+        commonuselist.removeOne(todel);
+        commonuselist.sort();
+        commonuselist.removeDuplicates();
+        ui->comboBox_findlist->clear();
+        ui->comboBox_findlist->addItems(commonuselist);
+        if(setnull)
+        {
+            ui->comboBox_findlist->setEditText("");
+        }
+        else
+        {
+            ui->comboBox_findlist->setEditText(curstr);
+        }
+        ui->comboBox_findlist->update();
+        return TRUE;
+    }
+    return FALSE;
+}
+
 void MainWindow::procUseListTimerOut()
 {
     return;
@@ -571,19 +599,8 @@ void MainWindow::procUseListTimerOut()
         oldstr = curstr;
         return;
     }
-    QString delstr = "delete it";
-    if(curstr.contains(delstr))
+    if(delKeyWord(curstr,FALSE))
     {
-        QString todel = curstr;
-        todel = todel.replace(delstr, "").simplified();
-//        qDebug() << "!!!procUseListTimerOut del uselist:" << todel;
-        commonuselist.removeOne(todel);
-        commonuselist.sort();
-        commonuselist.removeDuplicates();
-        ui->comboBox_findlist->clear();
-        ui->comboBox_findlist->addItems(commonuselist);
-        ui->comboBox_findlist->setEditText(curstr);
-        ui->comboBox_findlist->update();
         return;
     }
     if(ui->listWidget_cmdlist->count() == 0 )
@@ -870,7 +887,7 @@ void MainWindow::on_comboBox_findlist_currentIndexChanged(const QString &arg1)
 
 void MainWindow::on_pushButton_clicked()
 {
-    ui->comboBox_findlist->clear();
+    ui->comboBox_findlist->setEditText("");
 }
 
 void MainWindow::on_pushButton_push2box_clicked()
@@ -911,4 +928,14 @@ End:
 
     isdoing = FALSE;
     ui->statusBar->showMessage("");
+}
+
+void MainWindow::on_pushButton_delkey_clicked()
+{
+    if(ui->comboBox_findlist->currentText().simplified().length() == 0)
+        return;
+
+    QString delword = ui->comboBox_findlist->currentText();
+
+    delKeyWord(delword  + KEY_DELETEWORD, TRUE);
 }
