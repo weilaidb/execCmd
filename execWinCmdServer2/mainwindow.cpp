@@ -5,6 +5,10 @@
 #include <windows.h>
 #include <version.h>
 
+#define MAX_LENGTH (20480)
+
+char* szLogin = new char[MAX_LENGTH];
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -111,8 +115,24 @@ void MainWindow::procClientMessage()
 
 void MainWindow::readfromremote(QString cltmsg, void * pthread)
 {
-    qDebug() << (QString("read clt msg:%1").arg(cltmsg.toUtf8().data()));
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    QTextCodec::setCodecForTr(codec);
+//    QTextCodec::setCodecForLocale(QTextCodec::codecForLocale()); //设置GBK到本地
+//    QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
 
+    qDebug() << "clt msg size:" << cltmsg.size();
+//    qDebug() << "clt         :" << cltmsg;
+//    qDebug() << "clt         :" << tr(cltmsg.toUtf8());
+    qDebug() << "clt         :" << tr(cltmsg.toAscii()); //ok
+//    qDebug() << "clt         :" << tr(cltmsg.toLocal8Bit());
+    qDebug() << "clt         :" << tr(cltmsg.toLatin1()); //ok
+//    qDebug() << (QString::fromUtf8("read clt msg:%1").arg(cltmsg.toUtf8().data()));
+//    qDebug() << (QString::fromLocal8Bit("read clt msg:%1").arg(cltmsg.toAscii().data()));
+//    qDebug() << (QString::fromAscii("read clt msg:%1").arg(cltmsg.toLocal8Bit().data()));
+//    qDebug() << (QString::fromLatin1("read clt msg:%1").arg(cltmsg.toUtf8().data()));
+//    qDebug() << (QString::fromUtf8("read clt msg:%1").arg(cltmsg.toAscii().data()));
+//    qDebug() << (QString::fromUtf8("read clt msg:%1").arg(cltmsg.toLocal8Bit().data()));
+////    qDebug() << (QString::fromUtf8("read clt msg:%1").arg(cltmsg.toAscii().data()));
 
 
     //python.exe
@@ -121,6 +141,7 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
 //    LPCSTR filepath = cltmsg.toAscii().data();
 
     QStringList splitdata = cltmsg.split('\n');
+
     foreach (QString single, splitdata) {
         if(single.simplified().length() == 0)
             continue;
@@ -129,14 +150,15 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
         {
             isCmd = TRUE;
         }
-        LPCSTR filepath = single.toAscii().data();
+        single = tr(single.toAscii().data());
+        qDebug() << "single         :" << single;
+        LPCSTR filepath = (single.toAscii().data());
         LPCSTR resstring = singstep(filepath, isCmd, single);
         qDebug() << "resstring:" << resstring;
         QString showtext = (QString("%1 %2").arg(exepath).arg(QString::fromUtf8(filepath)));
     }
-    ui->statusBar->showMessage(cltmsg);
-//    ui->textEdit_receive->adjustSize();
-    ui->textEdit_receive->setText(cltmsg);
+    ui->statusBar->showMessage(tr(cltmsg.toLatin1()));
+    ui->textEdit_receive->setText(tr(cltmsg.toLatin1()));
 
 
 //    LPCSTR filepath2 = QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
@@ -247,9 +269,34 @@ void MainWindow::showversion()
 
 LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single)
 {
+
     LPCSTR filepath = LPCSTR(org);
-    LPCSTR filepath2 = QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
-    qDebug() <<"iscmd:" << isCmd << "filepath2:" << QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
+    LPCSTR filepath2 = NULL;
+
+
+    if(szLogin == NULL)
+        return filepath2;
+    memset(szLogin, 0, MAX_LENGTH);
+    QByteArray ba111 = single.toLocal8Bit(); // strUser是QString，外部传来的数据。
+    char* temp111 = ba111.data();
+    strcpy(szLogin, temp111);
+//    然后强行转换char*到LPCWSTR：
+    filepath2 = (LPCSTR)szLogin;
+
+
+//    LPCSTR filepath2 = QString::fromAscii(filepath).toAscii().simplified().data();
+//    qDebug() <<"iscmd:" << isCmd << "filepath2:" << QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
+    qDebug() <<"iscmd:" << isCmd ;
+    qDebug() << "filepath2:" << QString::fromAscii(filepath).toAscii().simplified().data();
+    qDebug() << "filepath2:" << QString::fromUtf8(filepath).toAscii().simplified().data();
+    qDebug() << "filepath2:" << QString::fromUtf8(filepath).toAscii().simplified().data();
+    qDebug() << "filepath2:" << QString::fromAscii(filepath);
+    qDebug() << "filepath2:" << QString::fromUtf8(filepath);
+    qDebug() << "filepath2:" << QString::fromLatin1(filepath);
+    qDebug() << "filepath2:" << QString::fromLocal8Bit(filepath);
+    qDebug() << "filepath2:" << (filepath);
+    qDebug() << "single   :" << (single);
+
 
     try
     {
@@ -275,7 +322,8 @@ LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single)
             qDebug() << "cmd order:" << single;
 
             filepath = single.toAscii().data();
-            filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
+//            filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
+            filepath2 = QString::fromUtf8(filepath).toUtf8().data();
             qDebug() << "filepath2 last:" << filepath2;
             HINSTANCE ret = ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
     //        HINSTANCE ret = ShellExecuteA(NULL, "open", "C:\windows\system32\cmd.exe", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
@@ -294,6 +342,7 @@ LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single)
     {
         qDebug() << " filepaths too long ?";
     }
+
 
     return filepath2;
 }
