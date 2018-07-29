@@ -7,6 +7,7 @@
 #include <QListWidget>
 #include <QTimer>
 #include <QMap>
+#include <QMutex>
 
 namespace Ui {
 class MainWindow;
@@ -47,6 +48,7 @@ private:
     QMap<QString, QStringList> map_showcmd;
     QStringList show_cmdlist;
     QStringList searchlist;
+    QString oneshowres;
     QString autosendstr;
     QStringList commonuselist;
     QTimer *uselistTimer;
@@ -120,6 +122,8 @@ private:
     QString message;  //存放从服务器接收到的字符串
 
     sockthread *pthreadsock;
+
+    QMutex mutex_search;
 
 private:
     Ui::MainWindow *ui;

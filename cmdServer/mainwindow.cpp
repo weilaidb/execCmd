@@ -460,6 +460,7 @@ void MainWindow::on_pushButton_clear_clicked()
 
     TodoCmdExecList.clear();
     searchlist.clear();
+    oneshowres.clear();
 }
 
 void MainWindow::procDoubleClickItem(QListWidgetItem * item)
@@ -493,9 +494,12 @@ void MainWindow::procitemSelectionChanged()
 
 void MainWindow::procFindList(QString findstr)
 {
+    oneshowres.clear();
+    mutex_search.lock();
     if(ui->comboBox_findlist->currentText().simplified().length() == 0)
     {
         UpdateShowCmdListWidgetByMap();
+        mutex_search.unlock();
         return;
     }
     searchlist.clear();
@@ -516,7 +520,9 @@ void MainWindow::procFindList(QString findstr)
         }
     }
 
+//    searchlist.sort();
     UpdateShowCmdListWidget(searchlist);
+    mutex_search.unlock();
 
 }
 
@@ -528,7 +534,7 @@ void MainWindow::procActivatedFindList(QString findstr)
     if(searchlist.size() > 0)
     {
 //        ui->textEdit->setText(list.at(0));
-        checkoneitem_execcmd(searchlist.at(0));
+        checkoneitem_execcmd(oneshowres);
 
     }
 }
@@ -779,6 +785,7 @@ void MainWindow::on_pushButton_paste_clicked()
 
 void MainWindow::UpdateShowCmdListWidget(QStringList list)
 {
+    oneshowres.clear();
     ui->listWidget_cmdlist->clear();
     foreach (QString item, list) {
         QListWidgetItem *lst = new QListWidgetItem(QIcon("images/floder.png"),
@@ -796,7 +803,13 @@ void MainWindow::UpdateShowCmdListWidget(QStringList list)
     qDebug() << "find list result size:" << list.size();
     if(list.size() > 0)
     {
-        ui->textEdit->setText(list.at(0));
+        oneshowres = ui->listWidget_cmdlist->item(0)->text();
+        qDebug() << "list.at(0):" << list.at(0);
+        ui->textEdit->setText(oneshowres);
+    }
+    else
+    {
+        ui->textEdit->setText("");
     }
 //    updateListWidgetColor();
 }
