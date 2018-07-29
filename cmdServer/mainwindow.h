@@ -75,6 +75,8 @@ private slots:
 
     void procFindList(QString findstr);
 
+    void procActivatedFindList(QString findstr);
+
     void procEnterItem(QListWidgetItem * item);
 
     void procUseListTimerOut();

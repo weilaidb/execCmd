@@ -104,6 +104,7 @@ void MainWindow::publicSets()
     connect(ui->listWidget_cmdlist, SIGNAL(itemEntered(QListWidgetItem*)),this, SLOT(procEnterItem(QListWidgetItem*)));
     connect(ui->listWidget_cmdlist, SIGNAL(itemSelectionChanged()), this, SLOT(procitemSelectionChanged()));
     connect(ui->comboBox_findlist, SIGNAL(editTextChanged(QString)), this, SLOT(procFindList(QString)));
+    connect(ui->comboBox_findlist, SIGNAL(activated(QString)), this, SLOT(procActivatedFindList(QString)));
 
 }
 
@@ -458,6 +459,7 @@ void MainWindow::on_pushButton_clear_clicked()
     ui->textEdit_cmdresult->clear();
 
     TodoCmdExecList.clear();
+    searchlist.clear();
 }
 
 void MainWindow::procDoubleClickItem(QListWidgetItem * item)
@@ -516,6 +518,19 @@ void MainWindow::procFindList(QString findstr)
 
     UpdateShowCmdListWidget(searchlist);
 
+}
+
+void MainWindow::procActivatedFindList(QString findstr)
+{
+    qDebug() << "procActivatedFindList";
+    findstr = findstr;
+
+    if(searchlist.size() > 0)
+    {
+//        ui->textEdit->setText(list.at(0));
+        checkoneitem_execcmd(searchlist.at(0));
+
+    }
 }
 
 

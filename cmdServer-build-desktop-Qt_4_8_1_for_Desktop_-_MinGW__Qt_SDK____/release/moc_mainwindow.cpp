@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Tue Jul 17 22:14:50 2018
+** Created: Sun Jul 29 21:38:40 2018
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      33,   14, // methods
+      34,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -44,26 +44,27 @@ static const uint qt_meta_data_MainWindow[] = {
      333,   11,   11,   11, 0x08,
      343,   11,   11,   11, 0x08,
      375,  367,   11,   11, 0x08,
-     397,  290,   11,   11, 0x08,
-     429,   11,   11,   11, 0x08,
-     471,  456,  451,   11, 0x08,
-     496,   11,   11,   11, 0x08,
-     523,   11,  515,   11, 0x08,
-     535,   11,   11,   11, 0x08,
-     554,   11,   11,   11, 0x08,
-     574,   11,   11,   11, 0x08,
-     601,  596,  515,   11, 0x08,
-     628,   83,   11,   11, 0x08,
-     648,   11,   11,   11, 0x08,
-     675,  118,   11,   11, 0x08,
-     701,   11,   11,   11, 0x08,
-     736,  731,   11,   11, 0x08,
-     777,  731,   11,   11, 0x08,
-     814,  731,   11,   11, 0x08,
-     864,   11,   11,   11, 0x08,
-     888,   11,   11,   11, 0x08,
-     921,   11,   11,   11, 0x08,
-     945,   11,   11,   11, 0x08,
+     397,  367,   11,   11, 0x08,
+     428,  290,   11,   11, 0x08,
+     460,   11,   11,   11, 0x08,
+     502,  487,  482,   11, 0x08,
+     527,   11,   11,   11, 0x08,
+     554,   11,  546,   11, 0x08,
+     566,   11,   11,   11, 0x08,
+     585,   11,   11,   11, 0x08,
+     605,   11,   11,   11, 0x08,
+     632,  627,  546,   11, 0x08,
+     659,   83,   11,   11, 0x08,
+     679,   11,   11,   11, 0x08,
+     706,  118,   11,   11, 0x08,
+     732,   11,   11,   11, 0x08,
+     767,  762,   11,   11, 0x08,
+     808,  762,   11,   11, 0x08,
+     845,  762,   11,   11, 0x08,
+     895,   11,   11,   11, 0x08,
+     919,   11,   11,   11, 0x08,
+     952,   11,   11,   11, 0x08,
+     976,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -80,6 +81,7 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "procDoubleClickItem(QListWidgetItem*)\0"
     "DelItem()\0updateListWidgetColor()\0"
     "findstr\0procFindList(QString)\0"
+    "procActivatedFindList(QString)\0"
     "procEnterItem(QListWidgetItem*)\0"
     "procUseListTimerOut()\0bool\0curstr,setnull\0"
     "delKeyWord(QString,bool)\0procSaveTimerOut()\0"
@@ -117,29 +119,30 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 10: _t->DelItem(); break;
         case 11: _t->updateListWidgetColor(); break;
         case 12: _t->procFindList((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 13: _t->procEnterItem((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
-        case 14: _t->procUseListTimerOut(); break;
-        case 15: { bool _r = _t->delKeyWord((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2])));
+        case 13: _t->procActivatedFindList((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 14: _t->procEnterItem((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
+        case 15: _t->procUseListTimerOut(); break;
+        case 16: { bool _r = _t->delKeyWord((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2])));
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = _r; }  break;
-        case 16: _t->procSaveTimerOut(); break;
-        case 17: { QString _r = _t->getMapKey();
+        case 17: _t->procSaveTimerOut(); break;
+        case 18: { QString _r = _t->getMapKey();
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
-        case 18: _t->procFindShortCut(); break;
-        case 19: _t->procClearShortCut(); break;
-        case 20: _t->procSendCmdShortCut(); break;
-        case 21: { QString _r = _t->filterInvalidText((*reinterpret_cast< QString(*)>(_a[1])));
+        case 19: _t->procFindShortCut(); break;
+        case 20: _t->procClearShortCut(); break;
+        case 21: _t->procSendCmdShortCut(); break;
+        case 22: { QString _r = _t->filterInvalidText((*reinterpret_cast< QString(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
-        case 22: _t->filterText((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 23: _t->procitemSelectionChanged(); break;
-        case 24: _t->procComBoxIpList((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 25: _t->on_pushButton_paste_clicked(); break;
-        case 26: _t->on_comboBox_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 27: _t->on_comboBox_editTextChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 28: _t->on_comboBox_findlist_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 29: _t->on_pushButton_clicked(); break;
-        case 30: _t->on_pushButton_push2box_clicked(); break;
-        case 31: _t->CheckTodoListTimerOut(); break;
-        case 32: _t->on_pushButton_delkey_clicked(); break;
+        case 23: _t->filterText((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 24: _t->procitemSelectionChanged(); break;
+        case 25: _t->procComBoxIpList((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 26: _t->on_pushButton_paste_clicked(); break;
+        case 27: _t->on_comboBox_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 28: _t->on_comboBox_editTextChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 29: _t->on_comboBox_findlist_currentIndexChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 30: _t->on_pushButton_clicked(); break;
+        case 31: _t->on_pushButton_push2box_clicked(); break;
+        case 32: _t->CheckTodoListTimerOut(); break;
+        case 33: _t->on_pushButton_delkey_clicked(); break;
         default: ;
         }
     }
@@ -177,9 +180,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 33)
+        if (_id < 34)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 33;
+        _id -= 34;
     }
     return _id;
 }
