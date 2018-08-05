@@ -8,6 +8,7 @@
 #include <QTimer>
 #include <QMap>
 #include <QMutex>
+#include <QSettings>
 
 namespace Ui {
 class MainWindow;
@@ -26,6 +27,8 @@ protected:
     void ReadHistorySettings();
     void WriteCurrentSettings();
     int CheckIPAddr(QString ipaddr);
+    void Var2Map(QSettings &sets, QString envkey, QMap<QString, QStringList> &outmap);
+    QMap<QString, QVariant> Map2Var(QMap<QString, QStringList> &inmap);
 public:
     void closeEvent(QCloseEvent *event);
     void contextMenuEvent(QContextMenuEvent *event);
@@ -33,7 +36,7 @@ public:
     void wheelEvent(QWheelEvent *event);
     void keyPressEvent(QKeyEvent *keyevt);
     void keyReleaseEvent(QKeyEvent * keyevt);
-    void UpdateShowCmdListWidget(QStringList list);
+    void UpdateShowCmdListWidget(QString findstr, QStringList list);
     void UpdateShowCmdListWidgetByMap();
     QStringList GetCurrentMapValue();
 
@@ -45,12 +48,14 @@ private:
     QAction * Act_Normal;
 
 private:
-    QMap<QString, QStringList> map_showcmd;
+    QMap<QString, QStringList> map_showcmd; //IP地址 -> IP地址存储的内容
     QStringList show_cmdlist;
     QStringList searchlist;
+//    QMap<QString, QStringList> searchlist;
     QString oneshowres;
     QString autosendstr;
-    QStringList commonuselist;
+    QMap<QString, QStringList> map_commonuselist; //IP地址 -> 关键词表
+    QStringList comuseitemlist; //关键词表
     QTimer *uselistTimer;
     QTimer *savetimer;
 private slots:
@@ -116,6 +121,14 @@ private slots:
     void CheckTodoListTimerOut();
 
     void on_pushButton_delkey_clicked();
+
+    QStringList getcomuselistbycurkeys();
+
+    void insertcomuselistbycurkeys(QStringList list);
+
+    void insertfindkeys2comuselist(QString findstr);
+
+    void printMapVar(QMap<QString, QStringList> &maps);
 
 private:
     QTcpSocket *socket;

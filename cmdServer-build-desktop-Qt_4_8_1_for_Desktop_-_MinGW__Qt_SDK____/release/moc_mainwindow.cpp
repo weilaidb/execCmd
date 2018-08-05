@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Sun Jul 29 22:07:16 2018
+** Created: Sun Aug 5 11:56:24 2018
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      34,   14, // methods
+      38,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -65,6 +65,10 @@ static const uint qt_meta_data_MainWindow[] = {
      919,   11,   11,   11, 0x08,
      952,   11,   11,   11, 0x08,
      976,   11,   11,   11, 0x08,
+    1019,   11, 1007,   11, 0x08,
+    1049, 1044,   11,   11, 0x08,
+    1088,  367,   11,   11, 0x08,
+    1128, 1123,   11,   11, 0x08,
 
        0        // eod
 };
@@ -98,6 +102,10 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "on_pushButton_push2box_clicked()\0"
     "CheckTodoListTimerOut()\0"
     "on_pushButton_delkey_clicked()\0"
+    "QStringList\0getcomuselistbycurkeys()\0"
+    "list\0insertcomuselistbycurkeys(QStringList)\0"
+    "insertfindkeys2comuselist(QString)\0"
+    "maps\0printMapVar(QMap<QString,QStringList>&)\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -143,6 +151,11 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 31: _t->on_pushButton_push2box_clicked(); break;
         case 32: _t->CheckTodoListTimerOut(); break;
         case 33: _t->on_pushButton_delkey_clicked(); break;
+        case 34: { QStringList _r = _t->getcomuselistbycurkeys();
+            if (_a[0]) *reinterpret_cast< QStringList*>(_a[0]) = _r; }  break;
+        case 35: _t->insertcomuselistbycurkeys((*reinterpret_cast< QStringList(*)>(_a[1]))); break;
+        case 36: _t->insertfindkeys2comuselist((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 37: _t->printMapVar((*reinterpret_cast< QMap<QString,QStringList>(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -180,9 +193,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 34)
+        if (_id < 38)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 34;
+        _id -= 38;
     }
     return _id;
 }

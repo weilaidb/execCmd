@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ReadHistorySettings();
     UpdateShowCmdListWidgetByMap();
 
-    ui->comboBox_findlist->addItems(commonuselist);
+    ui->comboBox_findlist->addItems(getcomuselistbycurkeys());
     publicSets();
     PopMenu();
     autosendstr.clear();
@@ -108,6 +108,37 @@ void MainWindow::publicSets()
 
 }
 
+void MainWindow::Var2Map(QSettings &sets, QString envkey, QMap<QString, QStringList> &outmap)
+{
+    QMap<QString, QVariant> maptmp = sets.value(envkey).toMap();
+
+//map_showcmd
+    QMapIterator<QString, QVariant> i(maptmp);
+    while (i.hasNext()) {
+        i.next();
+        QString key = i.key();
+        QVariant val = i.value();
+        outmap.insert(key, val.toStringList());
+    }
+}
+
+QMap<QString, QVariant> MainWindow::Map2Var(QMap<QString, QStringList> &inmap)
+{
+    QMap<QString, QVariant> maptmp;
+    maptmp.clear();
+    QMapIterator<QString, QStringList> i(inmap);
+    while (i.hasNext()) {
+        i.next();
+        QString key = i.key();
+        QVariant val = i.value();
+        maptmp.insert(key, val);
+    }
+    return maptmp;
+}
+
+
+
+
 
 /*============================================
 * FuncName    : autoCCode::ReadHistorySettings
@@ -124,18 +155,10 @@ void MainWindow::ReadHistorySettings()
     ui->comboBox->setEditText(m_settings.value("curkey").toString());
 //    show_cmdlist.clear();
 //    show_cmdlist = m_settings.value("listWidget_cmdlist").toStringList();
-    commonuselist.clear();
-    commonuselist = m_settings.value("comboBox_findlist").toStringList();
 
-    QMap<QString, QVariant> maptmp = m_settings.value("map_showcmd").toMap();
+    Var2Map(m_settings, "map_showcmd", map_showcmd);
+    Var2Map(m_settings, "map_commonuselist", map_commonuselist);
 
-//map_showcmd
-    QMapIterator<QString, QVariant> i(maptmp);
-    while (i.hasNext()) {
-        QString key = i.next().key();
-        QVariant val = i.value();
-        map_showcmd.insert(key, val.toStringList());
-    }
 //    mapIpAndContent
 //    ui->lineEdit->setText(m_settings.value("LineEditIP").toString());
     ui->checkBox_autosend->setChecked(m_settings.value("checkBox_autosend").toBool());
@@ -163,19 +186,11 @@ void MainWindow::WriteCurrentSettings()
 //        cmdlist << ui->listWidget_cmdlist->item(loop)->text();
 //    }
     m_settings.setValue("listWidget_cmdlist",show_cmdlist);
-    QMap<QString, QVariant> maptmp;
-    maptmp.clear();
-    QMapIterator<QString, QStringList> i(map_showcmd);
-    while (i.hasNext()) {
-        QString key = i.next().key();
-        QVariant val = i.value();
-        maptmp.insert(key, val);
-    }
 
-    m_settings.setValue("map_showcmd", maptmp);
+    m_settings.setValue("map_showcmd", Map2Var(map_showcmd));
+    m_settings.setValue("map_commonuselist", Map2Var(map_commonuselist));
 
 
-    m_settings.setValue("comboBox_findlist",commonuselist);
     m_settings.setValue("checkBox_autosend",ui->checkBox_autosend->isChecked());
 
 
@@ -200,6 +215,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 {
     qDebug() << "closeEvent";
     WriteCurrentSettings();
+    printMapVar(map_commonuselist);
     event->accept();
 }
 
@@ -418,7 +434,8 @@ void MainWindow::on_pushButton_collect_clicked()
     QStringList findlist;
     findlist.clear();
     while (i.hasNext()) {
-        if(i.next().key() == getMapKey())
+        i.next();
+        if(i.key() == getMapKey())
         {
 //            qDebug() << i.value();
             found = TRUE;
@@ -521,21 +538,21 @@ void MainWindow::procFindList(QString findstr)
     }
 
 //    searchlist.sort();
-    UpdateShowCmdListWidget(searchlist);
+    UpdateShowCmdListWidget(findstr, searchlist);
     mutex_search.unlock();
 
 }
 
 void MainWindow::procActivatedFindList(QString findstr)
 {
-    qDebug() << "procActivatedFindList";
+    qDebug() << "procActivatedFindList, findstr:" << findstr;
     findstr = findstr;
 
     if(searchlist.size() > 0)
     {
 //        ui->textEdit->setText(list.at(0));
         checkoneitem_execcmd(oneshowres);
-
+        insertfindkeys2comuselist(findstr);
     }
 }
 
@@ -589,11 +606,13 @@ bool MainWindow::delKeyWord(QString curstr, bool setnull)
         QString todel = curstr;
         todel = todel.replace(delstr, "").simplified();
 //        qDebug() << "!!!procUseListTimerOut del uselist:" << todel;
-        commonuselist.removeOne(todel);
-        commonuselist.sort();
-        commonuselist.removeDuplicates();
+        comuseitemlist = getcomuselistbycurkeys();
+        comuseitemlist.removeOne(todel);
+        comuseitemlist.sort();
+        comuseitemlist.removeDuplicates();
+        insertcomuselistbycurkeys(comuseitemlist);
         ui->comboBox_findlist->clear();
-        ui->comboBox_findlist->addItems(commonuselist);
+        ui->comboBox_findlist->addItems(getcomuselistbycurkeys());
         if(setnull)
         {
             ui->comboBox_findlist->setEditText("");
@@ -628,12 +647,14 @@ void MainWindow::procUseListTimerOut()
     {
         return;
     }
-//    qDebug() << "!!!procUseListTimerOut add uselist:" << curstr;
-    commonuselist.append(curstr);
-    commonuselist.sort();
-    commonuselist.removeDuplicates();
+    qDebug() << "!!!procUseListTimerOut add uselist:" << curstr;
+    comuseitemlist = getcomuselistbycurkeys();
+    comuseitemlist.append(curstr);
+    comuseitemlist.sort();
+    comuseitemlist.removeDuplicates();
+    insertcomuselistbycurkeys(comuseitemlist);
     ui->comboBox_findlist->clear();
-    ui->comboBox_findlist->addItems(commonuselist);
+    ui->comboBox_findlist->addItems(getcomuselistbycurkeys());
     ui->comboBox_findlist->setEditText(curstr);
     ui->comboBox_findlist->update();
 }
@@ -783,7 +804,7 @@ void MainWindow::on_pushButton_paste_clicked()
 }
 
 
-void MainWindow::UpdateShowCmdListWidget(QStringList list)
+void MainWindow::UpdateShowCmdListWidget(QString findstr, QStringList list)
 {
     oneshowres.clear();
     ui->listWidget_cmdlist->clear();
@@ -823,7 +844,8 @@ void MainWindow::UpdateShowCmdListWidgetByMap()
     QStringList findlist;
     findlist.clear();
     while (i.hasNext()) {
-        if(i.next().key() == getMapKey())
+        i.next();
+        if(i.key() == getMapKey())
         {
 //            qDebug() << i.value();
             found = TRUE;
@@ -855,6 +877,7 @@ void MainWindow::UpdateShowCmdListWidgetByMap()
 //    {
 //        ui->textEdit_cmdresult->setText(findlist.at(0));
 //    }
+
 }
 
 
@@ -865,7 +888,8 @@ QStringList MainWindow::GetCurrentMapValue()
     QStringList findlist;
     findlist.clear();
     while (i.hasNext()) {
-        if(i.next().key() == getMapKey())
+        i.next();
+        if(i.key() == getMapKey())
         {
 //            qDebug() << i.value();
             findlist = i.value();
@@ -901,6 +925,10 @@ void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
         return;
     }
     UpdateShowCmdListWidgetByMap();
+    ui->comboBox_findlist->clear();
+    ui->comboBox_findlist->addItem("");
+    ui->comboBox_findlist->addItems(getcomuselistbycurkeys());
+
 }
 
 void MainWindow::on_comboBox_editTextChanged(const QString &arg1)
@@ -968,3 +996,107 @@ void MainWindow::on_pushButton_delkey_clicked()
 
     delKeyWord(delword  + KEY_DELETEWORD, TRUE);
 }
+
+QStringList MainWindow::getcomuselistbycurkeys()
+{
+    QString curkey = ui->comboBox->currentText();
+//    map_commonuselist
+    QMapIterator<QString, QStringList> i(map_commonuselist);
+    qDebug() << "com use list key:" << curkey ;
+
+    QStringList findlist;
+    quint8 found = FALSE;
+    findlist.clear();
+    while (i.hasNext()) {
+        i.next();
+        if(i.key() == curkey)
+        {
+            qDebug() << "com use list key,value:" << curkey << "," << i.value();
+            found = TRUE;
+            findlist = i.value();
+            break;
+        }
+    }
+//    //没有数据时插入数据
+//    if(found == FALSE)
+//    {
+//        QStringList nulllist;
+//        nulllist.clear();
+//        map_commonuselist.insert(curkey, nulllist);
+//        findlist = nulllist;
+//    }
+
+    return findlist;
+}
+
+
+void MainWindow::insertcomuselistbycurkeys(QStringList list)
+{
+    QString curkey = ui->comboBox->currentText();
+    map_commonuselist.insert(curkey, list);
+}
+
+void MainWindow::insertfindkeys2comuselist(QString findstr)
+{
+    QString curkey = ui->comboBox->currentText();
+    QMapIterator<QString, QStringList> i(map_commonuselist);
+//    qDebug() << "com use list key:" << curkey ;
+
+    QStringList findlist;
+    quint8 found = FALSE;
+    findlist.clear();
+    while (i.hasNext()) {
+        i.next();
+        if(i.key() == curkey)
+        {
+//            qDebug() << "com use list key,value:" << curkey << "," << i.value();
+            found = TRUE;
+            findlist = i.value();
+            break;
+        }
+    }
+
+    //没有数据时插入数据
+    if(found == FALSE)
+    {
+        QStringList nulllist;
+        nulllist.clear();
+        map_commonuselist.insert(curkey, nulllist);
+        findlist = nulllist;
+    }
+
+    found = FALSE;
+    foreach (QString instr, findlist) {
+        if(instr == findstr)
+        {
+            found = TRUE;
+            break;
+        }
+    }
+
+    if(found == FALSE)
+    {
+        comuseitemlist = getcomuselistbycurkeys();
+        comuseitemlist.append(findstr);
+        comuseitemlist.sort();
+        comuseitemlist.removeDuplicates();
+        insertcomuselistbycurkeys(comuseitemlist);
+    }
+}
+
+
+
+void MainWindow::printMapVar(QMap<QString, QStringList> &maps)
+{
+    qDebug() << "map var size:"<< maps.size();
+    QMapIterator<QString, QStringList> i(maps);
+    while (i.hasNext()) {
+        i.next();
+        qDebug() << "com use list key,value size:" << i.key() << "," << i.value().size();
+        foreach (QString instr, i.value()) {
+            qDebug() << "instr:" << instr;
+        }
+
+    }
+}
+
