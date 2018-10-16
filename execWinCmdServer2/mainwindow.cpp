@@ -162,10 +162,11 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
         qDebug() << "ret :" << ret;
         qDebug() << "cret:" << cret;
         qDebug() << "resstring:" << resstring;
-        showtext += QString("%1 ret:%2[%3]\n")
-                            .arg(QString::fromLocal8Bit(resstring).toUtf8().data())
+        showtext += QString("ret:%1[%2] %3 \n")
                             .arg(cret)
-                            .arg(cret < 32 ? "err" : "ok");
+                            .arg(cret < 32 ? "err" : "ok")
+                            .arg(QString::fromLocal8Bit(resstring).toUtf8().data())
+                            ;
     }
     ui->statusBar->showMessage(tr(showtext.toLatin1()));
     ui->textEdit_receive->setText(tr(cltmsg.toLatin1()));
