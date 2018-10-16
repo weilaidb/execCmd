@@ -76,6 +76,8 @@ private slots:
 
     void procDoubleClickItem(QListWidgetItem *item);
 
+    void procClickItem(QListWidgetItem *item);
+
     void DelItem();
 
     void updateListWidgetColor();

@@ -4,6 +4,7 @@
 #include <QProcess>
 #include <windows.h>
 #include <version.h>
+#include <QRegExp>
 
 #define MAX_LENGTH (20480)
 
@@ -141,6 +142,7 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
 //    LPCSTR filepath = cltmsg.toAscii().data();
 
     QStringList splitdata = cltmsg.split('\n');
+    QString showtext;
 
     foreach (QString single, splitdata) {
         if(single.simplified().length() == 0)
@@ -153,11 +155,19 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
         single = tr(single.toAscii().data());
         qDebug() << "single         :" << single;
         LPCSTR filepath = (single.toAscii().data());
-        LPCSTR resstring = singstep(filepath, isCmd, single);
+        HINSTANCE ret;
+        quint32 cret = 0;
+        LPCSTR resstring = singstep(filepath, isCmd, single, ret);
+        cret = (quint32)ret;
+        qDebug() << "ret :" << ret;
+        qDebug() << "cret:" << cret;
         qDebug() << "resstring:" << resstring;
-        QString showtext = (QString("%1 %2").arg(exepath).arg(QString::fromUtf8(filepath)));
+        showtext += QString("%1 ret:%2[%3]\n")
+                            .arg(QString::fromLocal8Bit(resstring).toUtf8().data())
+                            .arg(cret)
+                            .arg(cret < 32 ? "err" : "ok");
     }
-    ui->statusBar->showMessage(tr(cltmsg.toLatin1()));
+    ui->statusBar->showMessage(tr(showtext.toLatin1()));
     ui->textEdit_receive->setText(tr(cltmsg.toLatin1()));
 
 
@@ -267,33 +277,46 @@ void MainWindow::showversion()
     ui->statusBar->showMessage(QString("version %1").arg(VERSION));
 }
 
-LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single)
-{
 
-    LPCSTR filepath = LPCSTR(org);
+
+char*  MainWindow::convertQString2buf(QString single)
+{
     LPCSTR filepath2 = NULL;
 
-
-    if(szLogin == NULL)
-        return filepath2;
     memset(szLogin, 0, MAX_LENGTH);
     QByteArray ba111 = single.toLocal8Bit(); // strUser是QString，外部传来的数据。
     char* temp111 = ba111.data();
     strcpy(szLogin, temp111);
-//    然后强行转换char*到LPCWSTR：
+    //    然后强行转换char*到LPCWSTR：
     filepath2 = (LPCSTR)szLogin;
+    fprintf(stdout, "temp111  :%s\n", temp111);
+    fprintf(stdout, "szLogin  :%s\n", szLogin);
+    fprintf(stdout, "filepath2:%s\n", filepath2);
+    fflush(stdout);
+    return szLogin;
+}
+
+LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single, HINSTANCE &ret)
+{
+    LPCSTR filepath = LPCSTR(org);
+    LPCSTR filepath2 = NULL;
+
+    if(szLogin == NULL)
+        return filepath2;
+
+    filepath2 = convertQString2buf(single);
 
 
-//    LPCSTR filepath2 = QString::fromAscii(filepath).toAscii().simplified().data();
-//    qDebug() <<"iscmd:" << isCmd << "filepath2:" << QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
-    qDebug() <<"iscmd:" << isCmd ;
-    qDebug() << "filepath2:" << QString::fromAscii(filepath).toAscii().simplified().data();
-    qDebug() << "filepath2:" << QString::fromUtf8(filepath).toAscii().simplified().data();
-    qDebug() << "filepath2:" << QString::fromUtf8(filepath).toAscii().simplified().data();
-    qDebug() << "filepath2:" << QString::fromAscii(filepath);
-    qDebug() << "filepath2:" << QString::fromUtf8(filepath);
-    qDebug() << "filepath2:" << QString::fromLatin1(filepath);
-    qDebug() << "filepath2:" << QString::fromLocal8Bit(filepath);
+////    LPCSTR filepath2 = QString::fromAscii(filepath).toAscii().simplified().data();
+////    qDebug() <<"iscmd:" << isCmd << "filepath2:" << QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
+//    qDebug() <<"iscmd:" << isCmd ;
+//    qDebug() << "filepath2:" << QString::fromAscii(filepath).toAscii().simplified().data();
+//    qDebug() << "filepath2:" << QString::fromUtf8(filepath).toAscii().simplified().data();
+//    qDebug() << "filepath2:" << QString::fromUtf8(filepath).toAscii().simplified().data();
+//    qDebug() << "filepath2:" << QString::fromAscii(filepath);
+//    qDebug() << "filepath2:" << QString::fromUtf8(filepath);
+//    qDebug() << "filepath2:" << QString::fromLatin1(filepath);
+//    qDebug() << "filepath2:" << QString::fromLocal8Bit(filepath);
     qDebug() << "filepath2:" << (filepath);
     qDebug() << "single   :" << (single);
 
@@ -307,35 +330,50 @@ LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single)
         {
     //        single = "/c "/* + single.replace("cmd", 3, "", 3)*/;
             QString strTmp = "";
-            int idx = 0;
+//            int idx = 0;
 
             strTmp = single;
             //only replace the first find cmd
-            idx = strTmp.indexOf("cmd ", 0);
-            if (-1 != idx)
-            {
-                strTmp.replace(idx, 4, "");
-    //            m_Button->setText(strTmp);
-            }
-            single = "/C " + strTmp;
+            strTmp.replace(QRegExp("^cmd\\s+"), "");
+//            idx = strTmp.indexOf("cmd ", 0);
+//            if (-1 != idx)
+//            {
+//                strTmp.replace(idx, 4, "");
+//    //            m_Button->setText(strTmp);
+//            }
+            single = QString("/C %1").arg(strTmp);
     //        single = strTmp;
             qDebug() << "cmd order:" << single;
+            qDebug() << "strTmp   :" << strTmp;
+
 
             filepath = single.toAscii().data();
+            qDebug() << "filepath :" << filepath;
+//            qDebug() << "filepath[0] :" << filepath[0];
+//            qDebug() << "filepath[1] :" << filepath[1];
+//            //跳过前导空格
+//            while(*filepath == ' ')
+//                filepath++;
+
 //            filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
-            filepath2 = QString::fromUtf8(filepath).toUtf8().data();
+//            filepath2 = QString::fromUtf8(filepath).toUtf8().data();
+            filepath2 = convertQString2buf(single);
+//            //跳过前导空格
+//            while(*filepath2 == ' ')
+//                filepath2++;
+
             qDebug() << "filepath2 last:" << filepath2;
-            HINSTANCE ret = ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
+            ret = ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
     //        HINSTANCE ret = ShellExecuteA(NULL, "open", "C:\windows\system32\cmd.exe", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
     //        HINSTANCE ret = ShellExecuteA(NULL, "open", NULL, filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
-            qDebug() << "ret:" << ret;
     //        SW_MINIMIZE
         }
         else
         {
             //    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
-            ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWMAXIMIZED);
+            ret = ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWMAXIMIZED);
         }
+        qDebug() << "ret:" << ret;
 
     }
     catch(QString & d1)

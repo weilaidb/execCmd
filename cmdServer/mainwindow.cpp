@@ -100,11 +100,12 @@ void MainWindow::publicSets()
 
     ui->listWidget_cmdlist->setMouseTracking(true);
     connect(ui->listWidget_cmdlist, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(procDoubleClickItem(QListWidgetItem *)));
-    connect(ui->listWidget_cmdlist, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(procDoubleClickItem(QListWidgetItem *)));
+    connect(ui->listWidget_cmdlist, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(procClickItem(QListWidgetItem *)));
     connect(ui->listWidget_cmdlist, SIGNAL(itemEntered(QListWidgetItem*)),this, SLOT(procEnterItem(QListWidgetItem*)));
     connect(ui->listWidget_cmdlist, SIGNAL(itemSelectionChanged()), this, SLOT(procitemSelectionChanged()));
     connect(ui->comboBox_findlist, SIGNAL(editTextChanged(QString)), this, SLOT(procFindList(QString)));
     connect(ui->comboBox_findlist, SIGNAL(activated(QString)), this, SLOT(procActivatedFindList(QString)));
+
 
 }
 
@@ -482,6 +483,20 @@ void MainWindow::on_pushButton_clear_clicked()
 
 void MainWindow::procDoubleClickItem(QListWidgetItem * item)
 {
+//    if(ui->checkBox_autosend->isChecked())
+    {
+        autosendstr = item->text();
+        ui->textEdit->setText(item->text());
+        on_connecting_sendstr("");
+
+        return;
+    }
+//    qDebug() << item->text();
+    ui->textEdit->setText(item->text());
+}
+
+void MainWindow::procClickItem(QListWidgetItem * item)
+{
     if(ui->checkBox_autosend->isChecked())
     {
         autosendstr = item->text();
@@ -493,6 +508,7 @@ void MainWindow::procDoubleClickItem(QListWidgetItem * item)
 //    qDebug() << item->text();
     ui->textEdit->setText(item->text());
 }
+
 
 void MainWindow::procEnterItem(QListWidgetItem* item)
 {
