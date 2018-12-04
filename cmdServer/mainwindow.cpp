@@ -298,6 +298,11 @@ void MainWindow::on_pushButton_connect_clicked()
     checkoneitem_execcmd(ui->textEdit->toPlainText());
 }
 
+void MainWindow::on_pushButton_connect_clicked_selftext(QString text)
+{
+    checkoneitem_execcmd(text);
+}
+
 void MainWindow::newConnect(QString ipaddr)
 {
     qDebug() << "-->>client socket:" << socket;
@@ -819,6 +824,12 @@ void MainWindow::on_pushButton_paste_clicked()
     ui->textEdit->setText(clipboard->text());
 }
 
+QString MainWindow::getclipboardtext()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    return clipboard->text();
+}
+
 
 void MainWindow::UpdateShowCmdListWidget(QString findstr, QStringList list)
 {
@@ -1115,4 +1126,26 @@ void MainWindow::printMapVar(QMap<QString, QStringList> &maps)
 
     }
 }
+void MainWindow::on_pushButton_searchengine_clicked(QString enginetext)
+{
+    QString head = enginetext;
+    QString cliptext = getclipboardtext();
+    if(cliptext.simplified().isEmpty())
+    {
+        return;
+    }
+    QString searchtext = head + cliptext;
+    ui->textEdit->setText(searchtext);
+    on_pushButton_connect_clicked_selftext(searchtext);
 
+}
+
+void MainWindow::on_pushButton_baidu_clicked()
+{
+    on_pushButton_searchengine_clicked( "https://www.baidu.com/s?wd=");
+}
+
+void MainWindow::on_pushButton_biying_clicked()
+{
+    on_pushButton_searchengine_clicked( "https://cn.bing.com/search?q=");
+}

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Tue Jul 17 22:06:55 2018
+** Created: Tue Dec 4 23:08:49 2018
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -63,6 +63,8 @@ public:
     QPushButton *pushButton_paste;
     QPushButton *pushButton_clear;
     QPushButton *pushButton_collect;
+    QPushButton *pushButton_baidu;
+    QPushButton *pushButton_biying;
     QLineEdit *lineEdit_sendnum;
     QSpacerItem *horizontalSpacer;
     QLabel *label;
@@ -242,6 +244,24 @@ public:
 
         horizontalLayout->addWidget(pushButton_collect);
 
+        pushButton_baidu = new QPushButton(horizontalGroupBox);
+        pushButton_baidu->setObjectName(QString::fromUtf8("pushButton_baidu"));
+        sizePolicy.setHeightForWidth(pushButton_baidu->sizePolicy().hasHeightForWidth());
+        pushButton_baidu->setSizePolicy(sizePolicy);
+        pushButton_baidu->setMinimumSize(QSize(60, 41));
+        pushButton_baidu->setMaximumSize(QSize(106, 41));
+
+        horizontalLayout->addWidget(pushButton_baidu);
+
+        pushButton_biying = new QPushButton(horizontalGroupBox);
+        pushButton_biying->setObjectName(QString::fromUtf8("pushButton_biying"));
+        sizePolicy.setHeightForWidth(pushButton_biying->sizePolicy().hasHeightForWidth());
+        pushButton_biying->setSizePolicy(sizePolicy);
+        pushButton_biying->setMinimumSize(QSize(60, 41));
+        pushButton_biying->setMaximumSize(QSize(106, 41));
+
+        horizontalLayout->addWidget(pushButton_biying);
+
         lineEdit_sendnum = new QLineEdit(horizontalGroupBox);
         lineEdit_sendnum->setObjectName(QString::fromUtf8("lineEdit_sendnum"));
         sizePolicy.setHeightForWidth(lineEdit_sendnum->sizePolicy().hasHeightForWidth());
@@ -318,6 +338,8 @@ public:
         pushButton_paste->setText(QApplication::translate("MainWindow", "\347\262\230\350\264\264", 0, QApplication::UnicodeUTF8));
         pushButton_clear->setText(QApplication::translate("MainWindow", "\346\270\205\347\251\272", 0, QApplication::UnicodeUTF8));
         pushButton_collect->setText(QApplication::translate("MainWindow", "\346\224\266\350\227\217", 0, QApplication::UnicodeUTF8));
+        pushButton_baidu->setText(QApplication::translate("MainWindow", "\347\231\276\345\272\246", 0, QApplication::UnicodeUTF8));
+        pushButton_biying->setText(QApplication::translate("MainWindow", "\345\277\205\345\272\224", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         lineEdit_sendnum->setToolTip(QApplication::translate("MainWindow", "\346\211\247\350\241\214\346\225\260\351\207\217", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP

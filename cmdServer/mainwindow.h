@@ -61,6 +61,7 @@ private:
 private slots:
     void on_connecting_sendstr(QString sendstr);
     void on_pushButton_connect_clicked();
+    void on_pushButton_connect_clicked_selftext(QString text);
 
     void checkoneitem_execcmd(QString text);
 
@@ -109,6 +110,7 @@ private slots:
 
     void procComBoxIpList(QString ipaddr);
     void on_pushButton_paste_clicked();
+    QString getclipboardtext();
 
     void on_comboBox_currentIndexChanged(const QString &arg1);
 
@@ -131,6 +133,12 @@ private slots:
     void insertfindkeys2comuselist(QString findstr);
 
     void printMapVar(QMap<QString, QStringList> &maps);
+
+    void on_pushButton_searchengine_clicked(QString text);
+
+    void on_pushButton_baidu_clicked();
+
+    void on_pushButton_biying_clicked();
 
 private:
     QTcpSocket *socket;
