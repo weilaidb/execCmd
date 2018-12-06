@@ -1130,10 +1130,10 @@ void MainWindow::on_pushButton_searchengine_clicked(QString enginetext)
 {
     QString head = enginetext;
     QString cliptext = getclipboardtext();
-    if(cliptext.simplified().isEmpty())
-    {
-        return;
-    }
+//    if(cliptext.simplified().isEmpty())
+//    {
+//        return;
+//    }
     QString searchtext = head + cliptext;
     ui->textEdit->setText(searchtext);
     on_pushButton_connect_clicked_selftext(searchtext);
