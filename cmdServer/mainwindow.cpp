@@ -1137,10 +1137,18 @@ void MainWindow::on_pushButton_searchengine_clicked(QString enginetext)
 //    }
 //    m_labelOutput->setText(QString(byteArrayPercentEncoded));
 
+    QString searchtext;
     QTextCodec * codecGB2312 = QTextCodec::codecForName("GB2312");
-    QByteArray byteArrayGB2312 = codecGB2312->fromUnicode(cliptext);
-    QByteArray byteArrayPercentEncoded = byteArrayGB2312.toPercentEncoding();
-    QString searchtext = head + byteArrayPercentEncoded;
+    if(!cliptext.simplified().isEmpty())
+    {
+        QByteArray byteArrayGB2312 = codecGB2312->fromUnicode(cliptext);
+        QByteArray byteArrayPercentEncoded = byteArrayGB2312.toPercentEncoding();
+        searchtext = head + byteArrayPercentEncoded;
+    }
+    else
+    {
+        searchtext = head + cliptext;
+    }
     ui->textEdit->setText(searchtext);
     on_pushButton_connect_clicked_selftext(searchtext);
 
