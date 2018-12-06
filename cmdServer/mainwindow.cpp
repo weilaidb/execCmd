@@ -11,6 +11,7 @@
 #include "version.h"
 #include <QClipboard>
 #include <windows.h>
+#include <QTextCodec>
 
 #define BINDPORT (99999)
 #define CMD_HELLO "hello word"
@@ -1134,7 +1135,12 @@ void MainWindow::on_pushButton_searchengine_clicked(QString enginetext)
 //    {
 //        return;
 //    }
-    QString searchtext = head + cliptext;
+//    m_labelOutput->setText(QString(byteArrayPercentEncoded));
+
+    QTextCodec * codecGB2312 = QTextCodec::codecForName("GB2312");
+    QByteArray byteArrayGB2312 = codecGB2312->fromUnicode(cliptext);
+    QByteArray byteArrayPercentEncoded = byteArrayGB2312.toPercentEncoding();
+    QString searchtext = head + byteArrayPercentEncoded;
     ui->textEdit->setText(searchtext);
     on_pushButton_connect_clicked_selftext(searchtext);
 
