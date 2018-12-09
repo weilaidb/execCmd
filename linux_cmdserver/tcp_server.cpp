@@ -244,9 +244,15 @@ int tcp_server::recv_msg()
 				// 子进程
 				close(socket_fd);
 				close(fd[0]);     /* close read end */
+				setvbuf ( stdout , NULL , _IONBF , 1024 );
+				setvbuf ( stderr , NULL , _IONBF , 1024 );
 				if (fd[1] != STDOUT_FILENO)
 				{
 				  if (dup2(fd[1], STDOUT_FILENO) != STDOUT_FILENO)
+				  {
+					  return -1;
+				  }
+				  if (dup2(fd[1], STDERR_FILENO) != STDERR_FILENO)
 				  {
 					  return -1;
 				  }
@@ -323,8 +329,8 @@ void tcp_server::do_service(int conn)
 		}
 		// showmsg(recvbuf, size);
 		memcpy(execcmd, recvbuf + offset, size - offset);
-		printf("execcmd  : %s\n",execcmd);
-		printf("-------------cmd list--------------\n");
+		fprintf(stdout, "execcmd  : %s\n",execcmd);
+		fprintf(stdout, "-------------cmd list--------------\n");
 		int status = system(execcmd);
 		if(status < 0)
 		{
