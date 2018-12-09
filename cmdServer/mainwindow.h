@@ -140,6 +140,8 @@ private slots:
 
     void on_pushButton_biying_clicked();
 
+    void on_pushButton_360so_clicked();
+
 private:
     QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串
@@ -147,6 +149,8 @@ private:
     sockthread *pthreadsock;
 
     QMutex mutex_search;
+
+    bool forceipaddrflag;
 
 private:
     Ui::MainWindow *ui;

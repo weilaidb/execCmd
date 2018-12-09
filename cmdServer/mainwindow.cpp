@@ -16,6 +16,7 @@
 #define BINDPORT (99999)
 #define CMD_HELLO "hello word"
 #define KEY_DELETEWORD "delete it"
+#define LOCALHOSTIPADDR ("127.0.0.1")
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -88,6 +89,9 @@ MainWindow::MainWindow(QWidget *parent) :
 //     setPlaceholderText()设置提示文字
 //     QLineEdit *edit;
 //     edit->setPlaceholderText("niahoma");
+
+     //强制IP标志
+     forceipaddrflag = false;
 }
 
 MainWindow::~MainWindow()
@@ -279,6 +283,11 @@ void MainWindow::checkoneitem_execcmd(QString text)
     if(0 != CheckIPAddr(ipaddr))
     {
         return;
+    }
+
+    if(forceipaddrflag)
+    {
+        ipaddr = LOCALHOSTIPADDR;
     }
 
     procComBoxIpList(ipaddr);
@@ -1155,13 +1164,25 @@ void MainWindow::on_pushButton_searchengine_clicked(QString enginetext)
     on_pushButton_connect_clicked_selftext(searchtext);
 
 }
+#define ENGINESEARCHTEXT(text)\
+do{\
+    forceipaddrflag = true;\
+    on_pushButton_searchengine_clicked( text);\
+    forceipaddrflag = false;\
+}while(0)
+
 
 void MainWindow::on_pushButton_baidu_clicked()
 {
-    on_pushButton_searchengine_clicked( "https://www.baidu.com/s?wd=");
+    ENGINESEARCHTEXT( "https://www.baidu.com/s?wd=");
 }
 
 void MainWindow::on_pushButton_biying_clicked()
 {
-    on_pushButton_searchengine_clicked( "https://cn.bing.com/search?q=");
+    ENGINESEARCHTEXT( "https://cn.bing.com/search?q=");
+}
+
+void MainWindow::on_pushButton_360so_clicked()
+{
+    ENGINESEARCHTEXT( "https://www.so.com/s?ie=utf-8&fr=none&src=360sou_newhome&q=");
 }
