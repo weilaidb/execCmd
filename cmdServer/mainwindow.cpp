@@ -285,7 +285,7 @@ void MainWindow::checkoneitem_execcmd(QString text)
         return;
     }
 
-    if(forceipaddrflag)
+    if(forceipaddrflag || (ui->checkBox_forcelocalhost->isChecked()))
     {
         ipaddr = LOCALHOSTIPADDR;
     }

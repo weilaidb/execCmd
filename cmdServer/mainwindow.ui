@@ -384,6 +384,13 @@
               </widget>
              </item>
              <item>
+              <widget class="QCheckBox" name="checkBox_forcelocalhost">
+               <property name="text">
+                <string>Local</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QLineEdit" name="lineEdit_sendnum">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">

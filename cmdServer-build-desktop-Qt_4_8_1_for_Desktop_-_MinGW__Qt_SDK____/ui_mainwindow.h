@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun Dec 9 14:56:30 2018
+** Created: Sun Dec 9 15:05:32 2018
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -66,6 +66,7 @@ public:
     QPushButton *pushButton_baidu;
     QPushButton *pushButton_biying;
     QPushButton *pushButton_360so;
+    QCheckBox *checkBox_forcelocalhost;
     QLineEdit *lineEdit_sendnum;
     QSpacerItem *horizontalSpacer;
     QLabel *label;
@@ -272,6 +273,11 @@ public:
 
         horizontalLayout->addWidget(pushButton_360so);
 
+        checkBox_forcelocalhost = new QCheckBox(horizontalGroupBox);
+        checkBox_forcelocalhost->setObjectName(QString::fromUtf8("checkBox_forcelocalhost"));
+
+        horizontalLayout->addWidget(checkBox_forcelocalhost);
+
         lineEdit_sendnum = new QLineEdit(horizontalGroupBox);
         lineEdit_sendnum->setObjectName(QString::fromUtf8("lineEdit_sendnum"));
         sizePolicy.setHeightForWidth(lineEdit_sendnum->sizePolicy().hasHeightForWidth());
@@ -351,6 +357,7 @@ public:
         pushButton_baidu->setText(QApplication::translate("MainWindow", "\347\231\276\345\272\246", 0, QApplication::UnicodeUTF8));
         pushButton_biying->setText(QApplication::translate("MainWindow", "\345\277\205\345\272\224", 0, QApplication::UnicodeUTF8));
         pushButton_360so->setText(QApplication::translate("MainWindow", "360so", 0, QApplication::UnicodeUTF8));
+        checkBox_forcelocalhost->setText(QApplication::translate("MainWindow", "Local", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         lineEdit_sendnum->setToolTip(QApplication::translate("MainWindow", "\346\211\247\350\241\214\346\225\260\351\207\217", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP
