@@ -7,6 +7,7 @@
 #include <QRegExp>
 
 #define MAX_LENGTH (20480)
+#define BINDPORT (9999)
 
 char* szLogin = new char[MAX_LENGTH];
 
@@ -23,7 +24,9 @@ MainWindow::MainWindow(QWidget *parent) :
     byteWritten  = 0;
     bytesToWrite = 0;
 
-    InitServer("127.0.0.1", 99999);
+//    InitServer("127.0.0.1", 9999);
+//    InitServer("192.168.59.12", BINDPORT);
+    InitServer("0", BINDPORT);
 
     //qt 最小化到托盘
 #if 1
@@ -65,6 +68,7 @@ int MainWindow::InitServer( QString ipaddr, quint16 listenport)
     //if(!tcpServer->listen(QHostAddress::LocalHost,6666))
     //    if(!tcpServer->listen(QHostAddress("192.168.1.100"),6666))
     if(!tcpServer->listen(QHostAddress(ipaddr),listenport))
+//    if(!tcpServer->listen(QHostAddress::Any,listenport))
     {  //监听本地主机的6666端口，如果出错就输出错误信息，并关闭
 
         qDebug() << tcpServer->errorString();
@@ -93,6 +97,7 @@ void MainWindow::procClientMessage()
     clientConnection = tcpServer->nextPendingConnection();
 
     qDebug() << "-->>client socket:" << clientConnection;
+    qDebug() << "-->>client socket address:" << clientConnection->peerAddress();
     sockthread *pthreadsock = new sockthread(this);
     pthreadsock->setSocketConnect(clientConnection);
     QObject::connect(pthreadsock,SIGNAL(emitMsgDoneSignal(QString,void*)),

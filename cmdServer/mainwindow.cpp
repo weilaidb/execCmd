@@ -13,7 +13,7 @@
 #include <windows.h>
 #include <QTextCodec>
 
-#define BINDPORT (99999)
+#define BINDPORT (9999)
 #define CMD_HELLO "hello word"
 #define KEY_DELETEWORD "delete it"
 #define LOCALHOSTIPADDR ("127.0.0.1")

@@ -132,7 +132,16 @@ void sockthread::updateReadMsgProgress()
     }
 
     if (bytesReceived == TotalReadBytes) {
-        QString  bigmsg = inBlock.mid(4); //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
+        QString  bigmsg;
+        bigmsg.clear();
+        if(inBlock.at(0) != '\0')
+        {
+            bigmsg = inBlock; //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
+        }
+        else
+        {
+            bigmsg = inBlock.mid(4);
+        }
         //入库
 //        readfromremote(bigmsg);
         emit emitMsgDoneSignal(bigmsg, (void *)this);
