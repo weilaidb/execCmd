@@ -169,7 +169,7 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
         qDebug() << "resstring:" << resstring;
         showtext += QString("ret:%1[%2] %3 \n")
                             .arg(cret)
-                            .arg(cret < 32 ? "err" : "ok")
+                            .arg(showshellexecuteresult(cret))
                             .arg(QString::fromLocal8Bit(resstring).toUtf8().data())
                             ;
     }
@@ -379,7 +379,8 @@ LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single, HINSTANCE
             //    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
             ret = ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWMAXIMIZED);
         }
-        qDebug() << "ret:" << ret;
+        qDebug() << "ret:" << ret << ", " << showshellexecuteresult((quint32)ret);
+
 
     }
     catch(QString & d1)
@@ -391,3 +392,65 @@ LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single, HINSTANCE
     return filepath2;
 }
 
+
+char * MainWindow::showshellexecuteresult(quint32 ret)
+{
+//    返回值大于32表示执行成功
+//    返回值小于32表示执行错误
+//    返回值可能的错误有: = 0 {内存不足}
+//    ERROR_FILE_NOT_FOUND = 2; {文件名错误}
+//    ERROR_PATH_NOT_FOUND = 3; {路径名错误}
+//    ERROR_BAD_FORMAT = 11; {EXE 文件无效}
+//    SE_ERR_SHARE = 26; {发生共享错误}
+//    SE_ERR_ASSOCINCOMPLETE = 27; {文件名不完全或无效}
+//    SE_ERR_DDETIMEOUT = 28; {超时}
+//    SE_ERR_DDEFAIL = 29; {DDE 事务失败}
+//    SE_ERR_DDEBUSY = 30; {正在处理其他 DDE 事务而不能完成该 DDE 事务}
+//    SE_ERR_NOASSOC = 31; {没有相关联的应用程序}
+
+
+//    #define SHELLEXECUTEA_RET_2STR(num)\
+
+    switch((quint32)ret)
+    {
+    case 2:
+        return "ERROR_FILE_NOT_FOUND";
+        break;
+    case 3:
+        return "ERROR_PATH_NOT_FOUND";
+        break;
+    case 11:
+        return "ERROR_BAD_FORMAT";
+        break;
+    case 26:
+        return "SE_ERR_SHARE";
+        break;
+    case 27:
+        return "SE_ERR_ASSOCINCOMPLETE";
+        break;
+    case 28:
+        return "SE_ERR_DDETIMEOUT";
+        break;
+    case 29:
+        return "SE_ERR_DDEFAIL";
+        break;
+    case 30:
+        return "SE_ERR_DDEBUSY";
+        break;
+    case 31:
+        return "SE_ERR_NOASSOC";
+        break;
+    default:
+        break;
+    }
+
+    if((int)ret > 32)
+    {
+        return "ok";
+    }
+    else
+    {
+        return "err";
+    }
+
+}

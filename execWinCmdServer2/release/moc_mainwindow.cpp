@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Tue Oct 16 22:04:56 2018
+** Created: Wed Dec 12 23:26:22 2018
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       4,   14, // methods
+       5,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -35,6 +35,7 @@ static const uint qt_meta_data_MainWindow[] = {
       47,   32,   11,   11, 0x08,
      105,   84,   77,   11, 0x08,
      161,  157,  151,   11, 0x08,
+     193,  189,  151,   11, 0x08,
 
        0        // eod
 };
@@ -45,6 +46,7 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "LPCSTR\0org,isCmd,single,ret\0"
     "singstep(const char*,bool,QString,HINSTANCE&)\0"
     "char*\0str\0convertQString2buf(QString)\0"
+    "ret\0showshellexecuteresult(quint32)\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -58,6 +60,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 2: { LPCSTR _r = _t->singstep((*reinterpret_cast< const char*(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3])),(*reinterpret_cast< HINSTANCE(*)>(_a[4])));
             if (_a[0]) *reinterpret_cast< LPCSTR*>(_a[0]) = _r; }  break;
         case 3: { char* _r = _t->convertQString2buf((*reinterpret_cast< QString(*)>(_a[1])));
+            if (_a[0]) *reinterpret_cast< char**>(_a[0]) = _r; }  break;
+        case 4: { char* _r = _t->showshellexecuteresult((*reinterpret_cast< quint32(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< char**>(_a[0]) = _r; }  break;
         default: ;
         }
@@ -96,9 +100,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 5)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 5;
     }
     return _id;
 }

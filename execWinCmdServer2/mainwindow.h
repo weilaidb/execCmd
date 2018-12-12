@@ -37,6 +37,7 @@ private slots:
     void readfromremote(QString cltmsg, void * pthread);
     LPCSTR singstep(const char *org, bool isCmd, QString single, HINSTANCE &ret);
     char *convertQString2buf(QString str);
+    char *showshellexecuteresult(quint32 ret);
 
 private:
     Ui::MainWindow *ui;

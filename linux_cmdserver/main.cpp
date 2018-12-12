@@ -26,6 +26,7 @@ typedef struct char_print_parms{
 	unsigned int msglen;
 	char *replaceprefix;
 	char *diskno;
+	char *openfile;
 }char_print_parms;
 
 
@@ -85,12 +86,21 @@ htonll(unsigned long long host)
 
 #define MAXPATH (1024)
 char dirpathbuffer[MAXPATH] = {0};
+char notepadpathbuffer[MAXPATH] = {0};
 int getcurrentpath(char *buffer)
 {
 	getcwd(buffer, MAXPATH);
 	printf("current path:%s\n", buffer);
 	return 0;
 }
+
+int getfilepath(char *buffer, char *filepath)
+{
+	snprintf(buffer, MAXPATH, "%s", filepath);
+	printf("current path:%s\n", buffer);
+	return 0;
+}
+
 
 
 /* 功  能：将str字符串中的oldstr字符串替换为newstr字符串
@@ -117,7 +127,11 @@ char *strrpc(char *str,char *oldstr,char *newstr)
 }
 
 
-int specialprocmsg(char **sendmsg, unsigned int *pmsglen, char *replaceprefix, char *diskno)
+int specialprocmsg(char **sendmsg, unsigned int *pmsglen
+						, char *replaceprefix
+						, char *diskno
+						, char *openfile
+						)
 {
 
 	/** 当前路径时特殊处理 **/
@@ -131,16 +145,51 @@ int specialprocmsg(char **sendmsg, unsigned int *pmsglen, char *replaceprefix, c
 		strrpc(dirpathbuffer, replaceprefix, diskno);
 		strrpc(dirpathbuffer, "/", "\\");
 //		printf("dirpathbuffer:%s\n", dirpathbuffer);
+		*sendmsg = dirpathbuffer;
+		*pmsglen = strlen(dirpathbuffer);
+
+	}
+	else if(
+	( 0 == strcmp("notepad++", *sendmsg) )
+	||( 0 == strcmp("NOTEPAD++", *sendmsg) )
+	||( 0 == strcmp("notepad", *sendmsg) )
+	||( 0 == strcmp("NOTEPAD", *sendmsg) )
+	)
+	{
+//		printf("special deal pwd\n");
+		getcurrentpath(dirpathbuffer);
+		if(openfile)
+		{
+//			strcat(dirpathbuffer, openfile);
+			strrpc(dirpathbuffer, replaceprefix, diskno);
+			strrpc(dirpathbuffer, "/", "\\");
+			snprintf(notepadpathbuffer, sizeof(notepadpathbuffer)
+					, "cmd %s \"%s\\%s\""
+					, *sendmsg
+					, dirpathbuffer
+					, openfile
+					);
+		}
+		else
+		{
+
+		}
+//		getfilepath(dirpathbuffer, openfile);
+
+//		printf("dirpathbuffer:%s\n", dirpathbuffer);
+		*sendmsg = notepadpathbuffer;
+		*pmsglen = strlen(notepadpathbuffer);
+
 
 	}
 	else
 	{
 		snprintf(dirpathbuffer, sizeof(dirpathbuffer), "%s", *sendmsg);
 		strrpc(dirpathbuffer, "\\", "\*\*");
+		*sendmsg = dirpathbuffer;
+		*pmsglen = strlen(dirpathbuffer);
 	}
 
-	*sendmsg = dirpathbuffer;
-	*pmsglen = strlen(dirpathbuffer);
 
 	return 0;
 }
@@ -171,6 +220,7 @@ void * sendmsg2addr(void* parameter
 	unsigned int msglen = p->msglen;
 	char *replaceprefix = p->replaceprefix;
 	char *diskno = p->diskno;
+	char *openfile = p->openfile;
 
 	int sockfd, len;
 	//建立socket
@@ -192,7 +242,6 @@ void * sendmsg2addr(void* parameter
 	{
 		servaddr.sin_addr.s_addr = inet_addr(destipaddr); //服务器地址
 	}
-//	servaddr.sin_addr.s_addr = inet_addr("192.168.59.12"); //服务器地址
 	servaddr.sin_port = htons(BIND_PORT); //服务器端口
 //	printf("addr:%#x, port:%#x\n", servaddr.sin_addr.s_addr, servaddr.sin_port);
 
@@ -208,7 +257,7 @@ void * sendmsg2addr(void* parameter
 //		printf("连接成功\n");
 	}
 
-	specialprocmsg(&sendmsg, &msglen, replaceprefix, diskno);
+	specialprocmsg(&sendmsg, &msglen, replaceprefix, diskno, openfile);
 
 	unsigned char *pbuffer = (unsigned char *)malloc(MSGSIZEMAX);
 	if(NULL == pbuffer)
@@ -240,38 +289,53 @@ void * sendmsg2addr(void* parameter
 
 }
 
+void processCmdPwd(int argc,char* argv[])
+{
+	//		printf("argc:%u\n", argc);
+	//		printf("argv[0]:%s\n", argv[0]);
+	//		printf("argv[1]:%s\n", argv[1]);
+	//		printf("argv[2]:%s\n", argv[2]);
+	//		printf("argv[3]:%s\n", argv[3]);
+	//		printf("argv[4]:%s\n", argv[4]);
+	char * ipaddr = argv[1];
+	char * replaceprex = argv[2];
+	char * panfu = argv[3];
+	char * testmsg = argv[4];
+	char * openfile = argv[5];
+	//		sendmsg2addr(0, ipaddr, testmsg, strlen(testmsg), replaceprex, panfu);
+	pthread_t thread1_id;
+	struct char_print_parms thread1_args = {0};
+	thread1_args.outaddr = 0;
+	thread1_args.destipaddr = ipaddr;
+	thread1_args.sendmsg = testmsg;
+	thread1_args.msglen = strlen(testmsg);
+	thread1_args.replaceprefix = replaceprex;
+	thread1_args.diskno = panfu;
+	thread1_args.openfile = openfile;
+	pthread_create(&thread1_id,NULL,&sendmsg2addr,&thread1_args);
+	pthread_join(thread1_id,NULL);
 
+}
+
+int processCmd(int argc,char* argv[])
+{
+	switch(argc)
+	{
+	case 5:
+	case 6:
+		processCmdPwd(argc, argv);
+		break;
+	default:
+		break;
+	}
+	exit(0);
+}
 
 int main(int argc,char* argv[])
 {
 	printf("supprt send msg 2 window server\n"
 	"usage:./a.out 192.168.1.1 replaceprefix X: orgmsg...\n", argc);
-	if(argc == 5)
-	{
-//		printf("argc:%u\n", argc);
-//		printf("argv[0]:%s\n", argv[0]);
-//		printf("argv[1]:%s\n", argv[1]);
-//		printf("argv[2]:%s\n", argv[2]);
-//		printf("argv[3]:%s\n", argv[3]);
-//		printf("argv[4]:%s\n", argv[4]);
-		char * ipaddr = argv[1];
-		char * replaceprex = argv[2];
-		char * panfu = argv[3];
-		char * testmsg = argv[4];
-//		sendmsg2addr(0, ipaddr, testmsg, strlen(testmsg), replaceprex, panfu);
-	    pthread_t thread1_id;
-	    struct char_print_parms thread1_args = {0};
-	    thread1_args.outaddr = 0;
-	    thread1_args.destipaddr = ipaddr;
-	    thread1_args.sendmsg = testmsg;
-	    thread1_args.msglen = strlen(testmsg);
-	    thread1_args.replaceprefix = replaceprex;
-	    thread1_args.diskno = panfu;
-	    pthread_create(&thread1_id,NULL,&sendmsg2addr,&thread1_args);
-	    pthread_join(thread1_id,NULL);
-
-		return 0;
-	}
+	processCmd(argc, argv);
 
 	signal(SIGINT, Stop);
 	signal(SIGCHLD, handler);
