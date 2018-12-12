@@ -194,6 +194,7 @@ int sendmsg2addr(unsigned int outaddr, char *destipaddr,
 	//将字串返回给client 端
 	int ret = send(sockfd, pbuffer, MSGSIZEMAX, 0);
 	printf("send result:%u\n", ret);
+	sleep(3);
 	free(pbuffer);
 
 	close(sockfd);
