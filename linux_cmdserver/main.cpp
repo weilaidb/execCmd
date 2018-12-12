@@ -11,6 +11,7 @@
 #include <arpa/inet.h>
 #include <errno.h>
 #include <dirent.h>
+#include <pthread.h>
 #include<iostream>
 #include<string>
 using namespace std;
@@ -18,8 +19,19 @@ using namespace std;
 
 #define BIND_PORT 9999
 
+typedef struct char_print_parms{
+	unsigned int outaddr;
+	char *destipaddr;
+	char *sendmsg;
+	unsigned int msglen;
+	char *replaceprefix;
+	char *diskno;
+}char_print_parms;
+
+
 
 tcp_server ts(BIND_PORT);
+
 
 
 
@@ -119,23 +131,47 @@ int specialprocmsg(char **sendmsg, unsigned int *pmsglen, char *replaceprefix, c
 		strrpc(dirpathbuffer, replaceprefix, diskno);
 		strrpc(dirpathbuffer, "/", "\\");
 //		printf("dirpathbuffer:%s\n", dirpathbuffer);
-		*sendmsg = dirpathbuffer;
-		*pmsglen = strlen(dirpathbuffer);
+
 	}
+	else
+	{
+		snprintf(dirpathbuffer, sizeof(dirpathbuffer), "%s", *sendmsg);
+		strrpc(dirpathbuffer, "\\", "\*\*");
+	}
+
+	*sendmsg = dirpathbuffer;
+	*pmsglen = strlen(dirpathbuffer);
 
 	return 0;
 }
 
 
 
-int sendmsg2addr(unsigned int outaddr, char *destipaddr,
-						char *sendmsg, unsigned int msglen,
-						char *replaceprefix
-						, char *diskno
+void* print_xs(void *  unused)
+{
+    while(1){
+        fputc('x',stderr);
+    }
+    return NULL;
+}
+
+
+
+void * sendmsg2addr(void* parameter
 						)
 {
 #define MSGSIZEMAX (msglen + sizeof(T_MsgStruct))
 #define MSGOFFSET (4)
+
+
+    struct char_print_parms* p =    (struct char_print_parms*)parameter;
+	unsigned int outaddr = p->outaddr;
+	char *destipaddr = p->destipaddr;
+	char *sendmsg = p->sendmsg;
+	unsigned int msglen = p->msglen;
+	char *replaceprefix = p->replaceprefix;
+	char *diskno = p->diskno;
+
 	int sockfd, len;
 	//建立socket
 	if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0
@@ -165,7 +201,7 @@ int sendmsg2addr(unsigned int outaddr, char *destipaddr,
 	{
 		printf("连接失败，errno ＝ %d(%s)\n",errno, strerror(errno));
 		close(sockfd);
-		return -1;
+		return NULL;
 	}
 	else
 	{
@@ -179,7 +215,7 @@ int sendmsg2addr(unsigned int outaddr, char *destipaddr,
 	{
 		printf("malloc mem failed\n");
 		close(sockfd);
-		return -1;
+		return NULL;
 	}
 	memset(pbuffer, 0, MSGSIZEMAX);
 
@@ -194,14 +230,16 @@ int sendmsg2addr(unsigned int outaddr, char *destipaddr,
 	//将字串返回给client 端
 	int ret = send(sockfd, pbuffer, MSGSIZEMAX, 0);
 	printf("send result:%u\n", ret);
-	sleep(3);
+	sleep(1);
 	free(pbuffer);
 
 	close(sockfd);
 
 
+    return NULL;
 
 }
+
 
 
 int main(int argc,char* argv[])
@@ -220,7 +258,18 @@ int main(int argc,char* argv[])
 		char * replaceprex = argv[2];
 		char * panfu = argv[3];
 		char * testmsg = argv[4];
-		sendmsg2addr(0, ipaddr, testmsg, strlen(testmsg), replaceprex, panfu);
+//		sendmsg2addr(0, ipaddr, testmsg, strlen(testmsg), replaceprex, panfu);
+	    pthread_t thread1_id;
+	    struct char_print_parms thread1_args = {0};
+	    thread1_args.outaddr = 0;
+	    thread1_args.destipaddr = ipaddr;
+	    thread1_args.sendmsg = testmsg;
+	    thread1_args.msglen = strlen(testmsg);
+	    thread1_args.replaceprefix = replaceprex;
+	    thread1_args.diskno = panfu;
+	    pthread_create(&thread1_id,NULL,&sendmsg2addr,&thread1_args);
+	    pthread_join(thread1_id,NULL);
+
 		return 0;
 	}
 
