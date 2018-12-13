@@ -90,14 +90,14 @@ char notepadpathbuffer[MAXPATH] = {0};
 int getcurrentpath(char *buffer)
 {
 	getcwd(buffer, MAXPATH);
-	printf("current path:%s\n", buffer);
+	// printf("current path:%s\n", buffer);
 	return 0;
 }
 
 int getfilepath(char *buffer, char *filepath)
 {
 	snprintf(buffer, MAXPATH, "%s", filepath);
-	printf("current path:%s\n", buffer);
+	// printf("current path:%s\n", buffer);
 	return 0;
 }
 
@@ -279,7 +279,10 @@ void * sendmsg2addr(void* parameter
 
 	//将字串返回给client 端
 	int ret = send(sockfd, pbuffer, MSGSIZEMAX, 0);
-	printf("send result:%u\n", ret);
+	if(ret < 0)
+	{
+		printf("send result:%u\n", ret);
+	}
 	//sleep(1);
 	free(pbuffer);
 
@@ -334,8 +337,8 @@ int processCmd(int argc,char* argv[])
 
 int main(int argc,char* argv[])
 {
-	printf("supprt send msg 2 window server\n"
-	"usage:./a.out 192.168.1.1 replaceprefix X: orgmsg...\n", argc);
+	// printf("supprt send msg 2 window server\n"
+	// "usage:./a.out 192.168.1.1 replaceprefix X: orgmsg...\n", argc);
 	processCmd(argc, argv);
 
 	signal(SIGINT, Stop);
