@@ -154,6 +154,7 @@ int specialprocmsg(char **sendmsg, unsigned int *pmsglen
 	||( 0 == strcmp("NOTEPAD++", *sendmsg) )
 	||( 0 == strcmp("notepad", *sendmsg) )
 	||( 0 == strcmp("NOTEPAD", *sendmsg) )
+	||( 1 )
 	)
 	{
 //		printf("special deal pwd\n");
@@ -279,7 +280,7 @@ void * sendmsg2addr(void* parameter
 	//将字串返回给client 端
 	int ret = send(sockfd, pbuffer, MSGSIZEMAX, 0);
 	printf("send result:%u\n", ret);
-	sleep(1);
+	//sleep(1);
 	free(pbuffer);
 
 	close(sockfd);

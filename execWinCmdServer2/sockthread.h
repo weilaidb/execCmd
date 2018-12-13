@@ -24,6 +24,7 @@ class sockthread : public QThread
     Q_OBJECT
 public:
     explicit sockthread(QObject *parent = 0);
+    void initData();
     void setSocketConnect(QTcpSocket *cltConnet);
     void sendmsg(QString msgs);
     void closeSocketConnect();

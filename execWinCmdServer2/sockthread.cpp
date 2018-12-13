@@ -25,6 +25,18 @@ sockthread::sockthread(QObject *parent) :
     QThread(parent),clientConnection(NULL)
 {
 
+    initData();
+//    clientConnection = /*cltConnection*/;
+}
+
+//    QObject::connect(clientConnection,SIGNAL(readyRead()),
+//                     this,SLOT(updateReadMsgProgress()));
+//    QObject::connect(clientConnection,SIGNAL(error(QAbstractSocket::SocketError)),
+//                     this,SLOT(displayErr(QAbstractSocket::SocketError)));
+
+
+void sockthread::initData()
+{
     //读数据统计
     TotalReadBytes = 0;
     bytesReceived  = 0;
@@ -35,14 +47,7 @@ sockthread::sockthread(QObject *parent) :
     byteWritten  = 0;
     bytesToWrite = 0;
 
-//    clientConnection = /*cltConnection*/;
 }
-
-//    QObject::connect(clientConnection,SIGNAL(readyRead()),
-//                     this,SLOT(updateReadMsgProgress()));
-//    QObject::connect(clientConnection,SIGNAL(error(QAbstractSocket::SocketError)),
-//                     this,SLOT(displayErr(QAbstractSocket::SocketError)));
-
 
 /*============================================
 * FuncName    : sockthread::run
@@ -239,6 +244,7 @@ void sockthread::setSocketConnect(QTcpSocket *cltConnet)
 
 void sockthread::closeSocketConnect()
 {
+    initData();
     clientConnection->close();
     clientConnection->deleteLater();
 }
