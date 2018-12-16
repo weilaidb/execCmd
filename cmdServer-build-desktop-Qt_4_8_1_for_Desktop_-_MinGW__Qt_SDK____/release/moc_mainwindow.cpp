@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Sun Dec 9 14:56:32 2018
+** Created: Sun Dec 16 15:48:18 2018
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      45,   14, // methods
+      46,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -72,10 +72,11 @@ static const uint qt_meta_data_MainWindow[] = {
     1148, 1143,   11,   11, 0x08,
     1187,  447,   11,   11, 0x08,
     1227, 1222,   11,   11, 0x08,
-    1267,   83,   11,   11, 0x08,
-    1311,   11,   11,   11, 0x08,
-    1341,   11,   11,   11, 0x08,
-    1372,   11,   11,   11, 0x08,
+    1278, 1267,   11,   11, 0x08,
+    1329,   11,   11,   11, 0x08,
+    1359,   11,   11,   11, 0x08,
+    1390,   11,   11,   11, 0x08,
+    1420,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -116,10 +117,12 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "list\0insertcomuselistbycurkeys(QStringList)\0"
     "insertfindkeys2comuselist(QString)\0"
     "maps\0printMapVar(QMap<QString,QStringList>&)\0"
-    "on_pushButton_searchengine_clicked(QString)\0"
+    "text,cflag\0"
+    "on_pushButton_searchengine_clicked(QString,quint8)\0"
     "on_pushButton_baidu_clicked()\0"
     "on_pushButton_biying_clicked()\0"
     "on_pushButton_360so_clicked()\0"
+    "on_pushButton_notepadpp_clicked()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -174,10 +177,11 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 38: _t->insertcomuselistbycurkeys((*reinterpret_cast< QStringList(*)>(_a[1]))); break;
         case 39: _t->insertfindkeys2comuselist((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 40: _t->printMapVar((*reinterpret_cast< QMap<QString,QStringList>(*)>(_a[1]))); break;
-        case 41: _t->on_pushButton_searchengine_clicked((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 41: _t->on_pushButton_searchengine_clicked((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< quint8(*)>(_a[2]))); break;
         case 42: _t->on_pushButton_baidu_clicked(); break;
         case 43: _t->on_pushButton_biying_clicked(); break;
         case 44: _t->on_pushButton_360so_clicked(); break;
+        case 45: _t->on_pushButton_notepadpp_clicked(); break;
         default: ;
         }
     }
@@ -215,9 +219,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 45)
+        if (_id < 46)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 45;
+        _id -= 46;
     }
     return _id;
 }

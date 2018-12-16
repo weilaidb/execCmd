@@ -92,6 +92,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
      //强制IP标志
      forceipaddrflag = false;
+
+
+
 }
 
 MainWindow::~MainWindow()
@@ -610,6 +613,34 @@ void MainWindow::PopMenu()
     /* 右键菜单 */
     Act_DelItem = new QAction(tr("DelItem"), this);
     connect(Act_DelItem, SIGNAL(triggered()), this, SLOT(DelItem()));
+
+    SearchMenu();
+}
+
+void MainWindow::SearchMenu()
+{
+#define GBKSELF(A) QString::fromLocal8Bit(#A)
+
+
+    /* 弹出菜单 */
+    Act_searchbaidu = new QAction(GBKSELF(百度), this);
+    connect(Act_searchbaidu, SIGNAL(triggered()), this, SLOT(on_pushButton_baidu_clicked()));
+    Act_searchbiying = new QAction(GBKSELF(必应), this);
+    connect(Act_searchbiying, SIGNAL(triggered()), this, SLOT(on_pushButton_biying_clicked()));
+    Act_search360so = new QAction(GBKSELF(360搜), this);
+    connect(Act_search360so, SIGNAL(triggered()), this, SLOT(on_pushButton_360so_clicked()));
+    Act_notepadpp = new QAction(GBKSELF(notepad++), this);
+    connect(Act_notepadpp, SIGNAL(triggered()), this, SLOT(on_pushButton_notepadpp_clicked()));
+
+
+    /* 弹出菜单 **/
+    QMenu *menu=new QMenu(this);
+    menu->addAction(Act_notepadpp); //添加菜单项1
+    menu->addAction(Act_searchbaidu); //添加菜单项1
+    menu->addAction(Act_searchbiying); //添加菜单项1
+    menu->addAction(Act_search360so); //添加菜单项1
+    ui->pushButton_baidu->setMenu(menu);
+
 }
 
 
@@ -1136,8 +1167,9 @@ void MainWindow::printMapVar(QMap<QString, QStringList> &maps)
 
     }
 }
-void MainWindow::on_pushButton_searchengine_clicked(QString enginetext)
+void MainWindow::on_pushButton_searchengine_clicked(QString enginetext, quint8 cflag)
 {
+    quint8 covertflag = cflag;
     QString head = enginetext;
     QString cliptext = getclipboardtext();
 //    if(cliptext.simplified().isEmpty())
@@ -1148,7 +1180,7 @@ void MainWindow::on_pushButton_searchengine_clicked(QString enginetext)
 
     QString searchtext;
 //    QTextCodec * codecGB2312 = QTextCodec::codecForName("GB2312");
-    if(!cliptext.simplified().isEmpty())
+    if(!cliptext.simplified().isEmpty() && covertflag)
     {
 //        QByteArray byteArrayGB2312 = codecGB2312->fromUnicode(cliptext);
 //        QByteArray byteArrayGB2312 = cliptext.toLocal8Bit().toPercentEncoding();
@@ -1164,25 +1196,29 @@ void MainWindow::on_pushButton_searchengine_clicked(QString enginetext)
     on_pushButton_connect_clicked_selftext(searchtext);
 
 }
-#define ENGINESEARCHTEXT(text)\
+#define ENGINESEARCHTEXT(text,cflag)\
 do{\
     forceipaddrflag = true;\
-    on_pushButton_searchengine_clicked( text);\
+    on_pushButton_searchengine_clicked( text, cflag);\
     forceipaddrflag = false;\
 }while(0)
 
 
 void MainWindow::on_pushButton_baidu_clicked()
 {
-    ENGINESEARCHTEXT( "https://www.baidu.com/s?wd=");
+    ENGINESEARCHTEXT( "https://www.baidu.com/s?wd=", true);
 }
 
 void MainWindow::on_pushButton_biying_clicked()
 {
-    ENGINESEARCHTEXT( "https://cn.bing.com/search?q=");
+    ENGINESEARCHTEXT( "https://cn.bing.com/search?q=", true);
 }
 
 void MainWindow::on_pushButton_360so_clicked()
 {
-    ENGINESEARCHTEXT( "https://www.so.com/s?ie=utf-8&fr=none&src=360sou_newhome&q=");
+    ENGINESEARCHTEXT( "https://www.so.com/s?ie=utf-8&fr=none&src=360sou_newhome&q=", true);
+}
+void MainWindow::on_pushButton_notepadpp_clicked()
+{
+    ENGINESEARCHTEXT( "cmd notepad++ ", false);
 }

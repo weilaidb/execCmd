@@ -33,6 +33,7 @@ public:
     void closeEvent(QCloseEvent *event);
     void contextMenuEvent(QContextMenuEvent *event);
     void PopMenu();
+    void SearchMenu();
     void wheelEvent(QWheelEvent *event);
     void keyPressEvent(QKeyEvent *keyevt);
     void keyReleaseEvent(QKeyEvent * keyevt);
@@ -46,6 +47,10 @@ private:
 private:
     QAction * Act_DelItem;
     QAction * Act_Normal;
+    QAction * Act_searchbaidu;
+    QAction * Act_searchbiying;
+    QAction * Act_search360so;
+    QAction * Act_notepadpp;
 
 private:
     QMap<QString, QStringList> map_showcmd; //IP地址 -> IP地址存储的内容
@@ -134,13 +139,15 @@ private slots:
 
     void printMapVar(QMap<QString, QStringList> &maps);
 
-    void on_pushButton_searchengine_clicked(QString text);
+    void on_pushButton_searchengine_clicked(QString text, quint8 cflag);
 
     void on_pushButton_baidu_clicked();
 
     void on_pushButton_biying_clicked();
 
     void on_pushButton_360so_clicked();
+
+    void on_pushButton_notepadpp_clicked();
 
 private:
     QTcpSocket *socket;
