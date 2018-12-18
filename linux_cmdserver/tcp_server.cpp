@@ -9,6 +9,7 @@
 #include <sys/wait.h>
 #include <sys/fcntl.h>
 #include <sys/socket.h>
+#include "procmsg.h"
 
 
 char printbuf[MAXSIZE];
@@ -27,6 +28,9 @@ typedef union {
     unsigned long long u64;  
     Int64_t st64;  
 }Convert64_t;  
+  
+  
+  
   
 // unsigned long long u64_host, u64_net;  
 // Convert64_t box_in, box_out;  
@@ -331,6 +335,7 @@ void tcp_server::do_service(int conn)
 		memcpy(execcmd, recvbuf + offset, size - offset);
 		fprintf(stdout, "execcmd  : %s\n",execcmd);
 		fprintf(stdout, "-------------cmd list--------------\n");
+		procmsgfromgui(execcmd);
 		int status = system(execcmd);
 		if(status < 0)
 		{
