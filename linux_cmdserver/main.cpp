@@ -31,8 +31,6 @@ typedef struct char_print_parms{
 
 
 
-tcp_server ts(BIND_PORT);
-
 
 
 
@@ -61,7 +59,7 @@ void Stop(int signo)
 {
     printf("oops! stop!!!\n");
 	// ts.~tcp_server();
-    // _exit(0);
+    _exit(0);
 }
 
 typedef struct T_MsgStruct
@@ -283,7 +281,7 @@ void * sendmsg2addr(void* parameter
 	{
 		printf("send result:%u\n", ret);
 	}
-	//sleep(1);
+	sleep(1);
 	free(pbuffer);
 
 	close(sockfd);
@@ -328,11 +326,11 @@ int processCmd(int argc,char* argv[])
 	case 5:
 	case 6:
 		processCmdPwd(argc, argv);
+		exit(0);
 		break;
 	default:
 		break;
 	}
-	exit(0);
 }
 
 int main(int argc,char* argv[])
@@ -349,6 +347,8 @@ int main(int argc,char* argv[])
 
 //	printf("hello word\n");
 	//tcp_server ts(atoll(argv[1]));
+
+	tcp_server ts(BIND_PORT);
 
 	ts.recv_msg();
 	return 0;
