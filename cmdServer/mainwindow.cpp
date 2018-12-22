@@ -1240,7 +1240,7 @@ void MainWindow::on_pushButton_saveresult_clicked()
     QString fileName = QFileDialog::getSaveFileName(this
             ,tr("Save File")
             ,""
-            ,tr("*.*;;Text Files (*.txt);;csv Files (*.csv);;Html Files (*.html;*.htm)")
+            ,tr("Text Files (*.txt);;csv Files (*.csv);;Html Files (*.html;*.htm);;*.*")
             );
     if (fileName.isNull())
     {
@@ -1256,7 +1256,7 @@ void MainWindow::on_pushButton_openfile2result_clicked()
     QString fileName = QFileDialog::getOpenFileName(this,
                                                     tr("Open File"),
                                                     "",
-                                                    tr("*.*;;Text Files (*.txt);;csv Files (*.csv);;Html Files (*.html;*.htm)"),
+                                                    tr("Text Files (*.txt);;csv Files (*.csv);;Html Files (*.html;*.htm);;*.*"),
                                                     0);
     if (fileName.isNull())
     {
@@ -1286,6 +1286,9 @@ void MainWindow::setrighttext(QString text)
     return ui->textEdit->setText(text);
 }
 
+/**
+  ** 判断文件是否为UTF8编码
+  **/
 bool MainWindow::IsUTF8(const void* pBuffer, long size)
 {
     bool IsUTF8 = true;
