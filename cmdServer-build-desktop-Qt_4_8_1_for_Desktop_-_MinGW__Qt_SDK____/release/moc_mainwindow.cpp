@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Sun Dec 16 15:48:18 2018
+** Created: Sat Dec 22 19:23:05 2018
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      46,   14, // methods
+      52,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -77,6 +77,12 @@ static const uint qt_meta_data_MainWindow[] = {
     1359,   11,   11,   11, 0x08,
     1390,   11,   11,   11, 0x08,
     1420,   11,   11,   11, 0x08,
+    1454,   11,   11,   11, 0x08,
+    1489,   11,   11,   11, 0x08,
+    1529,   11,  626,   11, 0x08,
+    1544,   83,   11,   11, 0x08,
+    1576, 1566,  562,   11, 0x08,
+    1613, 1600,  562,   11, 0x08,
 
        0        // eod
 };
@@ -123,6 +129,11 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "on_pushButton_biying_clicked()\0"
     "on_pushButton_360so_clicked()\0"
     "on_pushButton_notepadpp_clicked()\0"
+    "on_pushButton_saveresult_clicked()\0"
+    "on_pushButton_openfile2result_clicked()\0"
+    "getrighttext()\0setrighttext(QString)\0"
+    "pFileName\0IsUTF8File(const char*)\0"
+    "pBuffer,size\0IsUTF8(const void*,long)\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -182,6 +193,15 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 43: _t->on_pushButton_biying_clicked(); break;
         case 44: _t->on_pushButton_360so_clicked(); break;
         case 45: _t->on_pushButton_notepadpp_clicked(); break;
+        case 46: _t->on_pushButton_saveresult_clicked(); break;
+        case 47: _t->on_pushButton_openfile2result_clicked(); break;
+        case 48: { QString _r = _t->getrighttext();
+            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
+        case 49: _t->setrighttext((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 50: { bool _r = _t->IsUTF8File((*reinterpret_cast< const char*(*)>(_a[1])));
+            if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = _r; }  break;
+        case 51: { bool _r = _t->IsUTF8((*reinterpret_cast< const void*(*)>(_a[1])),(*reinterpret_cast< long(*)>(_a[2])));
+            if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = _r; }  break;
         default: ;
         }
     }
@@ -219,9 +239,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 46)
+        if (_id < 52)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 46;
+        _id -= 52;
     }
     return _id;
 }

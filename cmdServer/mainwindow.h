@@ -51,6 +51,8 @@ private:
     QAction * Act_searchbiying;
     QAction * Act_search360so;
     QAction * Act_notepadpp;
+    QAction * Act_saveresult;
+    QAction * Act_openfile2result;
 
 private:
     QMap<QString, QStringList> map_showcmd; //IP地址 -> IP地址存储的内容
@@ -148,6 +150,18 @@ private slots:
     void on_pushButton_360so_clicked();
 
     void on_pushButton_notepadpp_clicked();
+
+    void on_pushButton_saveresult_clicked();
+
+    void on_pushButton_openfile2result_clicked();
+
+    QString getrighttext();
+
+    void setrighttext(QString text);
+
+    bool IsUTF8File(const char* pFileName);
+
+    bool IsUTF8(const void* pBuffer, long size);
 
 private:
     QTcpSocket *socket;

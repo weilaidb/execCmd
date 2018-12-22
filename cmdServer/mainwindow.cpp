@@ -12,6 +12,8 @@
 #include <QClipboard>
 #include <windows.h>
 #include <QTextCodec>
+#include <QFileDialog>
+#include <QFile>
 
 #define BINDPORT (9999)
 #define CMD_HELLO "hello word"
@@ -632,6 +634,14 @@ void MainWindow::SearchMenu()
     Act_notepadpp = new QAction(GBKSELF(notepad++), this);
     connect(Act_notepadpp, SIGNAL(triggered()), this, SLOT(on_pushButton_notepadpp_clicked()));
 
+    Act_saveresult = new QAction(GBKSELF(保存), this);
+    connect(Act_saveresult, SIGNAL(triggered()), this, SLOT(on_pushButton_saveresult_clicked()));
+
+    Act_openfile2result = new QAction(GBKSELF(打开), this);
+    connect(Act_openfile2result, SIGNAL(triggered()), this, SLOT(on_pushButton_openfile2result_clicked()));
+
+
+
 
     /* 弹出菜单 **/
     QMenu *menu=new QMenu(this);
@@ -639,6 +649,8 @@ void MainWindow::SearchMenu()
     menu->addAction(Act_searchbaidu); //添加菜单项1
     menu->addAction(Act_searchbiying); //添加菜单项1
     menu->addAction(Act_search360so); //添加菜单项1
+    menu->addAction(Act_openfile2result); //添加菜单项1
+    menu->addAction(Act_saveresult); //添加菜单项1
     ui->pushButton_baidu->setMenu(menu);
 
 }
@@ -1222,3 +1234,135 @@ void MainWindow::on_pushButton_notepadpp_clicked()
 {
     ENGINESEARCHTEXT( "cmd notepad++ ", false);
 }
+void MainWindow::on_pushButton_saveresult_clicked()
+{
+    QString savetext = getrighttext();
+    QString fileName = QFileDialog::getSaveFileName(this
+            ,tr("Save File")
+            ,""
+            ,tr("*.*;;Text Files (*.txt);;csv Files (*.csv);;Html Files (*.html;*.htm)")
+            );
+    if (fileName.isNull())
+    {
+        return;
+    }
+    QFile file(fileName);
+    file.open(QIODevice::WriteOnly);
+    file.write(savetext.toLocal8Bit());
+    file.close();
+}
+void MainWindow::on_pushButton_openfile2result_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                                    tr("Open File"),
+                                                    "",
+                                                    tr("*.*;;Text Files (*.txt);;csv Files (*.csv);;Html Files (*.html;*.htm)"),
+                                                    0);
+    if (fileName.isNull())
+    {
+        return;
+    }
+    QFile file(fileName);
+    file.open(QIODevice::ReadOnly);
+    QString text;
+    if(IsUTF8File(fileName.toLocal8Bit().data()))
+    {
+        text = QString::fromUtf8(file.readAll());
+    }
+    else
+    {
+        text = QString::fromLocal8Bit(file.readAll());
+    }
+    file.close();
+    setrighttext(text);
+}
+
+QString MainWindow::getrighttext()
+{
+    return ui->textEdit->toPlainText();
+}
+void MainWindow::setrighttext(QString text)
+{
+    return ui->textEdit->setText(text);
+}
+
+bool MainWindow::IsUTF8(const void* pBuffer, long size)
+{
+    bool IsUTF8 = true;
+    unsigned char* start = (unsigned char*)pBuffer;
+    unsigned char* end = (unsigned char*)pBuffer + size;
+    while (start < end)
+    {
+        if (*start < 0x80) // (10000000): 值小于0x80的为ASCII字符
+        {
+            start++;
+        }
+        else if (*start < (0xC0)) // (11000000): 值介于0x80与0xC0之间的为无效UTF-8字符
+        {
+            IsUTF8 = false;
+            break;
+        }
+        else if (*start < (0xE0)) // (11100000): 此范围内为2字节UTF-8字符
+        {
+            if (start >= end - 1)
+            {
+                break;
+            }
+
+            if ((start[1] & (0xC0)) != 0x80)
+            {
+                IsUTF8 = false;
+                break;
+            }
+
+            start += 2;
+        }
+        else if (*start < (0xF0)) // (11110000): 此范围内为3字节UTF-8字符
+        {
+            if (start >= end - 2)
+            {
+                break;
+            }
+
+            if ((start[1] & (0xC0)) != 0x80 || (start[2] & (0xC0)) != 0x80)
+            {
+                IsUTF8 = false;
+                break;
+            }
+
+            start += 3;
+        }
+        else
+        {
+            IsUTF8 = false;
+            break;
+        }
+    }
+
+    return IsUTF8;
+}
+bool MainWindow::IsUTF8File(const char* pFileName)
+{
+    FILE *f = NULL;
+    f = fopen(pFileName, "rb");
+    if (NULL == f)
+    {
+        return false;
+    }
+
+    fseek(f, 0, SEEK_END);
+    long lSize = ftell(f);
+    fseek(f, 0, SEEK_SET);  //或rewind(f);
+
+    char *pBuff = new char[lSize + 1];
+    memset(pBuff, 0, lSize + 1);
+    fread(pBuff, lSize, 1, f);
+    fclose(f);
+
+    bool bIsUTF8 = IsUTF8(pBuff, lSize);
+    delete []pBuff;
+    pBuff = NULL;
+
+    return bIsUTF8;
+}
+
