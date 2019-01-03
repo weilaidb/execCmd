@@ -92,6 +92,7 @@ void sockthread::displayErr(QAbstractSocket::SocketError socketError)
 ============================================*/
 void sockthread::updateReadMsgProgress()
 {
+    qDebug() << "updateReadMsgProgress" ;
     QDataStream in(clientConnection);
     in.setVersion(QDataStream::Qt_4_6);
 

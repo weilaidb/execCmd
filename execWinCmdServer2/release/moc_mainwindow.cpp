@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Thu Dec 13 21:29:42 2018
+** Created: Fri Dec 28 19:51:44 2018
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-       5,   14, // methods
+       6,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -33,9 +33,10 @@ static const uint qt_meta_data_MainWindow[] = {
  // slots: signature, parameters, type, tag, flags
       12,   11,   11,   11, 0x08,
       47,   32,   11,   11, 0x08,
-     105,   84,   77,   11, 0x08,
-     161,  157,  151,   11, 0x08,
-     193,  189,  151,   11, 0x08,
+      77,   32,   11,   11, 0x08,
+     136,  115,  108,   11, 0x08,
+     192,  188,  182,   11, 0x08,
+     224,  220,  182,   11, 0x08,
 
        0        // eod
 };
@@ -43,7 +44,8 @@ static const uint qt_meta_data_MainWindow[] = {
 static const char qt_meta_stringdata_MainWindow[] = {
     "MainWindow\0\0procClientMessage()\0"
     "cltmsg,pthread\0readfromremote(QString,void*)\0"
-    "LPCSTR\0org,isCmd,single,ret\0"
+    "dealclienterror(QString,void*)\0LPCSTR\0"
+    "org,isCmd,single,ret\0"
     "singstep(const char*,bool,QString,HINSTANCE&)\0"
     "char*\0str\0convertQString2buf(QString)\0"
     "ret\0showshellexecuteresult(quint32)\0"
@@ -57,11 +59,12 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         switch (_id) {
         case 0: _t->procClientMessage(); break;
         case 1: _t->readfromremote((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< void*(*)>(_a[2]))); break;
-        case 2: { LPCSTR _r = _t->singstep((*reinterpret_cast< const char*(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3])),(*reinterpret_cast< HINSTANCE(*)>(_a[4])));
+        case 2: _t->dealclienterror((*reinterpret_cast< QString(*)>(_a[1])),(*reinterpret_cast< void*(*)>(_a[2]))); break;
+        case 3: { LPCSTR _r = _t->singstep((*reinterpret_cast< const char*(*)>(_a[1])),(*reinterpret_cast< bool(*)>(_a[2])),(*reinterpret_cast< QString(*)>(_a[3])),(*reinterpret_cast< HINSTANCE(*)>(_a[4])));
             if (_a[0]) *reinterpret_cast< LPCSTR*>(_a[0]) = _r; }  break;
-        case 3: { char* _r = _t->convertQString2buf((*reinterpret_cast< QString(*)>(_a[1])));
+        case 4: { char* _r = _t->convertQString2buf((*reinterpret_cast< QString(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< char**>(_a[0]) = _r; }  break;
-        case 4: { char* _r = _t->showshellexecuteresult((*reinterpret_cast< quint32(*)>(_a[1])));
+        case 5: { char* _r = _t->showshellexecuteresult((*reinterpret_cast< quint32(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< char**>(_a[0]) = _r; }  break;
         default: ;
         }
@@ -100,9 +103,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 5)
+        if (_id < 6)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 5;
+        _id -= 6;
     }
     return _id;
 }

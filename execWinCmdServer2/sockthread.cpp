@@ -80,9 +80,9 @@ void sockthread::displayErr(QAbstractSocket::SocketError socketError)
 //        return;
     emit emitErrInfo(QString("%1:%2").arg("errinfo").arg(clientConnection->errorString()),
                      (void *)this);
-//    QMessageBox::information(NULL,str_china("网络"),
-//                             str_china("产生如下错误： %1")
-//                             .arg(clientConnection->errorString()));
+    QMessageBox::information(NULL,str_china("网络"),
+                             str_china("产生如下错误： %1")
+                             .arg(clientConnection->errorString()));
 //    tcpserver->close();
 //    tcpserver = NULL;
 
@@ -242,8 +242,20 @@ void sockthread::setSocketConnect(QTcpSocket *cltConnet)
 
 }
 
+QTcpSocket *sockthread::getSocketConnect()
+{
+    return clientConnection;
+}
+
 void sockthread::closeSocketConnect()
 {
+    quint8 loop = 0;
+    while ( loop < 10)
+    {
+//        Sleep(1000);
+        loop++;
+    }
+//    qDebug() << "socket closed!!";
     initData();
     clientConnection->close();
     clientConnection->deleteLater();

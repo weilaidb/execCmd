@@ -19,6 +19,14 @@ using namespace std;
 
 #define BIND_PORT 9999
 
+#define PARA_NULL_RETNULL(A) \
+if(NULL == A)\
+{\
+	printf("para null:%s\n", #A);\
+	return NULL;\
+}
+
+
 typedef struct char_print_parms{
 	unsigned int outaddr;
 	char *destipaddr;
@@ -27,6 +35,8 @@ typedef struct char_print_parms{
 	char *replaceprefix;
 	char *diskno;
 	char *openfile;
+	char **argv;
+	int argc;
 }char_print_parms;
 
 
@@ -129,6 +139,8 @@ int specialprocmsg(char **sendmsg, unsigned int *pmsglen
 						, char *replaceprefix
 						, char *diskno
 						, char *openfile
+						, int argc
+						, char **argv
 						)
 {
 
@@ -147,12 +159,9 @@ int specialprocmsg(char **sendmsg, unsigned int *pmsglen
 		*pmsglen = strlen(dirpathbuffer);
 
 	}
-	else if(
-	( 0 == strcmp("notepad++", *sendmsg) )
-	||( 0 == strcmp("NOTEPAD++", *sendmsg) )
-	||( 0 == strcmp("notepad", *sendmsg) )
-	||( 0 == strcmp("NOTEPAD", *sendmsg) )
-	||( 1 )
+	else if(( 0 == strcasecmp("vim", *sendmsg) )
+	||( 0 == strcasecmp("notepad++", *sendmsg) )
+	||( 0 == strcasecmp("notepad++", *sendmsg) )
 	)
 	{
 //		printf("special deal pwd\n");
@@ -169,16 +178,36 @@ int specialprocmsg(char **sendmsg, unsigned int *pmsglen
 					, openfile
 					);
 		}
-		else
-		{
 
-		}
-//		getfilepath(dirpathbuffer, openfile);
+		//		getfilepath(dirpathbuffer, openfile);
 
-//		printf("dirpathbuffer:%s\n", dirpathbuffer);
+		//		printf("dirpathbuffer:%s\n", dirpathbuffer);
 		*sendmsg = notepadpathbuffer;
 		*pmsglen = strlen(notepadpathbuffer);
 
+	}
+	else if(
+	( 0 == strcasecmp("cmd", *sendmsg) )
+//	||( 0 == strcmp("NOTEPAD", *sendmsg) )
+	)
+	{
+		int i = 0;
+//		printf("No  Content\n");
+		snprintf(notepadpathbuffer, sizeof(notepadpathbuffer)
+				, "%s "
+				, "cmd");
+
+		for(i = 5; i < argc; i++)
+		{
+			strcat(notepadpathbuffer, " ");
+			strcat(notepadpathbuffer, argv[i]);
+		}
+
+		//		getfilepath(dirpathbuffer, openfile);
+
+		//		printf("dirpathbuffer:%s\n", dirpathbuffer);
+		*sendmsg = notepadpathbuffer;
+		*pmsglen = strlen(notepadpathbuffer);
 
 	}
 	else
@@ -195,12 +224,29 @@ int specialprocmsg(char **sendmsg, unsigned int *pmsglen
 
 
 
+
 void* print_xs(void *  unused)
 {
-    while(1){
+    while(1)
+    {
         fputc('x',stderr);
     }
     return NULL;
+}
+
+
+void printargs(int argc, char **argv)
+{
+	int i = 0;
+	printf("No  Content\n");
+	for(i = 0; i < argc; i++)
+	{
+		printf("%-03d  %s\n"
+			,i+ 1
+			,argv[i]
+			);
+	}
+
 }
 
 
@@ -211,7 +257,6 @@ void * sendmsg2addr(void* parameter
 #define MSGSIZEMAX (msglen + sizeof(T_MsgStruct))
 #define MSGOFFSET (4)
 
-
     struct char_print_parms* p =    (struct char_print_parms*)parameter;
 	unsigned int outaddr = p->outaddr;
 	char *destipaddr = p->destipaddr;
@@ -220,6 +265,15 @@ void * sendmsg2addr(void* parameter
 	char *replaceprefix = p->replaceprefix;
 	char *diskno = p->diskno;
 	char *openfile = p->openfile;
+	int argc = p->argc;
+	char **argv = p->argv;
+//	PARA_NULL_RETNULL(outaddr);
+	PARA_NULL_RETNULL(destipaddr);
+	PARA_NULL_RETNULL(sendmsg);
+	PARA_NULL_RETNULL(replaceprefix);
+	PARA_NULL_RETNULL(diskno);
+//	PARA_NULL_RETNULL(openfile);
+	printargs(argc, argv);
 
 	int sockfd, len;
 	//建立socket
@@ -256,7 +310,7 @@ void * sendmsg2addr(void* parameter
 //		printf("连接成功\n");
 	}
 
-	specialprocmsg(&sendmsg, &msglen, replaceprefix, diskno, openfile);
+	specialprocmsg(&sendmsg, &msglen, replaceprefix, diskno, openfile,argc,argv);
 
 	unsigned char *pbuffer = (unsigned char *)malloc(MSGSIZEMAX);
 	if(NULL == pbuffer)
@@ -281,10 +335,10 @@ void * sendmsg2addr(void* parameter
 	{
 		printf("send result:%u\n", ret);
 	}
-	sleep(1);
+	//sleep(5);
 	free(pbuffer);
 
-	close(sockfd);
+	//close(sockfd);
 
 
     return NULL;
@@ -299,6 +353,9 @@ void processCmdPwd(int argc,char* argv[])
 	//		printf("argv[2]:%s\n", argv[2]);
 	//		printf("argv[3]:%s\n", argv[3]);
 	//		printf("argv[4]:%s\n", argv[4]);
+#define NULLORSELF(A) A?A:0
+#define NULLORSELFSTR(A) A?A:""
+
 	char * ipaddr = argv[1];
 	char * replaceprex = argv[2];
 	char * panfu = argv[3];
@@ -307,15 +364,18 @@ void processCmdPwd(int argc,char* argv[])
 	//		sendmsg2addr(0, ipaddr, testmsg, strlen(testmsg), replaceprex, panfu);
 	pthread_t thread1_id;
 	struct char_print_parms thread1_args = {0};
+	thread1_args.argc = argc;
+	thread1_args.argv = argv;
 	thread1_args.outaddr = 0;
-	thread1_args.destipaddr = ipaddr;
-	thread1_args.sendmsg = testmsg;
-	thread1_args.msglen = strlen(testmsg);
-	thread1_args.replaceprefix = replaceprex;
-	thread1_args.diskno = panfu;
-	thread1_args.openfile = openfile;
+	thread1_args.destipaddr = NULLORSELF(ipaddr);
+	thread1_args.sendmsg = NULLORSELF(testmsg);
+	thread1_args.msglen = strlen(NULLORSELFSTR(testmsg));
+	thread1_args.replaceprefix = NULLORSELF(replaceprex);
+	thread1_args.diskno = NULLORSELF(panfu);
+	thread1_args.openfile = NULLORSELF(openfile);
 	pthread_create(&thread1_id,NULL,&sendmsg2addr,&thread1_args);
 	pthread_join(thread1_id,NULL);
+	sleep(3);
 
 }
 
@@ -323,8 +383,18 @@ int processCmd(int argc,char* argv[])
 {
 	switch(argc)
 	{
+	case 4:
 	case 5:
 	case 6:
+	case 7:
+	case 8:
+	case 9:
+	case 10:
+	case 11:
+	case 12:
+		printf("useage:linux_cmdserver  192.168.59.12 /home/weilaidb X: vim filename\n");
+		printf("useage:linux_cmdserver  192.168.59.12 /home/weilaidb X: notepad++ filename\n");
+		printf("useage:linux_cmdserver  192.168.59.12 cmd order\n");
 		processCmdPwd(argc, argv);
 		exit(0);
 		break;

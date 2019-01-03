@@ -26,6 +26,7 @@ public:
     explicit sockthread(QObject *parent = 0);
     void initData();
     void setSocketConnect(QTcpSocket *cltConnet);
+    QTcpSocket* getSocketConnect();
     void sendmsg(QString msgs);
     void closeSocketConnect();
 

@@ -116,7 +116,11 @@ void MainWindow::procClientMessage()
                  .arg(clientConnection->peerAddress().toString()));
 }
 
+void MainWindow::dealclienterror(QString cltmsg, void * pthread)
+{
+    qDebug() << "dealclienterror:" << cltmsg.size();
 
+}
 
 
 void MainWindow::readfromremote(QString cltmsg, void * pthread)
@@ -196,6 +200,8 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
 
 
     sockthread *threadsock = (sockthread *)pthread;
+    threadsock->getSocketConnect()->write((showtext.toLatin1()));
+//    threadsock->emitMsgDoneSignal();
     threadsock->closeSocketConnect();
 
 
