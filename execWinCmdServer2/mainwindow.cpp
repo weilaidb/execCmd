@@ -375,7 +375,8 @@ LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single, HINSTANCE
 //                filepath2++;
 
             qDebug() << "filepath2 last:" << filepath2;
-            ret = ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
+//            ret = ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
+            ret = ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_HIDE);
     //        HINSTANCE ret = ShellExecuteA(NULL, "open", "C:\windows\system32\cmd.exe", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
     //        HINSTANCE ret = ShellExecuteA(NULL, "open", NULL, filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
     //        SW_MINIMIZE
