@@ -163,6 +163,11 @@ private slots:
 
     bool IsUTF8(const void* pBuffer, long size);
 
+    void on_checkBox_echoswitch_toggled(bool checked);
+
+    QString get_last_open_dir();
+    QString set_last_open_dir(QString dir);
+
 private:
     QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串

@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sun Dec 16 15:47:13 2018
+** Created: Thu Jan 17 22:39:50 2019
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -67,6 +67,7 @@ public:
     QPushButton *pushButton_biying;
     QPushButton *pushButton_360so;
     QCheckBox *checkBox_forcelocalhost;
+    QCheckBox *checkBox_echoswitch;
     QLineEdit *lineEdit_sendnum;
     QSpacerItem *horizontalSpacer;
     QLabel *label;
@@ -278,6 +279,11 @@ public:
 
         horizontalLayout->addWidget(checkBox_forcelocalhost);
 
+        checkBox_echoswitch = new QCheckBox(horizontalGroupBox);
+        checkBox_echoswitch->setObjectName(QString::fromUtf8("checkBox_echoswitch"));
+
+        horizontalLayout->addWidget(checkBox_echoswitch);
+
         lineEdit_sendnum = new QLineEdit(horizontalGroupBox);
         lineEdit_sendnum->setObjectName(QString::fromUtf8("lineEdit_sendnum"));
         sizePolicy.setHeightForWidth(lineEdit_sendnum->sizePolicy().hasHeightForWidth());
@@ -358,6 +364,7 @@ public:
         pushButton_biying->setText(QApplication::translate("MainWindow", "\345\277\205\345\272\224", 0, QApplication::UnicodeUTF8));
         pushButton_360so->setText(QApplication::translate("MainWindow", "360so", 0, QApplication::UnicodeUTF8));
         checkBox_forcelocalhost->setText(QApplication::translate("MainWindow", "Local", 0, QApplication::UnicodeUTF8));
+        checkBox_echoswitch->setText(QApplication::translate("MainWindow", "Echo", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         lineEdit_sendnum->setToolTip(QApplication::translate("MainWindow", "\346\211\247\350\241\214\346\225\260\351\207\217", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP

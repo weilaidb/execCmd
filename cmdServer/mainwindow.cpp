@@ -1234,12 +1234,29 @@ void MainWindow::on_pushButton_notepadpp_clicked()
 {
     ENGINESEARCHTEXT( "cmd notepad++ ", false);
 }
+
+
+QString MainWindow::get_last_open_dir()
+{
+    QSettings setting("./Setting.ini", QSettings::IniFormat);  //QSettings能记录一些程序中的信息，下次再打开时可以读取出来
+    QString lastPath = setting.value("LastFilePath").toString();  //获取上次的打开路径
+    return lastPath;
+}
+
+QString MainWindow::set_last_open_dir(QString dir)
+{
+    QSettings setting("./Setting.ini", QSettings::IniFormat);  //QSettings能记录一些程序中的信息，下次再打开时可以读取出来
+    QString lastPath = setting.value("LastFilePath").toString();  //获取上次的打开路径
+    setting.setValue("LastFilePath",dir);  //记录路径到QSetting中保存
+    return lastPath;
+}
+
 void MainWindow::on_pushButton_saveresult_clicked()
 {
     QString savetext = getrighttext();
     QString fileName = QFileDialog::getSaveFileName(this
             ,tr("Save File")
-            ,""
+            ,get_last_open_dir()
             ,tr("Text Files (*.txt);;csv Files (*.csv);;Html Files (*.html;*.htm);;*.*")
             );
     if (fileName.isNull())
@@ -1255,12 +1272,12 @@ void MainWindow::on_pushButton_openfile2result_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
                                                     tr("Open File"),
-                                                    "",
+                                                    get_last_open_dir(),
                                                     tr("Text Files (*.txt);;csv Files (*.csv);;Html Files (*.html;*.htm);;*.*"),
                                                     0);
-    if (fileName.isNull())
+    if(!fileName.isEmpty())
     {
-        return;
+        set_last_open_dir(fileName);  //记录路径到QSetting中保存
     }
     QFile file(fileName);
     file.open(QIODevice::ReadOnly);
@@ -1369,3 +1386,8 @@ bool MainWindow::IsUTF8File(const char* pFileName)
     return bIsUTF8;
 }
 
+
+void MainWindow::on_checkBox_echoswitch_toggled(bool checked)
+{
+
+}

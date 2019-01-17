@@ -391,6 +391,13 @@
               </widget>
              </item>
              <item>
+              <widget class="QCheckBox" name="checkBox_echoswitch">
+               <property name="text">
+                <string>Echo</string>
+               </property>
+              </widget>
+             </item>
+             <item>
               <widget class="QLineEdit" name="lineEdit_sendnum">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
