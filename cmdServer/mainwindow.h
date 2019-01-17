@@ -9,6 +9,8 @@
 #include <QMap>
 #include <QMutex>
 #include <QSettings>
+#include <QFileSystemWatcher>
+#include <QDir>
 
 namespace Ui {
 class MainWindow;
@@ -168,6 +170,13 @@ private slots:
     QString get_last_open_dir();
     QString set_last_open_dir(QString dir);
 
+    void on_checkBox_echoswitch_clicked();
+
+    void on_checkBox_fileautoload_clicked();
+
+    void procDirChanged(const QString &path);
+
+    void update_selectedfile(QString fileName);
 private:
     QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串
@@ -189,6 +198,8 @@ private:
 private:
     QStringList TodoCmdExecList;//待处理的命令个数
     QTimer *exectimer;
+
+    QFileSystemWatcher myWatcher;
 };
 
 #endif // MAINWINDOW_H

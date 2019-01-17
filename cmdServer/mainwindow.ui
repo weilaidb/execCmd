@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>834</width>
+    <width>888</width>
     <height>479</height>
    </rect>
   </property>
@@ -387,6 +387,13 @@
               <widget class="QCheckBox" name="checkBox_forcelocalhost">
                <property name="text">
                 <string>Local</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_fileautoload">
+               <property name="text">
+                <string> 文件实时加载</string>
                </property>
               </widget>
              </item>

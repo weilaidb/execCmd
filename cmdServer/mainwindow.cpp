@@ -96,6 +96,9 @@ MainWindow::MainWindow(QWidget *parent) :
      forceipaddrflag = false;
 
 
+     // 将监视器的信号和自定义的槽进行关联
+//     connect(&myWatcher, SIGNAL(directoryChanged(QString)), this, SLOT(procDirChanged(QString)));
+     connect(&myWatcher, SIGNAL(fileChanged(QString)), this, SLOT(procDirChanged(QString)));
 
 }
 
@@ -173,6 +176,7 @@ void MainWindow::ReadHistorySettings()
 //    mapIpAndContent
 //    ui->lineEdit->setText(m_settings.value("LineEditIP").toString());
     ui->checkBox_autosend->setChecked(m_settings.value("checkBox_autosend").toBool());
+    ui->checkBox_fileautoload->setChecked(m_settings.value("checkBox_fileautoload").toBool());
     this->restoreGeometry(m_settings.value("Cmdserver").toByteArray());
 
 }
@@ -203,6 +207,7 @@ void MainWindow::WriteCurrentSettings()
 
 
     m_settings.setValue("checkBox_autosend",ui->checkBox_autosend->isChecked());
+    m_settings.setValue("checkBox_fileautoload",ui->checkBox_fileautoload->isChecked());
 
 
     m_settings.setValue("Cmdserver", this->saveGeometry());
@@ -1278,24 +1283,16 @@ void MainWindow::on_pushButton_openfile2result_clicked()
     if(!fileName.isEmpty())
     {
         set_last_open_dir(fileName);  //记录路径到QSetting中保存
+        myWatcher.removePath(get_last_open_dir());
+        myWatcher.addPath(fileName);
+        qDebug() << "fileName:" << fileName;
     }
     else
     {
         return;
     }
-    QFile file(fileName);
-    file.open(QIODevice::ReadOnly);
-    QString text;
-    if(IsUTF8File(fileName.toLocal8Bit().data()))
-    {
-        text = QString::fromUtf8(file.readAll());
-    }
-    else
-    {
-        text = QString::fromLocal8Bit(file.readAll());
-    }
-    file.close();
-    setrighttext(text);
+
+    update_selectedfile(fileName);
 }
 
 QString MainWindow::getrighttext()
@@ -1394,4 +1391,45 @@ bool MainWindow::IsUTF8File(const char* pFileName)
 void MainWindow::on_checkBox_echoswitch_toggled(bool checked)
 {
 
+}
+
+void MainWindow::on_checkBox_echoswitch_clicked()
+{
+
+}
+
+void MainWindow::on_checkBox_fileautoload_clicked()
+{
+
+}
+
+void MainWindow::procDirChanged(const QString &path)
+{
+    if(!ui->checkBox_fileautoload->isChecked())
+    {
+        qDebug() << "none select, no deal!!";
+        return;
+    }
+    qDebug() << "file changed!!";
+    update_selectedfile(path);
+//    ShowTipsInfo(str_china(""));
+    ShowTipsInfoWithShowTime(str_china("更新文件:") + path, 1000);
+
+}
+
+void MainWindow::update_selectedfile(QString fileName)
+{
+    QFile file(fileName);
+    file.open(QIODevice::ReadOnly);
+    QString text;
+    if(IsUTF8File(fileName.toLocal8Bit().data()))
+    {
+        text = QString::fromUtf8(file.readAll());
+    }
+    else
+    {
+        text = QString::fromLocal8Bit(file.readAll());
+    }
+    file.close();
+    setrighttext(text);
 }

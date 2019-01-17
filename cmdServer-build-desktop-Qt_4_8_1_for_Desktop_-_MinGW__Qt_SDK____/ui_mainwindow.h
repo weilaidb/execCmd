@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu Jan 17 22:39:50 2019
+** Created: Thu Jan 17 22:58:04 2019
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -67,6 +67,7 @@ public:
     QPushButton *pushButton_biying;
     QPushButton *pushButton_360so;
     QCheckBox *checkBox_forcelocalhost;
+    QCheckBox *checkBox_fileautoload;
     QCheckBox *checkBox_echoswitch;
     QLineEdit *lineEdit_sendnum;
     QSpacerItem *horizontalSpacer;
@@ -80,7 +81,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(834, 479);
+        MainWindow->resize(888, 479);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -279,6 +280,11 @@ public:
 
         horizontalLayout->addWidget(checkBox_forcelocalhost);
 
+        checkBox_fileautoload = new QCheckBox(horizontalGroupBox);
+        checkBox_fileautoload->setObjectName(QString::fromUtf8("checkBox_fileautoload"));
+
+        horizontalLayout->addWidget(checkBox_fileautoload);
+
         checkBox_echoswitch = new QCheckBox(horizontalGroupBox);
         checkBox_echoswitch->setObjectName(QString::fromUtf8("checkBox_echoswitch"));
 
@@ -364,6 +370,7 @@ public:
         pushButton_biying->setText(QApplication::translate("MainWindow", "\345\277\205\345\272\224", 0, QApplication::UnicodeUTF8));
         pushButton_360so->setText(QApplication::translate("MainWindow", "360so", 0, QApplication::UnicodeUTF8));
         checkBox_forcelocalhost->setText(QApplication::translate("MainWindow", "Local", 0, QApplication::UnicodeUTF8));
+        checkBox_fileautoload->setText(QApplication::translate("MainWindow", " \346\226\207\344\273\266\345\256\236\346\227\266\345\212\240\350\275\275", 0, QApplication::UnicodeUTF8));
         checkBox_echoswitch->setText(QApplication::translate("MainWindow", "Echo", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         lineEdit_sendnum->setToolTip(QApplication::translate("MainWindow", "\346\211\247\350\241\214\346\225\260\351\207\217", 0, QApplication::UnicodeUTF8));

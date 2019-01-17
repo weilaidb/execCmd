@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Thu Jan 17 22:45:46 2019
+** Created: Thu Jan 17 23:14:41 2019
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      55,   14, // methods
+      59,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -86,6 +86,10 @@ static const uint qt_meta_data_MainWindow[] = {
     1646, 1638,   11,   11, 0x08,
     1683,   11,  626,   11, 0x08,
     1707, 1703,  626,   11, 0x08,
+    1734,   11,   11,   11, 0x08,
+    1767,   11,   11,   11, 0x08,
+    1807, 1802,   11,   11, 0x08,
+    1840, 1831,   11,   11, 0x08,
 
        0        // eod
 };
@@ -140,6 +144,10 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "checked\0on_checkBox_echoswitch_toggled(bool)\0"
     "get_last_open_dir()\0dir\0"
     "set_last_open_dir(QString)\0"
+    "on_checkBox_echoswitch_clicked()\0"
+    "on_checkBox_fileautoload_clicked()\0"
+    "path\0procDirChanged(QString)\0fileName\0"
+    "update_selectedfile(QString)\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -213,6 +221,10 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
         case 54: { QString _r = _t->set_last_open_dir((*reinterpret_cast< QString(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
+        case 55: _t->on_checkBox_echoswitch_clicked(); break;
+        case 56: _t->on_checkBox_fileautoload_clicked(); break;
+        case 57: _t->procDirChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 58: _t->update_selectedfile((*reinterpret_cast< QString(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -250,9 +262,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 55)
+        if (_id < 59)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 55;
+        _id -= 59;
     }
     return _id;
 }
