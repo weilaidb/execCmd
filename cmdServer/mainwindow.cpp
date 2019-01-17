@@ -1279,6 +1279,10 @@ void MainWindow::on_pushButton_openfile2result_clicked()
     {
         set_last_open_dir(fileName);  //记录路径到QSetting中保存
     }
+    else
+    {
+        return;
+    }
     QFile file(fileName);
     file.open(QIODevice::ReadOnly);
     QString text;
