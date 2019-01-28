@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Thu Jan 17 22:58:04 2019
+** Created: Mon Jan 28 21:05:15 2019
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -29,6 +29,7 @@
 #include <QtGui/QSplitter>
 #include <QtGui/QStatusBar>
 #include <QtGui/QTextEdit>
+#include <QtGui/QTreeView>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QWidget>
 
@@ -39,18 +40,20 @@ class Ui_MainWindow
 public:
     QWidget *centralWidget;
     QGridLayout *gridLayout;
-    QSplitter *splitter_2;
-    QWidget *layoutWidget;
-    QVBoxLayout *verticalLayout_2;
+    QSplitter *splitter_5;
+    QSplitter *splitter_4;
     QSplitter *splitter_3;
     QLabel *label_3;
     QCheckBox *checkBox_autosend;
     QPushButton *pushButton_delkey;
+    QWidget *widget;
     QHBoxLayout *horizontalLayout_3;
     QComboBox *comboBox_findlist;
     QPushButton *pushButton;
+    QSplitter *splitter_2;
+    QTreeView *treeView_ut;
     QListWidget *listWidget_cmdlist;
-    QWidget *layoutWidget1;
+    QWidget *layoutWidget;
     QVBoxLayout *verticalLayout_3;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_2;
@@ -69,6 +72,7 @@ public:
     QCheckBox *checkBox_forcelocalhost;
     QCheckBox *checkBox_fileautoload;
     QCheckBox *checkBox_echoswitch;
+    QCheckBox *checkBox_tree;
     QLineEdit *lineEdit_sendnum;
     QSpacerItem *horizontalSpacer;
     QLabel *label;
@@ -81,24 +85,20 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(888, 479);
+        MainWindow->resize(996, 479);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
         gridLayout->setSpacing(6);
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        splitter_2 = new QSplitter(centralWidget);
-        splitter_2->setObjectName(QString::fromUtf8("splitter_2"));
-        splitter_2->setOrientation(Qt::Horizontal);
-        layoutWidget = new QWidget(splitter_2);
-        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        verticalLayout_2 = new QVBoxLayout(layoutWidget);
-        verticalLayout_2->setSpacing(6);
-        verticalLayout_2->setContentsMargins(11, 11, 11, 11);
-        verticalLayout_2->setObjectName(QString::fromUtf8("verticalLayout_2"));
-        verticalLayout_2->setContentsMargins(0, 0, 0, 0);
-        splitter_3 = new QSplitter(layoutWidget);
+        splitter_5 = new QSplitter(centralWidget);
+        splitter_5->setObjectName(QString::fromUtf8("splitter_5"));
+        splitter_5->setOrientation(Qt::Horizontal);
+        splitter_4 = new QSplitter(splitter_5);
+        splitter_4->setObjectName(QString::fromUtf8("splitter_4"));
+        splitter_4->setOrientation(Qt::Vertical);
+        splitter_3 = new QSplitter(splitter_4);
         splitter_3->setObjectName(QString::fromUtf8("splitter_3"));
         splitter_3->setOrientation(Qt::Horizontal);
         label_3 = new QLabel(splitter_3);
@@ -125,13 +125,15 @@ public:
         pushButton_delkey->setSizePolicy(sizePolicy);
         pushButton_delkey->setMinimumSize(QSize(20, 0));
         splitter_3->addWidget(pushButton_delkey);
-
-        verticalLayout_2->addWidget(splitter_3);
-
-        horizontalLayout_3 = new QHBoxLayout();
+        splitter_4->addWidget(splitter_3);
+        widget = new QWidget(splitter_4);
+        widget->setObjectName(QString::fromUtf8("widget"));
+        horizontalLayout_3 = new QHBoxLayout(widget);
         horizontalLayout_3->setSpacing(6);
+        horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
-        comboBox_findlist = new QComboBox(layoutWidget);
+        horizontalLayout_3->setContentsMargins(0, 0, 0, 0);
+        comboBox_findlist = new QComboBox(widget);
         comboBox_findlist->setObjectName(QString::fromUtf8("comboBox_findlist"));
         comboBox_findlist->setMaximumSize(QSize(16777215, 30));
         QFont font1;
@@ -143,7 +145,7 @@ public:
 
         horizontalLayout_3->addWidget(comboBox_findlist);
 
-        pushButton = new QPushButton(layoutWidget);
+        pushButton = new QPushButton(widget);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
         sizePolicy.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
         pushButton->setSizePolicy(sizePolicy);
@@ -151,10 +153,14 @@ public:
 
         horizontalLayout_3->addWidget(pushButton);
 
-
-        verticalLayout_2->addLayout(horizontalLayout_3);
-
-        listWidget_cmdlist = new QListWidget(layoutWidget);
+        splitter_4->addWidget(widget);
+        splitter_2 = new QSplitter(splitter_4);
+        splitter_2->setObjectName(QString::fromUtf8("splitter_2"));
+        splitter_2->setOrientation(Qt::Vertical);
+        treeView_ut = new QTreeView(splitter_2);
+        treeView_ut->setObjectName(QString::fromUtf8("treeView_ut"));
+        splitter_2->addWidget(treeView_ut);
+        listWidget_cmdlist = new QListWidget(splitter_2);
         listWidget_cmdlist->setObjectName(QString::fromUtf8("listWidget_cmdlist"));
         QFont font2;
         font2.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
@@ -164,13 +170,12 @@ public:
         font2.setWeight(50);
         listWidget_cmdlist->setFont(font2);
         listWidget_cmdlist->setStyleSheet(QString::fromUtf8("selection-color: rgb(0, 255, 255);"));
-
-        verticalLayout_2->addWidget(listWidget_cmdlist);
-
-        splitter_2->addWidget(layoutWidget);
-        layoutWidget1 = new QWidget(splitter_2);
-        layoutWidget1->setObjectName(QString::fromUtf8("layoutWidget1"));
-        verticalLayout_3 = new QVBoxLayout(layoutWidget1);
+        splitter_2->addWidget(listWidget_cmdlist);
+        splitter_4->addWidget(splitter_2);
+        splitter_5->addWidget(splitter_4);
+        layoutWidget = new QWidget(splitter_5);
+        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
+        verticalLayout_3 = new QVBoxLayout(layoutWidget);
         verticalLayout_3->setSpacing(6);
         verticalLayout_3->setContentsMargins(11, 11, 11, 11);
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
@@ -178,7 +183,7 @@ public:
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setSpacing(6);
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        label_2 = new QLabel(layoutWidget1);
+        label_2 = new QLabel(layoutWidget);
         label_2->setObjectName(QString::fromUtf8("label_2"));
         sizePolicy.setHeightForWidth(label_2->sizePolicy().hasHeightForWidth());
         label_2->setSizePolicy(sizePolicy);
@@ -187,7 +192,7 @@ public:
 
         horizontalLayout_2->addWidget(label_2);
 
-        comboBox = new QComboBox(layoutWidget1);
+        comboBox = new QComboBox(layoutWidget);
         comboBox->setObjectName(QString::fromUtf8("comboBox"));
         comboBox->setMinimumSize(QSize(251, 31));
         comboBox->setEditable(true);
@@ -200,7 +205,7 @@ public:
         verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(6);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        horizontalGroupBox = new QGroupBox(layoutWidget1);
+        horizontalGroupBox = new QGroupBox(layoutWidget);
         horizontalGroupBox->setObjectName(QString::fromUtf8("horizontalGroupBox"));
         horizontalLayout = new QHBoxLayout(horizontalGroupBox);
         horizontalLayout->setSpacing(6);
@@ -290,6 +295,11 @@ public:
 
         horizontalLayout->addWidget(checkBox_echoswitch);
 
+        checkBox_tree = new QCheckBox(horizontalGroupBox);
+        checkBox_tree->setObjectName(QString::fromUtf8("checkBox_tree"));
+
+        horizontalLayout->addWidget(checkBox_tree);
+
         lineEdit_sendnum = new QLineEdit(horizontalGroupBox);
         lineEdit_sendnum->setObjectName(QString::fromUtf8("lineEdit_sendnum"));
         sizePolicy.setHeightForWidth(lineEdit_sendnum->sizePolicy().hasHeightForWidth());
@@ -307,7 +317,7 @@ public:
 
         verticalLayout->addWidget(horizontalGroupBox);
 
-        label = new QLabel(layoutWidget1);
+        label = new QLabel(layoutWidget);
         label->setObjectName(QString::fromUtf8("label"));
         label->setMinimumSize(QSize(131, 16));
         label->setMaximumSize(QSize(16777215, 30));
@@ -315,7 +325,7 @@ public:
 
         verticalLayout->addWidget(label);
 
-        splitter = new QSplitter(layoutWidget1);
+        splitter = new QSplitter(layoutWidget);
         splitter->setObjectName(QString::fromUtf8("splitter"));
         splitter->setOrientation(Qt::Vertical);
         textEdit = new QTextEdit(splitter);
@@ -336,9 +346,9 @@ public:
 
         verticalLayout_3->addLayout(verticalLayout);
 
-        splitter_2->addWidget(layoutWidget1);
+        splitter_5->addWidget(layoutWidget);
 
-        gridLayout->addWidget(splitter_2, 0, 0, 1, 1);
+        gridLayout->addWidget(splitter_5, 0, 0, 1, 1);
 
         MainWindow->setCentralWidget(centralWidget);
         statusBar = new QStatusBar(MainWindow);
@@ -372,6 +382,7 @@ public:
         checkBox_forcelocalhost->setText(QApplication::translate("MainWindow", "Local", 0, QApplication::UnicodeUTF8));
         checkBox_fileautoload->setText(QApplication::translate("MainWindow", " \346\226\207\344\273\266\345\256\236\346\227\266\345\212\240\350\275\275", 0, QApplication::UnicodeUTF8));
         checkBox_echoswitch->setText(QApplication::translate("MainWindow", "Echo", 0, QApplication::UnicodeUTF8));
+        checkBox_tree->setText(QApplication::translate("MainWindow", "tree", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         lineEdit_sendnum->setToolTip(QApplication::translate("MainWindow", "\346\211\247\350\241\214\346\225\260\351\207\217", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP

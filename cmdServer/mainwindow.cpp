@@ -14,11 +14,15 @@
 #include <QTextCodec>
 #include <QFileDialog>
 #include <QFile>
+#include <QFileSystemModel>
+#include <QInputDialog>
+#include <QMessageBox>
 
 #define BINDPORT (9999)
 #define CMD_HELLO "hello word"
 #define KEY_DELETEWORD "delete it"
 #define LOCALHOSTIPADDR ("127.0.0.1")
+#define DEFAULT_LOADTREE_DIR "c:\\"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -26,15 +30,19 @@ MainWindow::MainWindow(QWidget *parent) :
     pthreadsock(NULL),
     uselistTimer(NULL),
     savetimer(NULL),
-    bCtrlKeyPressed(FALSE)
+    bCtrlKeyPressed(FALSE),
+    model(NULL),
+    curmodeldir(""),
+    orglabeltext(""),
+    cursavefilepath("")
 {
     ui->setupUi(this);
 
-//splitte分割比例
+    //splitte分割比例
     ui->splitter->setStretchFactor(0,2);
     ui->splitter->setStretchFactor(1,8);
 
-//splitte分割比例
+    //splitte分割比例
     ui->splitter_2->setStretchFactor(0,5);
     ui->splitter_2->setStretchFactor(1,5);
 
@@ -44,6 +52,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ReadHistorySettings();
     UpdateShowCmdListWidgetByMap();
+    initDirTree(curmodeldir);
+    orglabeltext = ui->label->text();
+
+    on_checkBox_tree_toggled(ui->checkBox_tree->isChecked());
 
     ui->comboBox_findlist->addItems(getcomuselistbycurkeys());
     publicSets();
@@ -64,41 +76,41 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(savetimer, SIGNAL(timeout()), this, SLOT(procSaveTimerOut()));
 
 
-//    ui->comboBox_findlist->setShortcutEnabled();
-//    ui->comboBox_findlist->setShortcutAutoRepeat();
-//     ui->udpSendButton->setShortcut(tr("Alt+F"));
+    //    ui->comboBox_findlist->setShortcutEnabled();
+    //    ui->comboBox_findlist->setShortcutAutoRepeat();
+    //     ui->udpSendButton->setShortcut(tr("Alt+F"));
 
-     QShortcut *findShortCut = new QShortcut(this);
-     findShortCut->setKey(tr("Ctrl+F"));
-     connect(findShortCut, SIGNAL(activated()),this,SLOT(procFindShortCut()));
+    QShortcut *findShortCut = new QShortcut(this);
+    findShortCut->setKey(tr("Ctrl+F"));
+    connect(findShortCut, SIGNAL(activated()),this,SLOT(procFindShortCut()));
 
-//     QShortcut *findClearShortCut = new QShortcut(this);
-//     findClearShortCut->setKey(tr("Ctrl+D"));
-//     connect(findClearShortCut, SIGNAL(activated()),this,SLOT(procClearShortCut()));
+    //     QShortcut *findClearShortCut = new QShortcut(this);
+    //     findClearShortCut->setKey(tr("Ctrl+D"));
+    //     connect(findClearShortCut, SIGNAL(activated()),this,SLOT(procClearShortCut()));
 
-     QShortcut *SendCmdShortCut = new QShortcut(this);
-     SendCmdShortCut->setKey(tr("Ctrl+S"));
-     connect(SendCmdShortCut, SIGNAL(activated()),this,SLOT(procSendCmdShortCut()));
-
-
-
-     TodoCmdExecList.clear();
-     exectimer = new QTimer();
-     exectimer->start(2000);
-     connect(exectimer, SIGNAL(timeout()), this, SLOT(CheckTodoListTimerOut()));
+    QShortcut *SendCmdShortCut = new QShortcut(this);
+    SendCmdShortCut->setKey(tr("Ctrl+S"));
+    connect(SendCmdShortCut, SIGNAL(activated()),this,SLOT(procSendCmdShortCut()));
 
 
-//     setPlaceholderText()设置提示文字
-//     QLineEdit *edit;
-//     edit->setPlaceholderText("niahoma");
 
-     //强制IP标志
-     forceipaddrflag = false;
+    TodoCmdExecList.clear();
+    exectimer = new QTimer();
+    exectimer->start(2000);
+    connect(exectimer, SIGNAL(timeout()), this, SLOT(CheckTodoListTimerOut()));
 
 
-     // 将监视器的信号和自定义的槽进行关联
-//     connect(&myWatcher, SIGNAL(directoryChanged(QString)), this, SLOT(procDirChanged(QString)));
-     connect(&myWatcher, SIGNAL(fileChanged(QString)), this, SLOT(procDirChanged(QString)));
+    //     setPlaceholderText()设置提示文字
+    //     QLineEdit *edit;
+    //     edit->setPlaceholderText("niahoma");
+
+    //强制IP标志
+    forceipaddrflag = false;
+
+
+    // 将监视器的信号和自定义的槽进行关联
+    //     connect(&myWatcher, SIGNAL(directoryChanged(QString)), this, SLOT(procDirChanged(QString)));
+    connect(&myWatcher, SIGNAL(fileChanged(QString)), this, SLOT(procDirChanged(QString)));
 
 }
 
@@ -126,7 +138,7 @@ void MainWindow::Var2Map(QSettings &sets, QString envkey, QMap<QString, QStringL
 {
     QMap<QString, QVariant> maptmp = sets.value(envkey).toMap();
 
-//map_showcmd
+    //map_showcmd
     QMapIterator<QString, QVariant> i(maptmp);
     while (i.hasNext()) {
         i.next();
@@ -167,16 +179,18 @@ void MainWindow::ReadHistorySettings()
     ui->comboBox->addItems(m_settings.value("ComBoxIPList").toStringList());
     ComBoxIPList = m_settings.value("ComBoxIPList").toStringList();
     ui->comboBox->setEditText(m_settings.value("curkey").toString());
-//    show_cmdlist.clear();
-//    show_cmdlist = m_settings.value("listWidget_cmdlist").toStringList();
+    curmodeldir = m_settings.value("curmodeldir").toString();
+    //    show_cmdlist.clear();
+    //    show_cmdlist = m_settings.value("listWidget_cmdlist").toStringList();
 
     Var2Map(m_settings, "map_showcmd", map_showcmd);
     Var2Map(m_settings, "map_commonuselist", map_commonuselist);
 
-//    mapIpAndContent
-//    ui->lineEdit->setText(m_settings.value("LineEditIP").toString());
+    //    mapIpAndContent
+    //    ui->lineEdit->setText(m_settings.value("LineEditIP").toString());
     ui->checkBox_autosend->setChecked(m_settings.value("checkBox_autosend").toBool());
     ui->checkBox_fileautoload->setChecked(m_settings.value("checkBox_fileautoload").toBool());
+    ui->checkBox_tree->setChecked(m_settings.value("checkBox_tree").toBool());
     this->restoreGeometry(m_settings.value("Cmdserver").toByteArray());
 
 }
@@ -193,13 +207,14 @@ void MainWindow::WriteCurrentSettings()
     QSettings m_settings("weilaidb.com.cn", "cmdserver");
     m_settings.setValue("ComBoxIPList",ComBoxIPList);
     m_settings.setValue("curkey", ui->comboBox->currentText());
-//    show_cmdlist.clear();
-//    int count = ui->listWidget_cmdlist->count();
-//    int loop = 0;
-//    for(loop = 0; loop < count;loop++)
-//    {
-//        cmdlist << ui->listWidget_cmdlist->item(loop)->text();
-//    }
+    m_settings.setValue("curmodeldir", curmodeldir);
+    //    show_cmdlist.clear();
+    //    int count = ui->listWidget_cmdlist->count();
+    //    int loop = 0;
+    //    for(loop = 0; loop < count;loop++)
+    //    {
+    //        cmdlist << ui->listWidget_cmdlist->item(loop)->text();
+    //    }
     m_settings.setValue("listWidget_cmdlist",show_cmdlist);
 
     m_settings.setValue("map_showcmd", Map2Var(map_showcmd));
@@ -208,13 +223,14 @@ void MainWindow::WriteCurrentSettings()
 
     m_settings.setValue("checkBox_autosend",ui->checkBox_autosend->isChecked());
     m_settings.setValue("checkBox_fileautoload",ui->checkBox_fileautoload->isChecked());
+    m_settings.setValue("checkBox_tree",ui->checkBox_tree->isChecked());
 
 
     m_settings.setValue("Cmdserver", this->saveGeometry());
 
-//    QSettings::SettingsMap
-//    QSettings::SettingsMap
-//    m_settings.setValue("mapIpAndContent",mapIpAndContent);
+    //    QSettings::SettingsMap
+    //    QSettings::SettingsMap
+    //    m_settings.setValue("mapIpAndContent",mapIpAndContent);
 
 
 }
@@ -262,10 +278,10 @@ void MainWindow::on_connecting_sendstr(QString sendstr)
     }
     else
     {
-//        for(loop = 0; loop < times; loop++)
-//        {
-//           on_pushButton_connect_clicked();
-//        }
+        //        for(loop = 0; loop < times; loop++)
+        //        {
+        //           on_pushButton_connect_clicked();
+        //        }
     }
 }
 
@@ -389,8 +405,8 @@ void MainWindow::hellosocket()
         pthreadsock->start();
         if(autosendstr.length())
         {
-           pthreadsock->sendmsg(autosendstr);
-           autosendstr.clear();
+            pthreadsock->sendmsg(autosendstr);
+            autosendstr.clear();
         }
         else if(ui->textEdit->toPlainText().length() == 0)
             pthreadsock->sendmsg(CMD_HELLO);
@@ -420,9 +436,9 @@ void MainWindow::readfromremote(QString msg,void*)
 {
     qDebug() << "read from remote";
     qDebug() << msg;
-//    ui->textEdit_cmdresult->setText(msg);
+    //    ui->textEdit_cmdresult->setText(msg);
     ui->textEdit_cmdresult->append(QString::fromUtf8(msg.toAscii().data()));
-//    ui->textEdit_cmdresult->append(QString::fromLocal8Bit(msg.toAscii().data()));
+    //    ui->textEdit_cmdresult->append(QString::fromLocal8Bit(msg.toAscii().data()));
 }
 
 
@@ -463,7 +479,7 @@ void MainWindow::on_pushButton_collect_clicked()
         i.next();
         if(i.key() == getMapKey())
         {
-//            qDebug() << i.value();
+            //            qDebug() << i.value();
             found = TRUE;
             findlist = i.value();
             break;
@@ -504,11 +520,12 @@ void MainWindow::on_pushButton_clear_clicked()
     TodoCmdExecList.clear();
     searchlist.clear();
     oneshowres.clear();
+    ui->label->setText(orglabeltext);
 }
 
 void MainWindow::procDoubleClickItem(QListWidgetItem * item)
 {
-//    if(ui->checkBox_autosend->isChecked())
+    //    if(ui->checkBox_autosend->isChecked())
     {
         autosendstr = item->text();
         ui->textEdit->setText(item->text());
@@ -516,7 +533,7 @@ void MainWindow::procDoubleClickItem(QListWidgetItem * item)
 
         return;
     }
-//    qDebug() << item->text();
+    //    qDebug() << item->text();
     ui->textEdit->setText(item->text());
 }
 
@@ -530,7 +547,7 @@ void MainWindow::procClickItem(QListWidgetItem * item)
 
         return;
     }
-//    qDebug() << item->text();
+    //    qDebug() << item->text();
     ui->textEdit->setText(item->text());
 }
 
@@ -538,9 +555,9 @@ void MainWindow::procClickItem(QListWidgetItem * item)
 void MainWindow::procEnterItem(QListWidgetItem* item)
 {
     QString itemtext = item->text();
-//    qDebug() << "enter " << itemtext;
+    //    qDebug() << "enter " << itemtext;
     setToolTip(itemtext);
-//    ui->textEdit->setText(itemtext);
+    //    ui->textEdit->setText(itemtext);
 }
 
 void MainWindow::procitemSelectionChanged()
@@ -578,7 +595,7 @@ void MainWindow::procFindList(QString findstr)
         }
     }
 
-//    searchlist.sort();
+    //    searchlist.sort();
     UpdateShowCmdListWidget(findstr, searchlist);
     mutex_search.unlock();
 
@@ -591,7 +608,7 @@ void MainWindow::procActivatedFindList(QString findstr)
 
     if(searchlist.size() > 0)
     {
-//        ui->textEdit->setText(list.at(0));
+        //        ui->textEdit->setText(list.at(0));
         checkoneitem_execcmd(oneshowres);
         insertfindkeys2comuselist(findstr);
     }
@@ -611,8 +628,14 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
     QCursor cur=this->cursor();
     QMenu *menu=new QMenu(this);
     menu->addAction(Act_DelItem); //添加菜单项1
+    menu->addAction(Act_LoadDirTree); //添加菜单项1
+    menu->addAction(Act_Mkdir); //添加菜单项1
+    menu->addAction(Act_Rmdir); //添加菜单项1
     //    menu->addAction(Act_Normal); //添加菜单项2
     menu->exec(cur.pos()); //关联到光标
+
+
+
 }
 
 void MainWindow::PopMenu()
@@ -620,6 +643,18 @@ void MainWindow::PopMenu()
     /* 右键菜单 */
     Act_DelItem = new QAction(tr("DelItem"), this);
     connect(Act_DelItem, SIGNAL(triggered()), this, SLOT(DelItem()));
+    /* 加载显示树形的路径 */
+    Act_LoadDirTree = new QAction(tr("LoadTree"), this);
+    connect(Act_LoadDirTree, SIGNAL(triggered()), this, SLOT(LoadDirTree()));
+    /* 创建目录 */
+    Act_Mkdir = new QAction(tr("Make Directory..."), this);
+    connect(Act_Mkdir, SIGNAL(triggered()), this, SLOT(TreeMkdir()));
+
+    /* 删除目录 */
+    Act_Rmdir = new QAction(tr("Remove"), this);
+    connect(Act_Rmdir, SIGNAL(triggered()), this, SLOT(TreeRm()));
+
+
 
     SearchMenu();
 }
@@ -642,8 +677,12 @@ void MainWindow::SearchMenu()
     Act_saveresult = new QAction(GBKSELF(保存), this);
     connect(Act_saveresult, SIGNAL(triggered()), this, SLOT(on_pushButton_saveresult_clicked()));
 
-    Act_openfile2result = new QAction(GBKSELF(打开), this);
-    connect(Act_openfile2result, SIGNAL(triggered()), this, SLOT(on_pushButton_openfile2result_clicked()));
+    Act_saveresult_2another = new QAction(GBKSELF(另存为), this);
+    connect(Act_saveresult_2another, SIGNAL(triggered()), this, SLOT(on_pushButton_saveresult2_another_clicked()));
+
+
+//    Act_openfile2result = new QAction(GBKSELF(打开), this);
+//    connect(Act_openfile2result, SIGNAL(triggered()), this, SLOT(on_pushButton_openfile2result_clicked()));
 
 
 
@@ -654,8 +693,9 @@ void MainWindow::SearchMenu()
     menu->addAction(Act_searchbaidu); //添加菜单项1
     menu->addAction(Act_searchbiying); //添加菜单项1
     menu->addAction(Act_search360so); //添加菜单项1
-    menu->addAction(Act_openfile2result); //添加菜单项1
+//    menu->addAction(Act_openfile2result); //添加菜单项1
     menu->addAction(Act_saveresult); //添加菜单项1
+    menu->addAction(Act_saveresult_2another); //添加菜单项1
     ui->pushButton_baidu->setMenu(menu);
 
 }
@@ -663,6 +703,10 @@ void MainWindow::SearchMenu()
 
 void MainWindow::DelItem()
 {
+    if(ui->listWidget_cmdlist->currentRow() < 0)
+    {
+        return;
+    }
     QStringList cmdlist = GetCurrentMapValue();
     cmdlist.removeOne(ui->listWidget_cmdlist->currentItem()->text());
     map_showcmd.insert(getMapKey(), cmdlist);
@@ -684,7 +728,7 @@ bool MainWindow::delKeyWord(QString curstr, bool setnull)
     {
         QString todel = curstr;
         todel = todel.replace(delstr, "").simplified();
-//        qDebug() << "!!!procUseListTimerOut del uselist:" << todel;
+        //        qDebug() << "!!!procUseListTimerOut del uselist:" << todel;
         comuseitemlist = getcomuselistbycurkeys();
         comuseitemlist.removeOne(todel);
         comuseitemlist.sort();
@@ -711,8 +755,8 @@ void MainWindow::procUseListTimerOut()
     return;
     static QString oldstr = ui->comboBox_findlist->currentText().simplified();
     QString curstr = ui->comboBox_findlist->currentText().simplified();
-//    qDebug() << "oldstr:" << oldstr;
-//    qDebug() << "curstr:" << curstr;
+    //    qDebug() << "oldstr:" << oldstr;
+    //    qDebug() << "curstr:" << curstr;
     if(oldstr != curstr)
     {
         oldstr = curstr;
@@ -743,6 +787,7 @@ void MainWindow::procFindShortCut()
     qDebug() << "procFindShortCut";
     ui->comboBox_findlist->setEditText("");
     ui->comboBox_findlist->setFocus();
+    ui->label->setText(orglabeltext);
 }
 void MainWindow::procClearShortCut()
 {
@@ -775,7 +820,7 @@ QString MainWindow::filterInvalidText(QString orgt)
         QString dealline = line.simplified();
         if(dealline.contains(QRegExp("^\\#"))
                 ||dealline.contains(QRegExp("^\\["))
-            )
+                )
         {
             continue;
         }
@@ -788,7 +833,7 @@ QString MainWindow::filterInvalidText(QString orgt)
         {
             QChar cha = dealline.at(i);
             uni = cha.unicode();
-//            qDebug() << "uni:" << uni;
+            //            qDebug() << "uni:" << uni;
             //查编码网址 http://www.qqxiuzi.cn/bianma/zifuji.php
             if(uni == BREAKSIGN) // unicode编码
             {
@@ -800,7 +845,7 @@ QString MainWindow::filterInvalidText(QString orgt)
                 //这个字符是中文
             }
         }
-//        qDebug() << "uni last:" << uni;
+        //        qDebug() << "uni last:" << uni;
         if(uni == BREAKSIGN)// unicode编码
         {
             continue;
@@ -829,7 +874,7 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     int numberSteps = numberDegrees / 15;
     if(event->orientation() == Qt::Vertical)
     {   //实现的是横排移动，所以这里把滚轮的上下移动实现为
-//        ui->listWidge `Q1SW23t->horizontalScrollBar()->setValue(ui->listWidget->horizontalScrollBar()->value() + numberSteps);
+        //        ui->listWidge `Q1SW23t->horizontalScrollBar()->setValue(ui->listWidget->horizontalScrollBar()->value() + numberSteps);
     }
     qDebug() << "numberSteps :"<<numberSteps;
     if(numberSteps > 0)
@@ -895,8 +940,8 @@ void MainWindow::UpdateShowCmdListWidget(QString findstr, QStringList list)
     ui->listWidget_cmdlist->clear();
     foreach (QString item, list) {
         QListWidgetItem *lst = new QListWidgetItem(QIcon("images/floder.png"),
-                                                           item,
-                                                           ui->listWidget_cmdlist);
+                                                   item,
+                                                   ui->listWidget_cmdlist);
         QStringList countstr = item.split("\n");
         int showheight = (countstr.size() >= 4) ? 4 : countstr.size();
         if(showheight == 0)
@@ -917,7 +962,7 @@ void MainWindow::UpdateShowCmdListWidget(QString findstr, QStringList list)
     {
         ui->textEdit->setText("");
     }
-//    updateListWidgetColor();
+    //    updateListWidgetColor();
 }
 
 void MainWindow::UpdateShowCmdListWidgetByMap()
@@ -932,7 +977,7 @@ void MainWindow::UpdateShowCmdListWidgetByMap()
         i.next();
         if(i.key() == getMapKey())
         {
-//            qDebug() << i.value();
+            //            qDebug() << i.value();
             found = TRUE;
             findlist = i.value();
             break;
@@ -940,13 +985,13 @@ void MainWindow::UpdateShowCmdListWidgetByMap()
     }
     if(found == FALSE)
     {
-       return;
+        return;
     }
 
     foreach (QString item, findlist) {
         QListWidgetItem *lst = new QListWidgetItem(QIcon("images/floder.png"),
-                                                           item,
-                                                           ui->listWidget_cmdlist);
+                                                   item,
+                                                   ui->listWidget_cmdlist);
         QStringList countstr = item.split("\n");
         int showheight = (countstr.size() >= 4) ? 4 : countstr.size();
         if(showheight == 0)
@@ -956,12 +1001,13 @@ void MainWindow::UpdateShowCmdListWidgetByMap()
     }
     ui->listWidget_cmdlist->sortItems();
 
-//    qDebug() << "ui->listWidget_cmdlist count:" << ui->listWidget_cmdlist->count();
+    //    qDebug() << "ui->listWidget_cmdlist count:" << ui->listWidget_cmdlist->count();
 
-//    if(findlist.size() == 1)
-//    {
-//        ui->textEdit_cmdresult->setText(findlist.at(0));
-//    }
+    //    if(findlist.size() == 1)
+    //    {
+    //        ui->textEdit_cmdresult->setText(findlist.at(0));
+    //    }
+
 
 }
 
@@ -976,7 +1022,7 @@ QStringList MainWindow::GetCurrentMapValue()
         i.next();
         if(i.key() == getMapKey())
         {
-//            qDebug() << i.value();
+            //            qDebug() << i.value();
             findlist = i.value();
             break;
         }
@@ -986,13 +1032,13 @@ QStringList MainWindow::GetCurrentMapValue()
 
 void MainWindow::procSaveTimerOut()
 {
-//    qDebug() << "procSaveTimerOut...";
-//    static int orgcount = show_cmdlist.size();
-//    if(show_cmdlist.size() == orgcount)
-//    {
-//        return;
-//    }
-//    orgcount = show_cmdlist.size();
+    //    qDebug() << "procSaveTimerOut...";
+    //    static int orgcount = show_cmdlist.size();
+    //    if(show_cmdlist.size() == orgcount)
+    //    {
+    //        return;
+    //    }
+    //    orgcount = show_cmdlist.size();
     WriteCurrentSettings();
 }
 
@@ -1053,20 +1099,20 @@ void MainWindow::CheckTodoListTimerOut()
 
     isdoing = TRUE;
 End:
-        foreach (QString str, TodoCmdExecList) {
-            if(!ui->pushButton_connect->isEnabled())
-            {
-                Sleep(1000);
-                continue;
-            }
-            qApp->processEvents();
-            ui->statusBar->showMessage(QString::fromLocal8Bit("待处理的命令数量:%1").arg(TodoCmdExecList.size()));
-            checkoneitem_execcmd(str);
-            qApp->processEvents();
-            TodoCmdExecList.removeAt(0);
-            if(TodoCmdExecList.size() > 0)
-                goto End;
+    foreach (QString str, TodoCmdExecList) {
+        if(!ui->pushButton_connect->isEnabled())
+        {
+            Sleep(1000);
+            continue;
         }
+        qApp->processEvents();
+        ui->statusBar->showMessage(QString::fromLocal8Bit("待处理的命令数量:%1").arg(TodoCmdExecList.size()));
+        checkoneitem_execcmd(str);
+        qApp->processEvents();
+        TodoCmdExecList.removeAt(0);
+        if(TodoCmdExecList.size() > 0)
+            goto End;
+    }
 
     isdoing = FALSE;
     ui->statusBar->showMessage("");
@@ -1085,7 +1131,7 @@ void MainWindow::on_pushButton_delkey_clicked()
 QStringList MainWindow::getcomuselistbycurkeys()
 {
     QString curkey = ui->comboBox->currentText();
-//    map_commonuselist
+    //    map_commonuselist
     QMapIterator<QString, QStringList> i(map_commonuselist);
     qDebug() << "com use list key:" << curkey ;
 
@@ -1102,14 +1148,14 @@ QStringList MainWindow::getcomuselistbycurkeys()
             break;
         }
     }
-//    //没有数据时插入数据
-//    if(found == FALSE)
-//    {
-//        QStringList nulllist;
-//        nulllist.clear();
-//        map_commonuselist.insert(curkey, nulllist);
-//        findlist = nulllist;
-//    }
+    //    //没有数据时插入数据
+    //    if(found == FALSE)
+    //    {
+    //        QStringList nulllist;
+    //        nulllist.clear();
+    //        map_commonuselist.insert(curkey, nulllist);
+    //        findlist = nulllist;
+    //    }
 
     return findlist;
 }
@@ -1125,7 +1171,7 @@ void MainWindow::insertfindkeys2comuselist(QString findstr)
 {
     QString curkey = ui->comboBox->currentText();
     QMapIterator<QString, QStringList> i(map_commonuselist);
-//    qDebug() << "com use list key:" << curkey ;
+    //    qDebug() << "com use list key:" << curkey ;
 
     QStringList findlist;
     quint8 found = FALSE;
@@ -1134,7 +1180,7 @@ void MainWindow::insertfindkeys2comuselist(QString findstr)
         i.next();
         if(i.key() == curkey)
         {
-//            qDebug() << "com use list key,value:" << curkey << "," << i.value();
+            //            qDebug() << "com use list key,value:" << curkey << "," << i.value();
             found = TRUE;
             findlist = i.value();
             break;
@@ -1189,19 +1235,19 @@ void MainWindow::on_pushButton_searchengine_clicked(QString enginetext, quint8 c
     quint8 covertflag = cflag;
     QString head = enginetext;
     QString cliptext = getclipboardtext();
-//    if(cliptext.simplified().isEmpty())
-//    {
-//        return;
-//    }
-//    m_labelOutput->setText(QString(byteArrayPercentEncoded));
+    //    if(cliptext.simplified().isEmpty())
+    //    {
+    //        return;
+    //    }
+    //    m_labelOutput->setText(QString(byteArrayPercentEncoded));
 
     QString searchtext;
-//    QTextCodec * codecGB2312 = QTextCodec::codecForName("GB2312");
+    //    QTextCodec * codecGB2312 = QTextCodec::codecForName("GB2312");
     if(!cliptext.simplified().isEmpty() && covertflag)
     {
-//        QByteArray byteArrayGB2312 = codecGB2312->fromUnicode(cliptext);
-//        QByteArray byteArrayGB2312 = cliptext.toLocal8Bit().toPercentEncoding();
-//        QByteArray byteArrayPercentEncoded = byteArrayGB2312.toPercentEncoding();
+        //        QByteArray byteArrayGB2312 = codecGB2312->fromUnicode(cliptext);
+        //        QByteArray byteArrayGB2312 = cliptext.toLocal8Bit().toPercentEncoding();
+        //        QByteArray byteArrayPercentEncoded = byteArrayGB2312.toPercentEncoding();
         QByteArray byteArrayPercentEncoded = cliptext.toLocal8Bit().toPercentEncoding();
         searchtext = head + byteArrayPercentEncoded;
     }
@@ -1214,11 +1260,11 @@ void MainWindow::on_pushButton_searchengine_clicked(QString enginetext, quint8 c
 
 }
 #define ENGINESEARCHTEXT(text,cflag)\
-do{\
+    do{\
     forceipaddrflag = true;\
     on_pushButton_searchengine_clicked( text, cflag);\
     forceipaddrflag = false;\
-}while(0)
+    }while(0)
 
 
 void MainWindow::on_pushButton_baidu_clicked()
@@ -1259,11 +1305,27 @@ QString MainWindow::set_last_open_dir(QString dir)
 void MainWindow::on_pushButton_saveresult_clicked()
 {
     QString savetext = getrighttext();
+    if (cursavefilepath.isEmpty())
+    {
+        return;
+    }
+    QString fileName = cursavefilepath;
+    QFile file(fileName);
+    if(file.open(QIODevice::WriteOnly))
+    {
+        file.write(savetext.toLocal8Bit());
+    }
+    file.close();
+}
+
+void MainWindow::on_pushButton_saveresult2_another_clicked()
+{
+    QString savetext = getrighttext();
     QString fileName = QFileDialog::getSaveFileName(this
-            ,tr("Save File")
-            ,get_last_open_dir()
-            ,tr("Text Files (*.txt);;csv Files (*.csv);;Html Files (*.html;*.htm);;*.*")
-            );
+                                                    ,tr("Save File")
+                                                    ,get_last_open_dir()
+                                                    ,tr("Text Files (*.txt);;csv Files (*.csv);;Html Files (*.html;*.htm);;*.*")
+                                                    );
     if (fileName.isNull())
     {
         return;
@@ -1273,6 +1335,10 @@ void MainWindow::on_pushButton_saveresult_clicked()
     file.write(savetext.toLocal8Bit());
     file.close();
 }
+
+
+
+
 void MainWindow::on_pushButton_openfile2result_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this,
@@ -1301,7 +1367,9 @@ QString MainWindow::getrighttext()
 }
 void MainWindow::setrighttext(QString text)
 {
-    return ui->textEdit->setText(text);
+    ui->textEdit->clear();
+    ui->textEdit->setText(text);
+    ui->textEdit->update();
 }
 
 /**
@@ -1411,25 +1479,198 @@ void MainWindow::procDirChanged(const QString &path)
         return;
     }
     qDebug() << "file changed!!";
+
     update_selectedfile(path);
-//    ShowTipsInfo(str_china(""));
+    //    ShowTipsInfo(str_china(""));
     ShowTipsInfoWithShowTime(str_china("更新文件:") + path, 1000);
 
+//    oldpath = path;
+
+}
+
+QString MainWindow::GetCorrectUnicode(const QByteArray &ba)
+{
+    QTextCodec::ConverterState state;
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    QString text = codec->toUnicode( ba.constData(), ba.size(), &state);
+    if (state.invalidChars > 0)
+    {
+        text = QTextCodec::codecForName( "GBK" )->toUnicode(ba);
+    }
+    else
+    {
+        text = ba;
+    }
+
+    return text;
 }
 
 void MainWindow::update_selectedfile(QString fileName)
 {
+    qDebug() << "update file cotent " << fileName;
+//    QFileInfo info(fileName);
     QFile file(fileName);
-    file.open(QIODevice::ReadOnly);
     QString text;
-    if(IsUTF8File(fileName.toLocal8Bit().data()))
+    if(file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
-        text = QString::fromUtf8(file.readAll());
+        QTextStream stream(&file);
+        QString strAll=stream.readAll();
+        if(IsUTF8File(fileName.toLocal8Bit().data()))
+        {
+            text = QString::fromUtf8(strAll.toLocal8Bit());
+        }
+        else
+        {
+            text = QString::fromLocal8Bit(strAll.toLocal8Bit());
+        }
+        qDebug() << "text:" << text;
+        setrighttext(text);
+        cursavefilepath = fileName;
+        ui->label->setText(orglabeltext + "  " + cursavefilepath);
+    }
+
+    file.close();
+
+//    QStringList files = myWatcher.files();
+//    foreach (QString file, files) {
+//        qDebug() << "watch file:" << file;
+//    }
+}
+
+void MainWindow::on_checkBox_tree_toggled(bool checked)
+{
+    if(ui->checkBox_tree->isChecked())
+    {
+        ui->treeView_ut->show();
     }
     else
     {
-        text = QString::fromLocal8Bit(file.readAll());
+        ui->treeView_ut->hide();
     }
-    file.close();
-    setrighttext(text);
 }
+
+
+void MainWindow::LoadDirTree()
+{
+    qDebug() << "LoadDirTree()";
+    QFileDialog::Options options = QFileDialog::ShowDirsOnly;
+//    options |= QFileDialog::HideNameFilterDetails;
+//    options |= QFileDialog::DontResolveSymlinks;
+//    options |= QFileDialog::DontUseSheet;
+//    options |= QFileDialog::DontConfirmOverwrite;
+//    options |= QFileDialog::DontUseNativeDialog;
+    QString directory = QFileDialog::getExistingDirectory(this,
+                                                          tr("Open Directory"),
+                                                          curmodeldir,
+                                                          options);
+    if (!directory.isEmpty())
+    {
+        //        ui->textEdit->setText(directory);
+        initDirTree(directory);
+    }
+}
+
+
+void MainWindow::initDirTree(QString directory = DEFAULT_LOADTREE_DIR)
+{
+    if(directory.isEmpty())
+    {
+        directory = DEFAULT_LOADTREE_DIR;
+    }
+
+    if(model)
+    {
+        delete model;
+        model = NULL;
+    }
+
+    model = new QFileSystemModel;
+    model->setRootPath(directory);
+    ui->treeView_ut->setModel(model);
+    ui->treeView_ut->setRootIndex(model->index(directory));
+    connect(ui->treeView_ut, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(procDoubleClickTree(QModelIndex)));
+
+    curmodeldir = directory;
+    ui->statusBar->showMessage(QString("Loading ") + QString::fromLocal8Bit(directory.toLocal8Bit()));
+
+    //    如果仔细查看就会发现，我们的视图不能排序不能点击列头。为此，我们可以使用下面代码：
+    ui->treeView_ut->header()->setStretchLastSection(true);
+    ui->treeView_ut->header()->setSortIndicator(0, Qt::AscendingOrder);
+    ui->treeView_ut->header()->setSortIndicatorShown(true);
+#if QT_VERSION >= 0x050000
+    ui->treeView_ut->header()->setSectionsClickable(true);
+#else
+    ui->treeView_ut->header()->setClickable(true);
+#endif
+
+}
+
+void MainWindow::procDoubleClickTree(QModelIndex currentIndex)
+{
+    qDebug() << "QModelIndex :" << currentIndex;
+    QString fileName =  QFileSystemModel().filePath(currentIndex);
+    if(!QFileSystemModel().isDir(currentIndex))
+    {
+        myWatcher.removePath(get_last_open_dir());
+        set_last_open_dir(fileName);  //记录路径到QSetting中保存
+        myWatcher.addPath(fileName);
+        qDebug() << "fileName:" << fileName;
+        update_selectedfile(fileName);
+    }
+
+}
+
+void MainWindow::TreeMkdir()
+{
+    QModelIndex index = ui->treeView_ut->currentIndex();
+    if (!index.isValid()) {
+        qDebug() << "index invalid";
+        return;
+    }
+    QString dirName = QInputDialog::getText(this,
+                                            tr("Create Directory"),
+                                            tr("Directory name"));
+    if (!dirName.isEmpty()) {
+        qDebug() << "dir ok";
+        if (!model->mkdir(index, dirName).isValid()) {
+            qDebug() << "if ok";
+            QMessageBox::information(this,
+                                     tr("Create Directory"),
+                                     tr("Failed to create the directory"));
+        }
+        else
+        {
+            qDebug() << "else ng";
+        }
+    }
+}
+
+void MainWindow::TreeRm()
+{
+    QModelIndex index = ui->treeView_ut->currentIndex();
+    if (!index.isValid()) {
+        return;
+    }
+    bool ok;
+    QString tips = tr("Are you Sure Remove %1 ?").arg(model->fileName(index));
+    int ret = QMessageBox::critical(NULL, "critical", tips,
+                                    QMessageBox::Yes | QMessageBox::No,
+                                    QMessageBox::Yes);
+    if(ret != QMessageBox::Yes)
+    {
+        return;
+    }
+
+    if (model->fileInfo(index).isDir()) {
+        ok = model->rmdir(index);
+    } else {
+        ok = model->remove(index);
+    }
+    if (!ok) {
+        QMessageBox::information(this,
+                                 tr("Remove"),
+                                 tr("Failed to remove %1").arg(model->fileName(index)));
+    }
+}
+
+

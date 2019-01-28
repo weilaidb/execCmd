@@ -11,6 +11,8 @@
 #include <QSettings>
 #include <QFileSystemWatcher>
 #include <QDir>
+#include <QFileSystemModel>
+#include <QMutex>
 
 namespace Ui {
 class MainWindow;
@@ -54,7 +56,17 @@ private:
     QAction * Act_search360so;
     QAction * Act_notepadpp;
     QAction * Act_saveresult;
+    QAction * Act_saveresult_2another;
     QAction * Act_openfile2result;
+
+    QAction * Act_LoadDirTree;
+    QAction * Act_Mkdir;
+    QAction * Act_Rmdir;
+    QFileSystemModel *model;
+    QString curmodeldir;
+    QString orglabeltext;
+    QString cursavefilepath;
+//    QMutex fileLock;
 
 private:
     QMap<QString, QStringList> map_showcmd; //IP地址 -> IP地址存储的内容
@@ -154,6 +166,7 @@ private slots:
     void on_pushButton_notepadpp_clicked();
 
     void on_pushButton_saveresult_clicked();
+    void on_pushButton_saveresult2_another_clicked();
 
     void on_pushButton_openfile2result_clicked();
 
@@ -177,6 +190,15 @@ private slots:
     void procDirChanged(const QString &path);
 
     void update_selectedfile(QString fileName);
+    QString GetCorrectUnicode(const QByteArray &ba);
+    void on_checkBox_tree_toggled(bool checked);
+
+    void initDirTree(QString dir);
+    void LoadDirTree();
+    void procDoubleClickTree(QModelIndex currentIndex);
+    void TreeMkdir();
+    void TreeRm();
+
 private:
     QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串
