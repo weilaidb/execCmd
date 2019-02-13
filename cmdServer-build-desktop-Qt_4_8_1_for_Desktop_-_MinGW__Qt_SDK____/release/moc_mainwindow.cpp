@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Mon Jan 28 23:52:20 2019
+** Created: Wed Feb 13 22:14:43 2019
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      67,   14, // methods
+      70,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -98,6 +98,9 @@ static const uint qt_meta_data_MainWindow[] = {
     2025, 2012,   11,   11, 0x08,
     2058,   11,   11,   11, 0x08,
     2070,   11,   11,   11, 0x08,
+    2079, 1682,   11,   11, 0x08,
+    2119,   11,  626,   11, 0x08,
+    2138,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -162,6 +165,8 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "initDirTree(QString)\0LoadDirTree()\0"
     "currentIndex\0procDoubleClickTree(QModelIndex)\0"
     "TreeMkdir()\0TreeRm()\0"
+    "on_checkBox_dict_realtime_toggled(bool)\0"
+    "getClipboard_Str()\0CheckDictTimerOut()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -248,6 +253,10 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 64: _t->procDoubleClickTree((*reinterpret_cast< QModelIndex(*)>(_a[1]))); break;
         case 65: _t->TreeMkdir(); break;
         case 66: _t->TreeRm(); break;
+        case 67: _t->on_checkBox_dict_realtime_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 68: { QString _r = _t->getClipboard_Str();
+            if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
+        case 69: _t->CheckDictTimerOut(); break;
         default: ;
         }
     }
@@ -285,9 +294,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 67)
+        if (_id < 70)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 67;
+        _id -= 70;
     }
     return _id;
 }

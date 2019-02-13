@@ -34,7 +34,8 @@ MainWindow::MainWindow(QWidget *parent) :
     model(NULL),
     curmodeldir(""),
     orglabeltext(""),
-    cursavefilepath("")
+    cursavefilepath(""),
+    cliptexttimer(NULL)
 {
     ui->setupUi(this);
 
@@ -91,6 +92,11 @@ MainWindow::MainWindow(QWidget *parent) :
     QShortcut *SendCmdShortCut = new QShortcut(this);
     SendCmdShortCut->setKey(tr("Ctrl+S"));
     connect(SendCmdShortCut, SIGNAL(activated()),this,SLOT(procSendCmdShortCut()));
+
+
+    cliptexttimer = new QTimer();
+    cliptexttimer->start(1000);
+    connect(cliptexttimer, SIGNAL(timeout()), this, SLOT(CheckDictTimerOut()));
 
 
 
@@ -191,6 +197,7 @@ void MainWindow::ReadHistorySettings()
     ui->checkBox_autosend->setChecked(m_settings.value("checkBox_autosend").toBool());
     ui->checkBox_fileautoload->setChecked(m_settings.value("checkBox_fileautoload").toBool());
     ui->checkBox_tree->setChecked(m_settings.value("checkBox_tree").toBool());
+    ui->checkBox_dict_realtime->setChecked(m_settings.value("checkBox_dict_realtime").toBool());
     this->restoreGeometry(m_settings.value("Cmdserver").toByteArray());
 
 }
@@ -224,6 +231,7 @@ void MainWindow::WriteCurrentSettings()
     m_settings.setValue("checkBox_autosend",ui->checkBox_autosend->isChecked());
     m_settings.setValue("checkBox_fileautoload",ui->checkBox_fileautoload->isChecked());
     m_settings.setValue("checkBox_tree",ui->checkBox_tree->isChecked());
+    m_settings.setValue("checkBox_dict_realtime",ui->checkBox_dict_realtime->isChecked());
 
 
     m_settings.setValue("Cmdserver", this->saveGeometry());
@@ -1674,3 +1682,37 @@ void MainWindow::TreeRm()
 }
 
 
+
+void MainWindow::on_checkBox_dict_realtime_toggled(bool checked)
+{
+    if(checked)
+    {
+//        cliptexttimer->start(1000);
+    }
+    else
+    {
+//        cliptexttimer->stop();
+    }
+
+}
+
+QString MainWindow::getClipboard_Str(void)
+{
+    return QApplication::clipboard()->text();
+}
+
+void MainWindow::CheckDictTimerOut()
+{
+    if(!ui->checkBox_dict_realtime->isChecked())
+    {
+        return;
+    }
+    static QString o;
+    QString n = getClipboard_Str();
+    if(n != o)
+    {
+        o = n;
+        on_pushButton_biying_clicked();
+    }
+
+}

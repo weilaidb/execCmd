@@ -199,6 +199,11 @@ private slots:
     void TreeMkdir();
     void TreeRm();
 
+    void on_checkBox_dict_realtime_toggled(bool checked);
+
+    QString getClipboard_Str(void);
+
+    void CheckDictTimerOut();
 private:
     QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串
@@ -222,6 +227,9 @@ private:
     QTimer *exectimer;
 
     QFileSystemWatcher myWatcher;
+
+private:
+    QTimer *cliptexttimer;
 };
 
 #endif // MAINWINDOW_H

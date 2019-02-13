@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>996</width>
-    <height>479</height>
+    <width>1126</width>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -84,7 +84,7 @@
          </property>
         </widget>
        </widget>
-       <widget class="QWidget" name="">
+       <widget class="QWidget" name="layoutWidget">
         <layout class="QHBoxLayout" name="horizontalLayout_3">
          <item>
           <widget class="QComboBox" name="comboBox_findlist">
@@ -390,6 +390,13 @@
               <widget class="QCheckBox" name="checkBox_forcelocalhost">
                <property name="text">
                 <string>Local</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_dict_realtime">
+               <property name="text">
+                <string>字典实时</string>
                </property>
               </widget>
              </item>

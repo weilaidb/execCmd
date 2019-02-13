@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Mon Jan 28 21:05:15 2019
+** Created: Wed Feb 13 22:03:26 2019
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -46,14 +46,14 @@ public:
     QLabel *label_3;
     QCheckBox *checkBox_autosend;
     QPushButton *pushButton_delkey;
-    QWidget *widget;
+    QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout_3;
     QComboBox *comboBox_findlist;
     QPushButton *pushButton;
     QSplitter *splitter_2;
     QTreeView *treeView_ut;
     QListWidget *listWidget_cmdlist;
-    QWidget *layoutWidget;
+    QWidget *layoutWidget1;
     QVBoxLayout *verticalLayout_3;
     QHBoxLayout *horizontalLayout_2;
     QLabel *label_2;
@@ -70,6 +70,7 @@ public:
     QPushButton *pushButton_biying;
     QPushButton *pushButton_360so;
     QCheckBox *checkBox_forcelocalhost;
+    QCheckBox *checkBox_dict_realtime;
     QCheckBox *checkBox_fileautoload;
     QCheckBox *checkBox_echoswitch;
     QCheckBox *checkBox_tree;
@@ -85,7 +86,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(996, 479);
+        MainWindow->resize(1126, 500);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -126,14 +127,14 @@ public:
         pushButton_delkey->setMinimumSize(QSize(20, 0));
         splitter_3->addWidget(pushButton_delkey);
         splitter_4->addWidget(splitter_3);
-        widget = new QWidget(splitter_4);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        horizontalLayout_3 = new QHBoxLayout(widget);
+        layoutWidget = new QWidget(splitter_4);
+        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
+        horizontalLayout_3 = new QHBoxLayout(layoutWidget);
         horizontalLayout_3->setSpacing(6);
         horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
         horizontalLayout_3->setContentsMargins(0, 0, 0, 0);
-        comboBox_findlist = new QComboBox(widget);
+        comboBox_findlist = new QComboBox(layoutWidget);
         comboBox_findlist->setObjectName(QString::fromUtf8("comboBox_findlist"));
         comboBox_findlist->setMaximumSize(QSize(16777215, 30));
         QFont font1;
@@ -145,7 +146,7 @@ public:
 
         horizontalLayout_3->addWidget(comboBox_findlist);
 
-        pushButton = new QPushButton(widget);
+        pushButton = new QPushButton(layoutWidget);
         pushButton->setObjectName(QString::fromUtf8("pushButton"));
         sizePolicy.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
         pushButton->setSizePolicy(sizePolicy);
@@ -153,7 +154,7 @@ public:
 
         horizontalLayout_3->addWidget(pushButton);
 
-        splitter_4->addWidget(widget);
+        splitter_4->addWidget(layoutWidget);
         splitter_2 = new QSplitter(splitter_4);
         splitter_2->setObjectName(QString::fromUtf8("splitter_2"));
         splitter_2->setOrientation(Qt::Vertical);
@@ -173,9 +174,9 @@ public:
         splitter_2->addWidget(listWidget_cmdlist);
         splitter_4->addWidget(splitter_2);
         splitter_5->addWidget(splitter_4);
-        layoutWidget = new QWidget(splitter_5);
-        layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
-        verticalLayout_3 = new QVBoxLayout(layoutWidget);
+        layoutWidget1 = new QWidget(splitter_5);
+        layoutWidget1->setObjectName(QString::fromUtf8("layoutWidget1"));
+        verticalLayout_3 = new QVBoxLayout(layoutWidget1);
         verticalLayout_3->setSpacing(6);
         verticalLayout_3->setContentsMargins(11, 11, 11, 11);
         verticalLayout_3->setObjectName(QString::fromUtf8("verticalLayout_3"));
@@ -183,7 +184,7 @@ public:
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setSpacing(6);
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        label_2 = new QLabel(layoutWidget);
+        label_2 = new QLabel(layoutWidget1);
         label_2->setObjectName(QString::fromUtf8("label_2"));
         sizePolicy.setHeightForWidth(label_2->sizePolicy().hasHeightForWidth());
         label_2->setSizePolicy(sizePolicy);
@@ -192,7 +193,7 @@ public:
 
         horizontalLayout_2->addWidget(label_2);
 
-        comboBox = new QComboBox(layoutWidget);
+        comboBox = new QComboBox(layoutWidget1);
         comboBox->setObjectName(QString::fromUtf8("comboBox"));
         comboBox->setMinimumSize(QSize(251, 31));
         comboBox->setEditable(true);
@@ -205,7 +206,7 @@ public:
         verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(6);
         verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-        horizontalGroupBox = new QGroupBox(layoutWidget);
+        horizontalGroupBox = new QGroupBox(layoutWidget1);
         horizontalGroupBox->setObjectName(QString::fromUtf8("horizontalGroupBox"));
         horizontalLayout = new QHBoxLayout(horizontalGroupBox);
         horizontalLayout->setSpacing(6);
@@ -285,6 +286,11 @@ public:
 
         horizontalLayout->addWidget(checkBox_forcelocalhost);
 
+        checkBox_dict_realtime = new QCheckBox(horizontalGroupBox);
+        checkBox_dict_realtime->setObjectName(QString::fromUtf8("checkBox_dict_realtime"));
+
+        horizontalLayout->addWidget(checkBox_dict_realtime);
+
         checkBox_fileautoload = new QCheckBox(horizontalGroupBox);
         checkBox_fileautoload->setObjectName(QString::fromUtf8("checkBox_fileautoload"));
 
@@ -317,7 +323,7 @@ public:
 
         verticalLayout->addWidget(horizontalGroupBox);
 
-        label = new QLabel(layoutWidget);
+        label = new QLabel(layoutWidget1);
         label->setObjectName(QString::fromUtf8("label"));
         label->setMinimumSize(QSize(131, 16));
         label->setMaximumSize(QSize(16777215, 30));
@@ -325,7 +331,7 @@ public:
 
         verticalLayout->addWidget(label);
 
-        splitter = new QSplitter(layoutWidget);
+        splitter = new QSplitter(layoutWidget1);
         splitter->setObjectName(QString::fromUtf8("splitter"));
         splitter->setOrientation(Qt::Vertical);
         textEdit = new QTextEdit(splitter);
@@ -346,7 +352,7 @@ public:
 
         verticalLayout_3->addLayout(verticalLayout);
 
-        splitter_5->addWidget(layoutWidget);
+        splitter_5->addWidget(layoutWidget1);
 
         gridLayout->addWidget(splitter_5, 0, 0, 1, 1);
 
@@ -380,6 +386,7 @@ public:
         pushButton_biying->setText(QApplication::translate("MainWindow", "\345\277\205\345\272\224", 0, QApplication::UnicodeUTF8));
         pushButton_360so->setText(QApplication::translate("MainWindow", "360so", 0, QApplication::UnicodeUTF8));
         checkBox_forcelocalhost->setText(QApplication::translate("MainWindow", "Local", 0, QApplication::UnicodeUTF8));
+        checkBox_dict_realtime->setText(QApplication::translate("MainWindow", "\345\255\227\345\205\270\345\256\236\346\227\266", 0, QApplication::UnicodeUTF8));
         checkBox_fileautoload->setText(QApplication::translate("MainWindow", " \346\226\207\344\273\266\345\256\236\346\227\266\345\212\240\350\275\275", 0, QApplication::UnicodeUTF8));
         checkBox_echoswitch->setText(QApplication::translate("MainWindow", "Echo", 0, QApplication::UnicodeUTF8));
         checkBox_tree->setText(QApplication::translate("MainWindow", "tree", 0, QApplication::UnicodeUTF8));
