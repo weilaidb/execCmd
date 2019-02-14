@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Wed Feb 13 22:14:43 2019
+** Created: Thu Feb 14 22:07:49 2019
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      70,   14, // methods
+      72,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -77,30 +77,32 @@ static const uint qt_meta_data_MainWindow[] = {
     1359,   11,   11,   11, 0x08,
     1390,   11,   11,   11, 0x08,
     1420,   11,   11,   11, 0x08,
-    1454,   11,   11,   11, 0x08,
-    1489,   11,   11,   11, 0x08,
-    1533,   11,   11,   11, 0x08,
-    1573,   11,  626,   11, 0x08,
-    1588,   83,   11,   11, 0x08,
-    1620, 1610,  562,   11, 0x08,
-    1657, 1644,  562,   11, 0x08,
-    1690, 1682,   11,   11, 0x08,
-    1727,   11,  626,   11, 0x08,
-    1751, 1747,  626,   11, 0x08,
-    1778,   11,   11,   11, 0x08,
-    1811,   11,   11,   11, 0x08,
-    1851, 1846,   11,   11, 0x08,
-    1884, 1875,   11,   11, 0x08,
-    1916, 1913,  626,   11, 0x08,
-    1946, 1682,   11,   11, 0x08,
-    1977, 1747,   11,   11, 0x08,
-    1998,   11,   11,   11, 0x08,
-    2025, 2012,   11,   11, 0x08,
+    1449,   11,   11,   11, 0x08,
+    1480,   11,   11,   11, 0x08,
+    1514,   11,   11,   11, 0x08,
+    1549,   11,   11,   11, 0x08,
+    1593,   11,   11,   11, 0x08,
+    1633,   11,  626,   11, 0x08,
+    1648,   83,   11,   11, 0x08,
+    1680, 1670,  562,   11, 0x08,
+    1717, 1704,  562,   11, 0x08,
+    1750, 1742,   11,   11, 0x08,
+    1787,   11,  626,   11, 0x08,
+    1811, 1807,  626,   11, 0x08,
+    1838,   11,   11,   11, 0x08,
+    1871,   11,   11,   11, 0x08,
+    1911, 1906,   11,   11, 0x08,
+    1944, 1935,   11,   11, 0x08,
+    1976, 1973,  626,   11, 0x08,
+    2006, 1742,   11,   11, 0x08,
+    2037, 1807,   11,   11, 0x08,
     2058,   11,   11,   11, 0x08,
-    2070,   11,   11,   11, 0x08,
-    2079, 1682,   11,   11, 0x08,
-    2119,   11,  626,   11, 0x08,
-    2138,   11,   11,   11, 0x08,
+    2085, 2072,   11,   11, 0x08,
+    2118,   11,   11,   11, 0x08,
+    2130,   11,   11,   11, 0x08,
+    2139, 1742,   11,   11, 0x08,
+    2179,   11,  626,   11, 0x08,
+    2198,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -146,6 +148,8 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "on_pushButton_baidu_clicked()\0"
     "on_pushButton_biying_clicked()\0"
     "on_pushButton_360so_clicked()\0"
+    "on_pushButton_ciba_clicked()\0"
+    "on_pushButton_youdao_clicked()\0"
     "on_pushButton_notepadpp_clicked()\0"
     "on_pushButton_saveresult_clicked()\0"
     "on_pushButton_saveresult2_another_clicked()\0"
@@ -225,38 +229,40 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 42: _t->on_pushButton_baidu_clicked(); break;
         case 43: _t->on_pushButton_biying_clicked(); break;
         case 44: _t->on_pushButton_360so_clicked(); break;
-        case 45: _t->on_pushButton_notepadpp_clicked(); break;
-        case 46: _t->on_pushButton_saveresult_clicked(); break;
-        case 47: _t->on_pushButton_saveresult2_another_clicked(); break;
-        case 48: _t->on_pushButton_openfile2result_clicked(); break;
-        case 49: { QString _r = _t->getrighttext();
+        case 45: _t->on_pushButton_ciba_clicked(); break;
+        case 46: _t->on_pushButton_youdao_clicked(); break;
+        case 47: _t->on_pushButton_notepadpp_clicked(); break;
+        case 48: _t->on_pushButton_saveresult_clicked(); break;
+        case 49: _t->on_pushButton_saveresult2_another_clicked(); break;
+        case 50: _t->on_pushButton_openfile2result_clicked(); break;
+        case 51: { QString _r = _t->getrighttext();
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
-        case 50: _t->setrighttext((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 51: { bool _r = _t->IsUTF8File((*reinterpret_cast< const char*(*)>(_a[1])));
+        case 52: _t->setrighttext((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 53: { bool _r = _t->IsUTF8File((*reinterpret_cast< const char*(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = _r; }  break;
-        case 52: { bool _r = _t->IsUTF8((*reinterpret_cast< const void*(*)>(_a[1])),(*reinterpret_cast< long(*)>(_a[2])));
+        case 54: { bool _r = _t->IsUTF8((*reinterpret_cast< const void*(*)>(_a[1])),(*reinterpret_cast< long(*)>(_a[2])));
             if (_a[0]) *reinterpret_cast< bool*>(_a[0]) = _r; }  break;
-        case 53: _t->on_checkBox_echoswitch_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 54: { QString _r = _t->get_last_open_dir();
+        case 55: _t->on_checkBox_echoswitch_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 56: { QString _r = _t->get_last_open_dir();
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
-        case 55: { QString _r = _t->set_last_open_dir((*reinterpret_cast< QString(*)>(_a[1])));
+        case 57: { QString _r = _t->set_last_open_dir((*reinterpret_cast< QString(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
-        case 56: _t->on_checkBox_echoswitch_clicked(); break;
-        case 57: _t->on_checkBox_fileautoload_clicked(); break;
-        case 58: _t->procDirChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
-        case 59: _t->update_selectedfile((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 60: { QString _r = _t->GetCorrectUnicode((*reinterpret_cast< const QByteArray(*)>(_a[1])));
+        case 58: _t->on_checkBox_echoswitch_clicked(); break;
+        case 59: _t->on_checkBox_fileautoload_clicked(); break;
+        case 60: _t->procDirChanged((*reinterpret_cast< const QString(*)>(_a[1]))); break;
+        case 61: _t->update_selectedfile((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 62: { QString _r = _t->GetCorrectUnicode((*reinterpret_cast< const QByteArray(*)>(_a[1])));
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
-        case 61: _t->on_checkBox_tree_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 62: _t->initDirTree((*reinterpret_cast< QString(*)>(_a[1]))); break;
-        case 63: _t->LoadDirTree(); break;
-        case 64: _t->procDoubleClickTree((*reinterpret_cast< QModelIndex(*)>(_a[1]))); break;
-        case 65: _t->TreeMkdir(); break;
-        case 66: _t->TreeRm(); break;
-        case 67: _t->on_checkBox_dict_realtime_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 68: { QString _r = _t->getClipboard_Str();
+        case 63: _t->on_checkBox_tree_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 64: _t->initDirTree((*reinterpret_cast< QString(*)>(_a[1]))); break;
+        case 65: _t->LoadDirTree(); break;
+        case 66: _t->procDoubleClickTree((*reinterpret_cast< QModelIndex(*)>(_a[1]))); break;
+        case 67: _t->TreeMkdir(); break;
+        case 68: _t->TreeRm(); break;
+        case 69: _t->on_checkBox_dict_realtime_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 70: { QString _r = _t->getClipboard_Str();
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
-        case 69: _t->CheckDictTimerOut(); break;
+        case 71: _t->CheckDictTimerOut(); break;
         default: ;
         }
     }
@@ -294,9 +300,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 70)
+        if (_id < 72)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 70;
+        _id -= 72;
     }
     return _id;
 }

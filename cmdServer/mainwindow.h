@@ -54,6 +54,8 @@ private:
     QAction * Act_searchbaidu;
     QAction * Act_searchbiying;
     QAction * Act_search360so;
+    QAction * Act_searchciba;
+    QAction * Act_searchyoudao;
     QAction * Act_notepadpp;
     QAction * Act_saveresult;
     QAction * Act_saveresult_2another;
@@ -162,6 +164,8 @@ private slots:
     void on_pushButton_biying_clicked();
 
     void on_pushButton_360so_clicked();
+    void on_pushButton_ciba_clicked();
+    void on_pushButton_youdao_clicked();
 
     void on_pushButton_notepadpp_clicked();
 

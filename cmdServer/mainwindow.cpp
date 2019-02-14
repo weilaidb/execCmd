@@ -679,6 +679,16 @@ void MainWindow::SearchMenu()
     connect(Act_searchbiying, SIGNAL(triggered()), this, SLOT(on_pushButton_biying_clicked()));
     Act_search360so = new QAction(GBKSELF(360搜), this);
     connect(Act_search360so, SIGNAL(triggered()), this, SLOT(on_pushButton_360so_clicked()));
+    Act_searchciba = new QAction(GBKSELF(金山词霸), this);
+    connect(Act_searchciba, SIGNAL(triggered()), this, SLOT(on_pushButton_ciba_clicked()));
+
+    Act_searchyoudao = new QAction(GBKSELF(有道), this);
+    connect(Act_searchyoudao, SIGNAL(triggered()), this, SLOT(on_pushButton_youdao_clicked()));
+
+
+
+
+
     Act_notepadpp = new QAction(GBKSELF(notepad++), this);
     connect(Act_notepadpp, SIGNAL(triggered()), this, SLOT(on_pushButton_notepadpp_clicked()));
 
@@ -701,6 +711,8 @@ void MainWindow::SearchMenu()
     menu->addAction(Act_searchbaidu); //添加菜单项1
     menu->addAction(Act_searchbiying); //添加菜单项1
     menu->addAction(Act_search360so); //添加菜单项1
+    menu->addAction(Act_searchciba); //添加菜单项1
+    menu->addAction(Act_searchyoudao); //添加菜单项1
 //    menu->addAction(Act_openfile2result); //添加菜单项1
     menu->addAction(Act_saveresult); //添加菜单项1
     menu->addAction(Act_saveresult_2another); //添加菜单项1
@@ -1289,6 +1301,18 @@ void MainWindow::on_pushButton_360so_clicked()
 {
     ENGINESEARCHTEXT( "https://www.so.com/s?ie=utf-8&fr=none&src=360sou_newhome&q=", true);
 }
+
+void MainWindow::on_pushButton_ciba_clicked()
+{
+    ENGINESEARCHTEXT( "http://www.iciba.com/", true);
+}
+
+void MainWindow::on_pushButton_youdao_clicked()
+{
+    ENGINESEARCHTEXT( "http://dict.youdao.com/w/eng/", true);
+}
+
+
 void MainWindow::on_pushButton_notepadpp_clicked()
 {
     ENGINESEARCHTEXT( "cmd notepad++ ", false);
