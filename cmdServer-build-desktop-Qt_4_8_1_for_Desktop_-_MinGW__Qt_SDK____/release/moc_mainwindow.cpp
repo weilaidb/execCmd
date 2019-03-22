@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Thu Feb 14 22:07:49 2019
+** Created: Fri Mar 22 22:27:53 2019
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      72,   14, // methods
+      75,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -100,9 +100,12 @@ static const uint qt_meta_data_MainWindow[] = {
     2085, 2072,   11,   11, 0x08,
     2118,   11,   11,   11, 0x08,
     2130,   11,   11,   11, 0x08,
-    2139, 1742,   11,   11, 0x08,
-    2179,   11,  626,   11, 0x08,
-    2198,   11,   11,   11, 0x08,
+    2143, 2139,   11,   11, 0x08,
+    2168,   11,   11,   11, 0x08,
+    2182,   11,   11,   11, 0x08,
+    2194, 1742,   11,   11, 0x08,
+    2234,   11,  626,   11, 0x08,
+    2253,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -168,8 +171,9 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "on_checkBox_tree_toggled(bool)\0"
     "initDirTree(QString)\0LoadDirTree()\0"
     "currentIndex\0procDoubleClickTree(QModelIndex)\0"
-    "TreeMkdir()\0TreeRm()\0"
-    "on_checkBox_dict_realtime_toggled(bool)\0"
+    "TreeMkdir()\0TreeRm()\0inx\0"
+    "TreeOpenDir(QModelIndex)\0TreeOpenDir()\0"
+    "TreeFresh()\0on_checkBox_dict_realtime_toggled(bool)\0"
     "getClipboard_Str()\0CheckDictTimerOut()\0"
 };
 
@@ -259,10 +263,13 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 66: _t->procDoubleClickTree((*reinterpret_cast< QModelIndex(*)>(_a[1]))); break;
         case 67: _t->TreeMkdir(); break;
         case 68: _t->TreeRm(); break;
-        case 69: _t->on_checkBox_dict_realtime_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 70: { QString _r = _t->getClipboard_Str();
+        case 69: _t->TreeOpenDir((*reinterpret_cast< QModelIndex(*)>(_a[1]))); break;
+        case 70: _t->TreeOpenDir(); break;
+        case 71: _t->TreeFresh(); break;
+        case 72: _t->on_checkBox_dict_realtime_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 73: { QString _r = _t->getClipboard_Str();
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
-        case 71: _t->CheckDictTimerOut(); break;
+        case 74: _t->CheckDictTimerOut(); break;
         default: ;
         }
     }
@@ -300,9 +307,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 72)
+        if (_id < 75)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 72;
+        _id -= 75;
     }
     return _id;
 }

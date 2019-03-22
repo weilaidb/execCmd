@@ -24,6 +24,17 @@
 #define LOCALHOSTIPADDR ("127.0.0.1")
 #define DEFAULT_LOADTREE_DIR "c:\\"
 
+#define ENGINESEARCHTEXT(text,cflag)\
+    do{\
+    forceipaddrflag = true;\
+    on_pushButton_searchengine_clicked( text, cflag);\
+    forceipaddrflag = false;\
+    }while(0)
+
+#define CMDNOTEPADPROC QString("cmd notepad++ ")
+
+
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
@@ -195,6 +206,7 @@ void MainWindow::ReadHistorySettings()
     //    mapIpAndContent
     //    ui->lineEdit->setText(m_settings.value("LineEditIP").toString());
     ui->checkBox_autosend->setChecked(m_settings.value("checkBox_autosend").toBool());
+    ui->checkBox_treeopen->setChecked(m_settings.value("checkBox_treeopen").toBool());
     ui->checkBox_fileautoload->setChecked(m_settings.value("checkBox_fileautoload").toBool());
     ui->checkBox_tree->setChecked(m_settings.value("checkBox_tree").toBool());
     ui->checkBox_dict_realtime->setChecked(m_settings.value("checkBox_dict_realtime").toBool());
@@ -229,6 +241,7 @@ void MainWindow::WriteCurrentSettings()
 
 
     m_settings.setValue("checkBox_autosend",ui->checkBox_autosend->isChecked());
+    m_settings.setValue("checkBox_treeopen",ui->checkBox_treeopen->isChecked());
     m_settings.setValue("checkBox_fileautoload",ui->checkBox_fileautoload->isChecked());
     m_settings.setValue("checkBox_tree",ui->checkBox_tree->isChecked());
     m_settings.setValue("checkBox_dict_realtime",ui->checkBox_dict_realtime->isChecked());
@@ -636,8 +649,10 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
     QCursor cur=this->cursor();
     QMenu *menu=new QMenu(this);
     menu->addAction(Act_DelItem); //添加菜单项1
+    menu->addAction(Act_Explorer); //添加菜单项1
     menu->addAction(Act_LoadDirTree); //添加菜单项1
     menu->addAction(Act_Mkdir); //添加菜单项1
+//    menu->addAction(Act_Mkfile); //添加菜单项1
     menu->addAction(Act_Rmdir); //添加菜单项1
     //    menu->addAction(Act_Normal); //添加菜单项2
     menu->exec(cur.pos()); //关联到光标
@@ -649,7 +664,7 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 void MainWindow::PopMenu()
 {
     /* 右键菜单 */
-    Act_DelItem = new QAction(tr("DelItem"), this);
+    Act_DelItem = new QAction(tr("DelItem( for text)"), this);
     connect(Act_DelItem, SIGNAL(triggered()), this, SLOT(DelItem()));
     /* 加载显示树形的路径 */
     Act_LoadDirTree = new QAction(tr("LoadTree"), this);
@@ -657,10 +672,17 @@ void MainWindow::PopMenu()
     /* 创建目录 */
     Act_Mkdir = new QAction(tr("Make Directory..."), this);
     connect(Act_Mkdir, SIGNAL(triggered()), this, SLOT(TreeMkdir()));
+//    /* 创建文件 */
+//    Act_Mkfile = new QAction(tr("Make File..."), this);
+//    connect(Act_Mkfile, SIGNAL(triggered()), this, SLOT(TreeMkfile()));
 
     /* 删除目录 */
     Act_Rmdir = new QAction(tr("Remove"), this);
     connect(Act_Rmdir, SIGNAL(triggered()), this, SLOT(TreeRm()));
+
+    /* 打开目录 */
+    Act_Explorer = new QAction(tr("Open Directory"), this);
+    connect(Act_Explorer, SIGNAL(triggered()), this, SLOT(TreeOpenDir()));
 
 
 
@@ -681,13 +703,8 @@ void MainWindow::SearchMenu()
     connect(Act_search360so, SIGNAL(triggered()), this, SLOT(on_pushButton_360so_clicked()));
     Act_searchciba = new QAction(GBKSELF(金山词霸), this);
     connect(Act_searchciba, SIGNAL(triggered()), this, SLOT(on_pushButton_ciba_clicked()));
-
     Act_searchyoudao = new QAction(GBKSELF(有道), this);
     connect(Act_searchyoudao, SIGNAL(triggered()), this, SLOT(on_pushButton_youdao_clicked()));
-
-
-
-
 
     Act_notepadpp = new QAction(GBKSELF(notepad++), this);
     connect(Act_notepadpp, SIGNAL(triggered()), this, SLOT(on_pushButton_notepadpp_clicked()));
@@ -1279,13 +1296,6 @@ void MainWindow::on_pushButton_searchengine_clicked(QString enginetext, quint8 c
     on_pushButton_connect_clicked_selftext(searchtext);
 
 }
-#define ENGINESEARCHTEXT(text,cflag)\
-    do{\
-    forceipaddrflag = true;\
-    on_pushButton_searchengine_clicked( text, cflag);\
-    forceipaddrflag = false;\
-    }while(0)
-
 
 void MainWindow::on_pushButton_baidu_clicked()
 {
@@ -1586,6 +1596,7 @@ void MainWindow::LoadDirTree()
 {
     qDebug() << "LoadDirTree()";
     QFileDialog::Options options = QFileDialog::ShowDirsOnly;
+//    QFileDialog::Options options = QFileDialog::ShowDirsOnly;
 //    options |= QFileDialog::HideNameFilterDetails;
 //    options |= QFileDialog::DontResolveSymlinks;
 //    options |= QFileDialog::DontUseSheet;
@@ -1634,6 +1645,9 @@ void MainWindow::initDirTree(QString directory = DEFAULT_LOADTREE_DIR)
 #else
     ui->treeView_ut->header()->setClickable(true);
 #endif
+    ui->treeView_ut->setSortingEnabled(true);
+
+    QObject::connect(ui->treeView_ut, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(TreeOpenDir()));
 
 }
 
@@ -1675,6 +1689,70 @@ void MainWindow::TreeMkdir()
             qDebug() << "else ng";
         }
     }
+}
+
+//void MainWindow::TreeMkfile()
+//{
+//    QModelIndex index = ui->treeView_ut->currentIndex();
+//    if (!index.isValid()) {
+//        qDebug() << "index invalid";
+//        return;
+//    }
+//    QString dirName = QInputDialog::getText(this,
+//                                            tr("Create Filename"),
+//                                            tr("Filename"));
+//    if (!dirName.isEmpty()) {
+//        qDebug() << "dir ok";
+//        if (!model->mkdir(index, dirName).isValid()) {
+//            qDebug() << "if ok";
+//            QMessageBox::information(this,
+//                                     tr("Create Directory"),
+//                                     tr("Failed to create the directory"));
+//        }
+//        else
+//        {
+//            qDebug() << "else ng";
+//        }
+//    }
+//}
+
+void MainWindow::TreeOpenDir(QModelIndex inx)
+{
+    QModelIndex index;
+    if(inx.isValid())
+    {
+        index = inx;
+    }
+    else
+    {
+        index = ui->treeView_ut->currentIndex();
+    }
+
+    if (!index.isValid()) {
+        return;
+    }
+
+//    qDebug() << "OpenDir:" << model->fileInfo(index).absoluteFilePath();
+    QString path = model->fileInfo(index).absoluteFilePath();
+    if (model->fileInfo(index).isDir()) {
+        on_pushButton_connect_clicked_selftext(path);
+    } else {
+        if(ui->checkBox_treeopen->isChecked())
+        {
+            on_pushButton_connect_clicked_selftext(CMDNOTEPADPROC + path);
+        }
+    }
+}
+
+void MainWindow::TreeOpenDir()
+{
+    QModelIndex inx;
+    TreeOpenDir(inx);
+}
+
+void MainWindow::TreeFresh()
+{
+    ui->treeView_ut;
 }
 
 void MainWindow::TreeRm()

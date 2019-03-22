@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Wed Feb 13 22:03:26 2019
+** Created: Fri Mar 22 22:34:37 2019
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -46,6 +46,7 @@ public:
     QLabel *label_3;
     QCheckBox *checkBox_autosend;
     QPushButton *pushButton_delkey;
+    QCheckBox *checkBox_treeopen;
     QWidget *layoutWidget;
     QHBoxLayout *horizontalLayout_3;
     QComboBox *comboBox_findlist;
@@ -126,6 +127,13 @@ public:
         pushButton_delkey->setSizePolicy(sizePolicy);
         pushButton_delkey->setMinimumSize(QSize(20, 0));
         splitter_3->addWidget(pushButton_delkey);
+        checkBox_treeopen = new QCheckBox(splitter_3);
+        checkBox_treeopen->setObjectName(QString::fromUtf8("checkBox_treeopen"));
+        QFont font1;
+        font1.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
+        font1.setPointSize(12);
+        checkBox_treeopen->setFont(font1);
+        splitter_3->addWidget(checkBox_treeopen);
         splitter_4->addWidget(splitter_3);
         layoutWidget = new QWidget(splitter_4);
         layoutWidget->setObjectName(QString::fromUtf8("layoutWidget"));
@@ -137,10 +145,10 @@ public:
         comboBox_findlist = new QComboBox(layoutWidget);
         comboBox_findlist->setObjectName(QString::fromUtf8("comboBox_findlist"));
         comboBox_findlist->setMaximumSize(QSize(16777215, 30));
-        QFont font1;
-        font1.setFamily(QString::fromUtf8("Times New Roman"));
-        font1.setPointSize(14);
-        comboBox_findlist->setFont(font1);
+        QFont font2;
+        font2.setFamily(QString::fromUtf8("Times New Roman"));
+        font2.setPointSize(14);
+        comboBox_findlist->setFont(font2);
         comboBox_findlist->setEditable(true);
         comboBox_findlist->setMaxVisibleItems(30);
 
@@ -163,13 +171,13 @@ public:
         splitter_2->addWidget(treeView_ut);
         listWidget_cmdlist = new QListWidget(splitter_2);
         listWidget_cmdlist->setObjectName(QString::fromUtf8("listWidget_cmdlist"));
-        QFont font2;
-        font2.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
-        font2.setPointSize(12);
-        font2.setBold(false);
-        font2.setItalic(false);
-        font2.setWeight(50);
-        listWidget_cmdlist->setFont(font2);
+        QFont font3;
+        font3.setFamily(QString::fromUtf8("\345\256\213\344\275\223"));
+        font3.setPointSize(12);
+        font3.setBold(false);
+        font3.setItalic(false);
+        font3.setWeight(50);
+        listWidget_cmdlist->setFont(font3);
         listWidget_cmdlist->setStyleSheet(QString::fromUtf8("selection-color: rgb(0, 255, 255);"));
         splitter_2->addWidget(listWidget_cmdlist);
         splitter_4->addWidget(splitter_2);
@@ -372,6 +380,7 @@ public:
         label_3->setText(QApplication::translate("MainWindow", "\345\221\275\344\273\244\345\210\227\350\241\250", 0, QApplication::UnicodeUTF8));
         checkBox_autosend->setText(QApplication::translate("MainWindow", "\350\207\252\345\212\250\345\217\221\351\200\201", 0, QApplication::UnicodeUTF8));
         pushButton_delkey->setText(QApplication::translate("MainWindow", "\345\210\240\351\231\244\345\205\263\351\224\256\345\255\227", 0, QApplication::UnicodeUTF8));
+        checkBox_treeopen->setText(QApplication::translate("MainWindow", "\345\217\214\345\207\273\346\211\223\345\274\200\346\226\207\344\273\266", 0, QApplication::UnicodeUTF8));
         pushButton->setText(QApplication::translate("MainWindow", "\346\270\205\347\251\272", 0, QApplication::UnicodeUTF8));
         label_2->setText(QApplication::translate("MainWindow", "IP\345\234\260\345\235\200", 0, QApplication::UnicodeUTF8));
         pushButton_connect->setText(QApplication::translate("MainWindow", "\345\217\221\351\200\201", 0, QApplication::UnicodeUTF8));

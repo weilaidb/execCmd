@@ -63,7 +63,9 @@ private:
 
     QAction * Act_LoadDirTree;
     QAction * Act_Mkdir;
+    QAction * Act_Mkfile;
     QAction * Act_Rmdir;
+    QAction * Act_Explorer;
     QFileSystemModel *model;
     QString curmodeldir;
     QString orglabeltext;
@@ -201,7 +203,12 @@ private slots:
     void LoadDirTree();
     void procDoubleClickTree(QModelIndex currentIndex);
     void TreeMkdir();
+//    void TreeMkfile();
     void TreeRm();
+    void TreeOpenDir(QModelIndex inx);
+    void TreeOpenDir();
+
+    void TreeFresh();
 
     void on_checkBox_dict_realtime_toggled(bool checked);
 
