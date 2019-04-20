@@ -112,20 +112,22 @@ void MainWindow::procClientMessage()
 
 
     ui->statusBar->showMessage("proc new client message...");
-    qDebug() << (QString("got new client(%1)")
-                 .arg(clientConnection->peerAddress().toString()));
+
 }
 
 void MainWindow::dealclienterror(QString cltmsg, void * pthread)
 {
     qDebug() << "dealclienterror:" << cltmsg.size();
+    sockthread *p = (sockthread *)pthread;
+    p->closeSocketConnect();
 
 }
 
 
 void MainWindow::readfromremote(QString cltmsg, void * pthread)
 {
-    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+//    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+    QTextCodec *codec = QTextCodec::codecForName("GB2312");
     QTextCodec::setCodecForTr(codec);
 //    QTextCodec::setCodecForLocale(QTextCodec::codecForLocale()); //设置GBK到本地
 //    QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
@@ -200,7 +202,8 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
 
 
     sockthread *threadsock = (sockthread *)pthread;
-    threadsock->getSocketConnect()->write((showtext.toLatin1()));
+    //不写
+//    threadsock->getSocketConnect()->write((showtext.toLatin1()));
 //    threadsock->emitMsgDoneSignal();
     threadsock->closeSocketConnect();
 
