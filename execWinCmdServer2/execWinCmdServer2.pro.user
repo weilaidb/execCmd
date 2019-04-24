@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<<<<<<< HEAD
-<!-- Written by Qt Creator 2.4.1, 2019-04-21T15:56:49. -->
-=======
-<!-- Written by Qt Creator 2.4.1, 2019-01-05T22:59:01. -->
->>>>>>> parent of 81ed008... 状态栏显示内容转成汉字
+<!-- Written by Qt Creator 2.4.1, 2019-04-24T21:26:53. -->
 <qtcreator>
  <data>
   <variable>ProjectExplorer.Project.ActiveTarget</variable>
