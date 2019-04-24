@@ -3,6 +3,7 @@
 #include <QMessageBox>
 #include <QString>
 #include <windows.h>
+#include <QHostAddress>
 
 
 #if 1
@@ -78,11 +79,14 @@ void sockthread::displayErr(QAbstractSocket::SocketError socketError)
 {
 //    if(socketError == QTcpSocket::RemoteHostClosedError)
 //        return;
-    emit emitErrInfo(QString("%1:%2").arg("errinfo").arg(clientConnection->errorString()),
-                     (void *)this);
-    QMessageBox::information(NULL,str_china("网络"),
-                             str_china("产生如下错误： %1")
-                             .arg(clientConnection->errorString()));
+    if(clientConnection)
+    {
+        emit emitErrInfo(QString("%1:%2").arg("errinfo").arg(clientConnection->errorString()),
+                         (void *)this);
+//        QMessageBox::information(NULL,str_china("网络"),
+//                                 str_china("产生如下错误： %1")
+//                                 .arg(clientConnection->errorString()));
+    }
 //    tcpserver->close();
 //    tcpserver = NULL;
 
@@ -142,17 +146,25 @@ void sockthread::updateReadMsgProgress()
         if(inBlock.at(0) != '\0')
         {
             bigmsg = inBlock; //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
+            qDebug() << "get from head";
         }
         else
         {
             bigmsg = inBlock.mid(4);
+            qDebug() << "get from head 4byte";
         }
         //入库
 //        readfromremote(bigmsg);
         emit emitMsgDoneSignal(bigmsg, (void *)this);
         qDebug() << "read msg size:" << bigmsg.size();
 
+        qDebug() << "read msg:" << bigmsg;
         qDebug() << "read msg:" << bigmsg.toLocal8Bit();
+        qDebug() << "read msg:" << bigmsg.toUtf8();
+        qDebug() << "read msg:" << bigmsg.toAscii();
+        qDebug() << "read msg:" << bigmsg.toLatin1();
+        qDebug() << "read msg:" << bigmsg.toAscii();
+
 
         TotalReadBytes = 0;
         bytesReceived = 0;
@@ -232,10 +244,13 @@ void sockthread::sendmsg(QString msgs)
 void sockthread::setSocketConnect(QTcpSocket *cltConnet)
 {
     clientConnection = cltConnet;
+    qDebug() << (QString("got new client(%1)")
+                 .arg(clientConnection->peerAddress().toString()));
+
     QObject::connect(clientConnection,SIGNAL(readyRead()),
                      this,SLOT(updateReadMsgProgress()));
-    QObject::connect(clientConnection,SIGNAL(bytesWritten(qint64)),
-                     this,SLOT(updateWriteClientProgress(qint64)));
+//    QObject::connect(clientConnection,SIGNAL(bytesWritten(qint64)),
+//                     this,SLOT(updateWriteClientProgress(qint64)));
     QObject::connect(clientConnection,SIGNAL(error(QAbstractSocket::SocketError)),
                      this,SLOT(displayErr(QAbstractSocket::SocketError)));
 
@@ -259,5 +274,6 @@ void sockthread::closeSocketConnect()
     initData();
     clientConnection->close();
     clientConnection->deleteLater();
+    clientConnection = NULL;
 }
 
