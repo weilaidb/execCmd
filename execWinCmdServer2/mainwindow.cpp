@@ -126,8 +126,8 @@ void MainWindow::dealclienterror(QString cltmsg, void * pthread)
 
 void MainWindow::readfromremote(QString cltmsg, void * pthread)
 {
-//    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-    QTextCodec *codec = QTextCodec::codecForName("GB2312");
+    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
+//    QTextCodec *codec = QTextCodec::codecForName("GB2312");
     QTextCodec::setCodecForTr(codec);
 //    QTextCodec::setCodecForLocale(QTextCodec::codecForLocale()); //设置GBK到本地
 //    QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
@@ -176,7 +176,7 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
         showtext += QString("ret:%1[%2] %3 \n")
                             .arg(cret)
                             .arg(showshellexecuteresult(cret))
-                            .arg(QString::fromLocal8Bit(resstring).toLocal8Bit().data())
+                            .arg(QString::fromLocal8Bit(resstring).toUtf8().data())
                             ;
     }
     ui->statusBar->showMessage(tr(showtext.toLatin1()));

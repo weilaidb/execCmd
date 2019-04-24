@@ -4,7 +4,7 @@
 #include <QString>
 #include <windows.h>
 #include <QHostAddress>
-
+#include "getstrdata.h"
 
 #if 1
 //编码汉字
@@ -118,8 +118,11 @@ void sockthread::updateReadMsgProgress()
         if((clientConnection->bytesAvailable() >= sizeof(qint64)*1)){
             in>>TotalReadBytes;
 //            bytesReceived += sizeof(qint64)*1;
+            qDebug() << inBlock.data();
+            PrintStrData("inBlock", (BYTE *)inBlock.data(), inBlock.size());
             inBlock.resize(0);
             recvdone = READING;
+            qDebug() << "TotalReadBytes:" << TotalReadBytes;
         }
     }
 
@@ -143,6 +146,7 @@ void sockthread::updateReadMsgProgress()
     if (bytesReceived == TotalReadBytes) {
         QString  bigmsg;
         bigmsg.clear();
+        PrintStrData("afinBlock", (BYTE *)inBlock.data(), inBlock.size());
         if(inBlock.at(0) != '\0')
         {
             bigmsg = inBlock; //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息

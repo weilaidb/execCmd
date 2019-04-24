@@ -4,7 +4,7 @@ INPUT(
 ./release\msgtipsautoshut.o
 ./release\msgtips.o
 ./release\mainwindow.o
-./release\main.o
+./release\getstrdata.o
 ./release\moc_mainwindow.o
 ./release\moc_sockthread.o
 ./release\moc_msgtipsautoshut.o
