@@ -16,13 +16,15 @@ SOURCES += main.cpp\
     sockthread.cpp \
     msgtipsautoshut.cpp \
     msgtips.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    getstrdata.cpp
 
 HEADERS  += mainwindow.h \
     sockthread.h \
     msgtipsautoshut.h \
     msgtips.h \
-    version.h
+    version.h \
+    getstrdata.h
 
 FORMS    += mainwindow.ui
 
