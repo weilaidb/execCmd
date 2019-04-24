@@ -174,7 +174,7 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
         showtext += QString("ret:%1[%2] %3 \n")
                             .arg(cret)
                             .arg(showshellexecuteresult(cret))
-                            .arg(QString::fromLocal8Bit(resstring).toLocal8Bit().data())
+                            .arg(QString::fromLocal8Bit(resstring).toUtf8().data())
                             ;
     }
     ui->statusBar->showMessage(tr(showtext.toLatin1()));
