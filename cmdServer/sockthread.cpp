@@ -191,7 +191,7 @@ void sockthread::sendmsg(QString msgs)
     //设置数据流的版本，客户端和服务器端使用的版本要相同
     out<<(quint64) 0;
     //要发送的数据放到out
-    out<< msgs.toUtf8().data(); //必须是转换后的字符
+    out<< msgs.toLocal8Bit().data(); //必须是转换后的字符
 //    out << "hello world";
     out.device()->seek(0);
     out<<(quint64)(outBlock.size()-sizeof(quint64));//计算发送数据的大小
