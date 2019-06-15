@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Fri Mar 22 22:34:37 2019
+** Created: Sat Jun 15 08:22:49 2019
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -75,6 +75,7 @@ public:
     QCheckBox *checkBox_fileautoload;
     QCheckBox *checkBox_echoswitch;
     QCheckBox *checkBox_tree;
+    QCheckBox *checkBox_openfirstitem;
     QLineEdit *lineEdit_sendnum;
     QSpacerItem *horizontalSpacer;
     QLabel *label;
@@ -87,7 +88,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1126, 500);
+        MainWindow->resize(1250, 500);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -314,6 +315,11 @@ public:
 
         horizontalLayout->addWidget(checkBox_tree);
 
+        checkBox_openfirstitem = new QCheckBox(horizontalGroupBox);
+        checkBox_openfirstitem->setObjectName(QString::fromUtf8("checkBox_openfirstitem"));
+
+        horizontalLayout->addWidget(checkBox_openfirstitem);
+
         lineEdit_sendnum = new QLineEdit(horizontalGroupBox);
         lineEdit_sendnum->setObjectName(QString::fromUtf8("lineEdit_sendnum"));
         sizePolicy.setHeightForWidth(lineEdit_sendnum->sizePolicy().hasHeightForWidth());
@@ -399,6 +405,7 @@ public:
         checkBox_fileautoload->setText(QApplication::translate("MainWindow", " \346\226\207\344\273\266\345\256\236\346\227\266\345\212\240\350\275\275", 0, QApplication::UnicodeUTF8));
         checkBox_echoswitch->setText(QApplication::translate("MainWindow", "Echo", 0, QApplication::UnicodeUTF8));
         checkBox_tree->setText(QApplication::translate("MainWindow", "tree", 0, QApplication::UnicodeUTF8));
+        checkBox_openfirstitem->setText(QApplication::translate("MainWindow", "\346\211\223\345\274\200\351\246\226\351\241\271", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP
         lineEdit_sendnum->setToolTip(QApplication::translate("MainWindow", "\346\211\247\350\241\214\346\225\260\351\207\217", 0, QApplication::UnicodeUTF8));
 #endif // QT_NO_TOOLTIP

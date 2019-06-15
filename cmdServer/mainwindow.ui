@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1126</width>
+    <width>1250</width>
     <height>500</height>
    </rect>
   </property>
@@ -429,6 +429,13 @@
               <widget class="QCheckBox" name="checkBox_tree">
                <property name="text">
                 <string>tree</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="checkBox_openfirstitem">
+               <property name="text">
+                <string>打开首项</string>
                </property>
               </widget>
              </item>

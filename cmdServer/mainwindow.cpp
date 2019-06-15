@@ -210,6 +210,7 @@ void MainWindow::ReadHistorySettings()
     ui->checkBox_fileautoload->setChecked(m_settings.value("checkBox_fileautoload").toBool());
     ui->checkBox_tree->setChecked(m_settings.value("checkBox_tree").toBool());
     ui->checkBox_dict_realtime->setChecked(m_settings.value("checkBox_dict_realtime").toBool());
+    ui->checkBox_openfirstitem->setChecked(m_settings.value("checkBox_openfirstitem").toBool());
     this->restoreGeometry(m_settings.value("Cmdserver").toByteArray());
 
 }
@@ -245,6 +246,7 @@ void MainWindow::WriteCurrentSettings()
     m_settings.setValue("checkBox_fileautoload",ui->checkBox_fileautoload->isChecked());
     m_settings.setValue("checkBox_tree",ui->checkBox_tree->isChecked());
     m_settings.setValue("checkBox_dict_realtime",ui->checkBox_dict_realtime->isChecked());
+    m_settings.setValue("checkBox_openfirstitem",ui->checkBox_openfirstitem->isChecked());
 
 
     m_settings.setValue("Cmdserver", this->saveGeometry());
@@ -630,7 +632,10 @@ void MainWindow::procActivatedFindList(QString findstr)
     if(searchlist.size() > 0)
     {
         //        ui->textEdit->setText(list.at(0));
-        checkoneitem_execcmd(oneshowres);
+        if(ui->checkBox_openfirstitem->isChecked())
+        {
+            checkoneitem_execcmd(oneshowres);
+        }
         insertfindkeys2comuselist(findstr);
     }
 }
