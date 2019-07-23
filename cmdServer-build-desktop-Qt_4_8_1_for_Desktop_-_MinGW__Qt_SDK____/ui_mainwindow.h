@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'mainwindow.ui'
 **
-** Created: Sat Jun 15 08:34:20 2019
+** Created: Tue Jul 23 23:04:36 2019
 **      by: Qt User Interface Compiler version 4.8.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
@@ -63,7 +63,7 @@ public:
     QCheckBox *checkBox_forcelocalhost;
     QCheckBox *checkBox_dict_realtime;
     QCheckBox *checkBox_fileautoload;
-    QCheckBox *checkBox_echoswitch;
+    QCheckBox *checkBox_watchhttp;
     QCheckBox *checkBox_tree;
     QCheckBox *checkBox_openfirstitem;
     QLineEdit *lineEdit_sendnum;
@@ -84,7 +84,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(1250, 500);
+        MainWindow->resize(1330, 500);
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QString::fromUtf8("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -246,10 +246,10 @@ public:
 
         horizontalLayout->addWidget(checkBox_fileautoload);
 
-        checkBox_echoswitch = new QCheckBox(horizontalGroupBox);
-        checkBox_echoswitch->setObjectName(QString::fromUtf8("checkBox_echoswitch"));
+        checkBox_watchhttp = new QCheckBox(horizontalGroupBox);
+        checkBox_watchhttp->setObjectName(QString::fromUtf8("checkBox_watchhttp"));
 
-        horizontalLayout->addWidget(checkBox_echoswitch);
+        horizontalLayout->addWidget(checkBox_watchhttp);
 
         checkBox_tree = new QCheckBox(horizontalGroupBox);
         checkBox_tree->setObjectName(QString::fromUtf8("checkBox_tree"));
@@ -390,7 +390,7 @@ public:
         checkBox_forcelocalhost->setText(QApplication::translate("MainWindow", "Local", 0, QApplication::UnicodeUTF8));
         checkBox_dict_realtime->setText(QApplication::translate("MainWindow", "\345\255\227\345\205\270\345\256\236\346\227\266", 0, QApplication::UnicodeUTF8));
         checkBox_fileautoload->setText(QApplication::translate("MainWindow", " \346\226\207\344\273\266\345\256\236\346\227\266\345\212\240\350\275\275", 0, QApplication::UnicodeUTF8));
-        checkBox_echoswitch->setText(QApplication::translate("MainWindow", "Echo", 0, QApplication::UnicodeUTF8));
+        checkBox_watchhttp->setText(QApplication::translate("MainWindow", "watch http", 0, QApplication::UnicodeUTF8));
         checkBox_tree->setText(QApplication::translate("MainWindow", "tree", 0, QApplication::UnicodeUTF8));
         checkBox_openfirstitem->setText(QApplication::translate("MainWindow", "\346\211\223\345\274\200\351\246\226\351\241\271", 0, QApplication::UnicodeUTF8));
 #ifndef QT_NO_TOOLTIP

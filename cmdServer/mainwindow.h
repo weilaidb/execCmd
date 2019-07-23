@@ -215,6 +215,9 @@ private slots:
     QString getClipboard_Str(void);
 
     void CheckDictTimerOut();
+    void WatchHttpTimerOut();
+    void on_checkBox_watchhttp_toggled(bool checked);
+
 private:
     QTcpSocket *socket;
     QString message;  //存放从服务器接收到的字符串
@@ -241,6 +244,7 @@ private:
 
 private:
     QTimer *cliptexttimer;
+    QTimer *watchhttptimer;
 };
 
 #endif // MAINWINDOW_H

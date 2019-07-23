@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'mainwindow.h'
 **
-** Created: Fri Mar 22 22:27:53 2019
+** Created: Tue Jul 23 23:20:01 2019
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -23,7 +23,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      75,   14, // methods
+      77,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -106,6 +106,8 @@ static const uint qt_meta_data_MainWindow[] = {
     2194, 1742,   11,   11, 0x08,
     2234,   11,  626,   11, 0x08,
     2253,   11,   11,   11, 0x08,
+    2273,   11,   11,   11, 0x08,
+    2293, 1742,   11,   11, 0x08,
 
        0        // eod
 };
@@ -175,6 +177,8 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "TreeOpenDir(QModelIndex)\0TreeOpenDir()\0"
     "TreeFresh()\0on_checkBox_dict_realtime_toggled(bool)\0"
     "getClipboard_Str()\0CheckDictTimerOut()\0"
+    "WatchHttpTimerOut()\0"
+    "on_checkBox_watchhttp_toggled(bool)\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -270,6 +274,8 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 73: { QString _r = _t->getClipboard_Str();
             if (_a[0]) *reinterpret_cast< QString*>(_a[0]) = _r; }  break;
         case 74: _t->CheckDictTimerOut(); break;
+        case 75: _t->WatchHttpTimerOut(); break;
+        case 76: _t->on_checkBox_watchhttp_toggled((*reinterpret_cast< bool(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -307,9 +313,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 75)
+        if (_id < 77)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 75;
+        _id -= 77;
     }
     return _id;
 }

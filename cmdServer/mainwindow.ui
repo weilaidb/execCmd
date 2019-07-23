@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1250</width>
+    <width>1330</width>
     <height>500</height>
    </rect>
   </property>
@@ -346,9 +346,9 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="checkBox_echoswitch">
+            <widget class="QCheckBox" name="checkBox_watchhttp">
              <property name="text">
-              <string>Echo</string>
+              <string>watch http</string>
              </property>
             </widget>
            </item>

@@ -109,6 +109,10 @@ MainWindow::MainWindow(QWidget *parent) :
     cliptexttimer->start(1000);
     connect(cliptexttimer, SIGNAL(timeout()), this, SLOT(CheckDictTimerOut()));
 
+    watchhttptimer = new QTimer();
+    watchhttptimer->start(1000);
+    connect(watchhttptimer, SIGNAL(timeout()), this, SLOT(WatchHttpTimerOut()));
+
 
 
     TodoCmdExecList.clear();
@@ -211,6 +215,7 @@ void MainWindow::ReadHistorySettings()
     ui->checkBox_tree->setChecked(m_settings.value("checkBox_tree").toBool());
     ui->checkBox_dict_realtime->setChecked(m_settings.value("checkBox_dict_realtime").toBool());
     ui->checkBox_openfirstitem->setChecked(m_settings.value("checkBox_openfirstitem").toBool());
+    ui->checkBox_watchhttp->setChecked(m_settings.value("checkBox_watchhttp").toBool());
     this->restoreGeometry(m_settings.value("Cmdserver").toByteArray());
 
 }
@@ -247,6 +252,7 @@ void MainWindow::WriteCurrentSettings()
     m_settings.setValue("checkBox_tree",ui->checkBox_tree->isChecked());
     m_settings.setValue("checkBox_dict_realtime",ui->checkBox_dict_realtime->isChecked());
     m_settings.setValue("checkBox_openfirstitem",ui->checkBox_openfirstitem->isChecked());
+    m_settings.setValue("checkBox_watchhttp",ui->checkBox_watchhttp->isChecked());
 
 
     m_settings.setValue("Cmdserver", this->saveGeometry());
@@ -1822,4 +1828,52 @@ void MainWindow::CheckDictTimerOut()
         on_pushButton_biying_clicked();
     }
 
+}
+
+void MainWindow::on_checkBox_watchhttp_toggled(bool checked)
+{
+////    qDebug() << "toggled:" << checked;
+
+}
+
+void MainWindow::WatchHttpTimerOut()
+{
+    if(!ui->checkBox_watchhttp->isChecked())
+    {
+        return;
+    }
+
+    QStringList httpkeylist;
+    httpkeylist.clear();
+    httpkeylist << "http://";
+    httpkeylist << "https://";
+
+    QString res("");
+    static QString oldres("");
+
+    QString cliptxt = getclipboardtext();
+
+    foreach (QString str, httpkeylist) {
+        if(cliptxt.contains(str, Qt::CaseInsensitive))
+        {
+            res = cliptxt;
+            break;
+        }
+    }
+
+    if(res.trimmed().isEmpty())
+    {
+        return;
+    }
+
+    if(oldres != res)
+    {
+        oldres = res;
+    }
+    else
+    {
+        return;
+    }
+
+    ENGINESEARCHTEXT("", false);
 }
