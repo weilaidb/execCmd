@@ -166,7 +166,31 @@ int specialprocmsg(char **sendmsg, unsigned int *pmsglen
 	{
 //		printf("special deal pwd\n");
 		getcurrentpath(dirpathbuffer);
-		if(openfile)
+		if('~' == openfile[0])
+		{
+//			strcat(dirpathbuffer, openfile);
+			strrpc(dirpathbuffer, replaceprefix, diskno);
+			strrpc(dirpathbuffer, "/", "\\");
+			snprintf(notepadpathbuffer, sizeof(notepadpathbuffer)
+					, "cmd %s \"%s\\%s\""
+					, *sendmsg
+					, dirpathbuffer
+					, openfile
+					);
+		}
+		else if('/' == openfile[0])
+		{
+			snprintf(dirpathbuffer, sizeof(dirpathbuffer), "%s", openfile);
+//			strcat(dirpathbuffer, openfile);
+			strrpc(dirpathbuffer, replaceprefix, diskno);
+			strrpc(dirpathbuffer, "/", "\\");
+			snprintf(notepadpathbuffer, sizeof(notepadpathbuffer)
+					, "cmd %s \"%s\""
+					, *sendmsg
+					, dirpathbuffer
+					);
+		}
+		else
 		{
 //			strcat(dirpathbuffer, openfile);
 			strrpc(dirpathbuffer, replaceprefix, diskno);
