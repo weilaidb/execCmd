@@ -16,12 +16,16 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     sockthread.cpp \
     msgtips.cpp \
-    msgtipsautoshut.cpp
+    msgtipsautoshut.cpp \
+    cgetfilecheckxxsum.cpp \
+    processbarx.cpp
 
 HEADERS  += mainwindow.h \
     sockthread.h \
     msgtips.h \
     msgtipsautoshut.h \
-    version.h
+    version.h \
+    cgetfilecheckxxsum.h \
+    processbarx.h
 
 FORMS    += mainwindow.ui

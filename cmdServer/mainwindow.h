@@ -13,6 +13,7 @@
 #include <QDir>
 #include <QFileSystemModel>
 #include <QMutex>
+#include <QUrl>
 
 namespace Ui {
 class MainWindow;
@@ -180,6 +181,9 @@ private slots:
 
     void setrighttext(QString text);
 
+    QString getrdowntext();
+    void setrdowntext(QString text);
+
     bool IsUTF8File(const char* pFileName);
 
     bool IsUTF8(const void* pBuffer, long size);
@@ -245,6 +249,18 @@ private:
 private:
     QTimer *cliptexttimer;
     QTimer *watchhttptimer;
+
+private:
+    void dragEnterEvent(QDragEnterEvent *event);
+    void dropEvent(QDropEvent *event);
+
+private:
+    int isDropFileEnd; //拖曳批量文件是否结束
+    QList<QUrl> urls;
+    QString result;
+
+
+
 };
 
 #endif // MAINWINDOW_H

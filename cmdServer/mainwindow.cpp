@@ -17,6 +17,7 @@
 #include <QFileSystemModel>
 #include <QInputDialog>
 #include <QMessageBox>
+#include "cgetfilecheckxxsum.h"
 
 #define BINDPORT (9999)
 #define CMD_HELLO "hello word"
@@ -1425,6 +1426,21 @@ void MainWindow::setrighttext(QString text)
     ui->textEdit->update();
 }
 
+QString MainWindow::getrdowntext()
+{
+    return ui->textEdit_cmdresult->toPlainText();
+}
+void MainWindow::setrdowntext(QString text)
+{
+    ui->textEdit_cmdresult->clear();
+    ui->textEdit_cmdresult->setText(text);
+    ui->textEdit_cmdresult->update();
+}
+
+
+
+
+
 /**
   ** 判断文件是否为UTF8编码
   **/
@@ -1877,3 +1893,56 @@ void MainWindow::WatchHttpTimerOut()
 
     ENGINESEARCHTEXT("", false);
 }
+
+
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    if(event->mimeData()->hasUrls()){
+        event->acceptProposedAction();
+    }
+}
+
+/*============================================
+* FuncName    : autoCCode::dropEvent
+* Description :
+* @event      :
+* Author      :
+* Time        : 2017-05-28
+============================================*/
+void MainWindow::dropEvent(QDropEvent *event)
+{
+    result.clear();
+    QByteArray arrresult;
+    urls = event->mimeData()->urls();
+    foreach (QUrl url, urls) {
+        QString fileName = url.toLocalFile();
+        qDebug() << fileName;
+        result += fileName;
+        arrresult = CGetFileCheckxxSum::getFileMd5(fileName, result);
+        if(0 == arrresult)
+        {
+            result += "\n\n";
+            continue;
+        }
+        result += "\nmd5sum :\t" + arrresult.toHex();
+        arrresult = CGetFileCheckxxSum::getFileSha1(fileName, result);
+        if(0 == arrresult)
+        {
+            result += "\n\n";
+            continue;
+        }
+        result += "\nsha1sum:\t" + arrresult.toHex();
+        result += "\n\n";
+
+//        qDebug() << (arrresult.toHex());
+
+    }
+
+    setrdowntext(result);
+}
+
+
+
+
+

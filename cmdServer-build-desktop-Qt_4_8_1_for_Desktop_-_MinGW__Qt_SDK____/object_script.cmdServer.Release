@@ -1,0 +1,12 @@
+INPUT(
+./release\main.o
+./release\mainwindow.o
+./release\sockthread.o
+./release\msgtips.o
+./release\msgtipsautoshut.o
+./release\cgetfilecheckxxsum.o
+./release\processbarx.o
+./release\moc_mainwindow.o
+./release\moc_sockthread.o
+./release\moc_msgtipsautoshut.o
+);

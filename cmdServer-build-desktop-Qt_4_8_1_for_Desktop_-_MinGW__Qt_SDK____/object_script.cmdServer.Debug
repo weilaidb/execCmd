@@ -1,0 +1,12 @@
+INPUT(
+./debug\main.o
+./debug\mainwindow.o
+./debug\sockthread.o
+./debug\msgtips.o
+./debug\msgtipsautoshut.o
+./debug\cgetfilecheckxxsum.o
+./debug\processbarx.o
+./debug\moc_mainwindow.o
+./debug\moc_sockthread.o
+./debug\moc_msgtipsautoshut.o
+);
