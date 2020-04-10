@@ -24,7 +24,7 @@ BYTE gArray[1234] = {0};
 
 #define ARRAYSIZE(A) (unsigned int)(sizeof(A)/sizeof(A[0]))
 /**
-  * charæ•°ç»„ è½¬æ¢byteæ•°ç»„
+  * charÊı×é ×ª»»byteÊı×é
   **/
 int chararrayconvertbytearray(char *str, BYTE *parry)
 {
@@ -42,7 +42,7 @@ int chararrayconvertbytearray(char *str, BYTE *parry)
             printf("No:%-2u -- Val:%02X\n", i + 1, str[i]);
         }
     }
-    //è½¬æ¢æˆå¤§å†™
+    //×ª»»³É´óĞ´
     string strA = str;
     transform(strA.begin(), strA.end(), strA.begin(), ::toupper);
 
@@ -65,5 +65,7 @@ int chararrayconvertbytearray(char *str, BYTE *parry)
 //    cout << "hello world" << endl;
 //    return 0;
 //}
+
+
 
 

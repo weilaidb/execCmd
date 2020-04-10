@@ -9,7 +9,7 @@ using namespace std;
 
 
 /*
-* 寮�鍏虫墦鍗帮紝涓嶉渶瑕佸姞鎹㈣
+* 开关打印，不需要加换行
 */
 #define switchprint(fmt,args...)\
 do{\
@@ -95,3 +95,6 @@ int procmsgfromgui(char *msg)
 	
 	
 }
+
+
+

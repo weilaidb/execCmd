@@ -4,7 +4,8 @@
 #include <arpa/inet.h>  
   
 #define MAXSIZE 16 * 1024 *1024
-  
+#define OFFSET_HEAD  12
+
 class tcp_server  
 {  
 private:  

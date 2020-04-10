@@ -97,13 +97,13 @@ void showmsg(char *str, int len)
 	printf("\n");
 }
 /**
-   * å¢å¼ºçš„systemå‡½æ•°ï¼Œèƒ½å¤Ÿè¿”å›systemè°ƒç”¨çš„è¾“å‡º
+   * ÔöÇ¿µÄsystemº¯Êı£¬ÄÜ¹»·µ»Øsystemµ÷ÓÃµÄÊä³ö
    *
-   * @param[in] cmdstring è°ƒç”¨å¤–éƒ¨ç¨‹åºæˆ–è„šæœ¬çš„å‘½ä»¤ä¸²
-   * @param[out] buf è¿”å›å¤–éƒ¨å‘½ä»¤çš„ç»“æœçš„ç¼“å†²åŒº
-   * @param[in] len ç¼“å†²åŒºbufçš„é•¿åº¦
+   * @param[in] cmdstring µ÷ÓÃÍâ²¿³ÌĞò»ò½Å±¾µÄÃüÁî´®
+   * @param[out] buf ·µ»ØÍâ²¿ÃüÁîµÄ½á¹ûµÄ»º³åÇø
+   * @param[in] len »º³åÇøbufµÄ³¤¶È
    *
-   * @return 0: æˆåŠŸ; -1: å¤±è´¥ 
+   * @return 0: ³É¹¦; -1: Ê§°Ü 
    */
 int mysystem(char* cmdstring, char* buf, int len)
 {
@@ -142,7 +142,7 @@ int mysystem(char* cmdstring, char* buf, int len)
       return 0;
 }
 
-// è®¾ç½®ä¸€ä¸ªæ–‡ä»¶æè¿°ç¬¦ä¸ºnonblock  
+// ÉèÖÃÒ»¸öÎÄ¼şÃèÊö·ûÎªnonblock  
 int set_nonblocking(int fd)  
 {  
     int flags;  
@@ -245,7 +245,7 @@ int tcp_server::recv_msg()
 			}
 			if (pid == 0)
 			{
-				// å­è¿›ç¨‹
+				// ×Ó½ø³Ì
 				close(socket_fd);
 				close(fd[0]);     /* close read end */
 				setvbuf ( stdout , NULL , _IONBF , 1024 );
@@ -298,7 +298,7 @@ int tcp_server::recv_msg()
 				close(fd[0]);
 				printf("get child out msg len :%d\n", count);
 				// printf("get child out printbuf:%s\n", printbuf);
-				close(accept_fd); //çˆ¶è¿›ç¨‹
+				close(accept_fd); //¸¸½ø³Ì
 			}
 #else
 			mysystem();
@@ -307,21 +307,21 @@ int tcp_server::recv_msg()
 	return 0;  
 }  
 
-char recvbuf[MAXSIZE];  
-char execcmd[MAXSIZE];  
+char recvbuf[MAXSIZE] = {0};  
+char execcmd[MAXSIZE] = {0};  
 
 void tcp_server::do_service(int conn)
 {
-	int offset = 12;
+	int offset = OFFSET_HEAD;
 	int status;
 
 
     while (1)
     {
-		memset(recvbuf,0,MAXSIZE);  
-		memset(execcmd,0,MAXSIZE);  
+		memset(recvbuf,0,sizeof(recvbuf));  
+		memset(execcmd,0,sizeof(execcmd));  
         int size = read(conn, recvbuf, sizeof(recvbuf));
-        if (size == 0)   //å®¢æˆ·ç«¯å…³é—­äº†
+        if (size == 0)   //¿Í»§¶Ë¹Ø±ÕÁË
         {
             printf("client close\n");
             break;
@@ -339,21 +339,21 @@ void tcp_server::do_service(int conn)
 		int status = system(execcmd);
 		if(status < 0)
 		{
-			printf("cmd: %s\t error: %s", execcmd, strerror(errno)); // è¿™é‡ŒåŠ¡å¿…è¦æŠŠerrnoä¿¡æ¯è¾“å‡ºæˆ–è®°å…¥Log
+			printf("cmd: %s\t error: %s", execcmd, strerror(errno)); // ÕâÀïÎñ±ØÒª°ÑerrnoĞÅÏ¢Êä³ö»ò¼ÇÈëLog
 			// return -1;
 			exit(0); 
 		}
 		if(WIFEXITED(status))
 		{
-			// printf("normal termination, exit status = %d\n", WEXITSTATUS(status)); //å–å¾—cmdstringæ‰§è¡Œç»“æœ 
+			// printf("normal termination, exit status = %d\n", WEXITSTATUS(status)); //È¡µÃcmdstringÖ´ĞĞ½á¹û 
 		}
 		else if(WIFSIGNALED(status))
 		{
-			printf("abnormal termination,signal number =%d\n", WTERMSIG(status)); //å¦‚æœcmdstringè¢«ä¿¡å·ä¸­æ–­ï¼Œå–å¾—ä¿¡å·å€¼
+			printf("abnormal termination,signal number =%d\n", WTERMSIG(status)); //Èç¹ûcmdstring±»ĞÅºÅÖĞ¶Ï£¬È¡µÃĞÅºÅÖµ
 		}
 		else if(WIFSTOPPED(status))
 		{
-			printf("process stopped, signal number =%d\n", WSTOPSIG(status)); //å¦‚æœcmdstringè¢«ä¿¡å·æš‚åœæ‰§è¡Œï¼Œå–å¾—ä¿¡å·å€¼
+			printf("process stopped, signal number =%d\n", WSTOPSIG(status)); //Èç¹ûcmdstring±»ĞÅºÅÔİÍ£Ö´ĞĞ£¬È¡µÃĞÅºÅÖµ
 		}							
 		break;
     }
@@ -375,3 +375,6 @@ extern "C" void testabc(void)
 {
 	printf("testabc\n");
 }
+
+
+
