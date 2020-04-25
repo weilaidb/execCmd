@@ -416,9 +416,9 @@ int processCmd(int argc,char* argv[])
 	case 10:
 	case 11:
 	case 12:
-		printf("useage:linux_cmdserver  192.168.59.12 /home/weilaidb X: vim filename\n");
-		printf("useage:linux_cmdserver  192.168.59.12 /home/weilaidb X: notepad++ filename\n");
-		printf("useage:linux_cmdserver  192.168.59.12 cmd order\n");
+		// printf("useage:linux_cmdserver  192.168.59.12 /home/weilaidb X: vim filename\n");
+		// printf("useage:linux_cmdserver  192.168.59.12 /home/weilaidb X: notepad++ filename\n");
+		// printf("useage:linux_cmdserver  192.168.59.12 cmd order\n");
 		processCmdPwd(argc, argv);
 		exit(0);
 		break;
@@ -427,8 +427,21 @@ int processCmd(int argc,char* argv[])
 	}
 }
 
+void usage()
+{
+	printf("useage:\n");
+	printf("linux_cmdserver  192.168.59.12 /home/weilaidb X: vim filename\n");
+	printf("linux_cmdserver  192.168.59.12 /home/weilaidb X: notepad++ filename\n");
+	printf("linux_cmdserver  192.168.59.12 cmd order\n");	
+}
+
+
 int main(int argc,char* argv[])
 {
+	if(argc < 2 )
+	{
+		usage();
+	}
 	// printf("supprt send msg 2 window server\n"
 	// "usage:./a.out 192.168.1.1 replaceprefix X: orgmsg...\n", argc);
 	processCmd(argc, argv);
