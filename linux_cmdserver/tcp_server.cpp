@@ -9,6 +9,11 @@
 #include <sys/wait.h>
 #include <sys/fcntl.h>
 #include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
 #include "procmsg.h"
 
 
@@ -58,30 +63,60 @@ unsigned long long convert64word(unsigned long long writelen)
 
 tcp_server::tcp_server(long long listen_port) 
 {  
-  
-	if(( socket_fd = socket(PF_INET,SOCK_STREAM,IPPROTO_TCP)) < 0 ){  
-			throw "socket() failed";  
-	}  
 
-	memset(&myserver,0,sizeof(myserver));  
-	myserver.sin_family = AF_INET;  
-	myserver.sin_addr.s_addr = htonl(INADDR_ANY);  
-	myserver.sin_port = htons(listen_port);  
+	printf("server startup! listen max:%u\n", SOMAXCONN);
+	server_sockfd = socket(AF_INET, SOCK_STREAM, 0);//建立服务器端socket 
+	memset(&server_address,0,sizeof(server_address));  
+	server_address.sin_family = AF_INET; 
+	server_address.sin_addr.s_addr = htonl(INADDR_ANY); 
+	server_address.sin_port = htons(listen_port); 
+	server_len = sizeof(server_address); 
 
 	int on = 1;
-    if (setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
-        throw ("setsockopt error");
+    if (setsockopt(server_sockfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
+   	{
+        perror("setsockopt\n");
+		exit(0);
+	}
+
+	if( bind(server_sockfd,(sockaddr*) &server_address,sizeof(server_address)) < 0 ) 
+	{  
+        perror("bind\n");
+	}  
+
+	if( listen(server_sockfd,SOMAXCONN) < 0 ) 
+	{  
+        perror("bind\n");
+	}  
+
+
+	FD_ZERO(&readfds); 
+	FD_SET(server_sockfd, &readfds);//将服务器端socket加入到集合中
+
 	
-	// bool bDontLinger = false;
-	// setsockopt (socket_fd,SOL_SOCKET,SO_DONTLINGER,(const char*)&bDontLinger,sizeof(bool));
+//	if(( socket_fd = socket(PF_INET,SOCK_STREAM,IPPROTO_TCP)) < 0 ){  
+//			throw "socket() failed";  
+//	}  
 
-	if( bind(socket_fd,(sockaddr*) &myserver,sizeof(myserver)) < 0 ) {  
-			throw "bind() failed";  
-	}  
+//	memset(&myserver,0,sizeof(myserver));  
+//	myserver.sin_family = AF_INET;  
+//	myserver.sin_addr.s_addr = htonl(INADDR_ANY);  
+//	myserver.sin_port = htons(listen_port);  
 
-	if( listen(socket_fd,SOMAXCONN) < 0 ) {  
-			throw "listen() failed";  
-	}  
+//	int on = 1;
+//    if (setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
+//        throw ("setsockopt error");
+//	
+//	// bool bDontLinger = false;
+//	// setsockopt (socket_fd,SOL_SOCKET,SO_DONTLINGER,(const char*)&bDontLinger,sizeof(bool));
+
+//	if( bind(socket_fd,(sockaddr*) &myserver,sizeof(myserver)) < 0 ) {  
+//			throw "bind() failed";  
+//	}  
+
+//	if( listen(socket_fd,SOMAXCONN) < 0 ) {  
+//			throw "listen() failed";  
+//	}  
 }  
 
 void showmsg(char *str, int len)
@@ -216,17 +251,172 @@ int sendmsg(int &sock,char *buf, int length)
   
 int tcp_server::recv_msg() 
 {  
-	int   fd[2];
-	int   n, count; 
+#if 1
+printf("server waiting\n"); 
+//printf("FD_SETSIZE:%u\n", FD_SETSIZE); 
+
+
+while(1) 
+    {
+        char ch; 
+        int fd; 
+        int nread; 
+        testfds = readfds;//将需要监视的描述符集copy到select查询队列中，select会对其修改，所以一定要分开使用变量 
+
+		/** 回传数据 **/
+		int   fdpipe[2] = {0};
+		int   n = 0, count = 0; 
+		memset(printbuf,0,MAXSIZE);  
+		pid_t pid = 0;
+
+
+		struct stat tStat;
+
+
+        /*无限期阻塞，并测试文件描述符变动 */
+        result
+ = select(FD_SETSIZE, &testfds, (fd_set *)0,(fd_set *)0, (struct timeval *) 0); //FD_SETSIZE：系统默认的最大文件描述符
+		if (-1 == fstat(result, &tStat))
+		{
+			printf("fstat %d error:%s", result, strerror(errno));		
+		}
+
+        if(result < 1) 
+        { 
+            perror("server5"); 
+            exit(1); 
+//			continue;
+        } 
+
+        /*扫描所有的文件描述符*/
+        for(fd = 0; fd < FD_SETSIZE; fd++) 
+        {
+            /*找到相关文件描述符*/
+            if(FD_ISSET(fd,&testfds)) 
+            { 
+              /*判断是否为服务器套接字，是则表示为客户请求连接。*/
+                if(fd == server_sockfd) 
+                { 
+                    client_len = sizeof(client_address); 
+                    client_sockfd = accept(server_sockfd, (struct sockaddr *)&client_address, (socklen_t*)&client_len); 
+                    FD_SET(client_sockfd, &readfds);//将客户端socket加入到集合中
+//                    printf("adding client on fd %d\n", client_sockfd); 
+					printf("Received a connection from %s[%u]\n",(char*) inet_ntoa(client_address.sin_addr), client_address.sin_port);  
+                } 
+                /*客户端socket中有数据请求时*/
+                else 
+                { 
+                    ioctl(fd, FIONREAD, &nread);//取得数据量交给nread
+                    
+                    /*客户数据请求完毕，关闭套接字，从集合中清除相应描述符 */
+                    if(nread == 0) 
+                    { 
+                        close(fd); 
+                        FD_CLR(fd, &readfds); //去掉关闭的fd
+                        printf("removing client on fd %d\n", fd); 
+                    } 
+                    /*处理客户数据请求*/
+                    else 
+                    { 
+#if 0
+                        read(fd, &ch, 1); 
+                        sleep(1); 
+                        printf("serving client on fd %d\n", fd); 
+                        ch++; 
+                        write(fd, &ch, 1); 
+
+#else
+						if (pipe(fdpipe) < 0)
+						  return -1;  
+						
+						pid = fork();
+						if (pid == -1)
+						{
+							perror("fork error");
+							exit(0);
+						}
+						if (pid == 0)
+						{
+							// 子进程
+							close(server_sockfd);
+							close(fdpipe[0]);	  /* close read end */
+							setvbuf ( stdout , NULL , _IONBF , 1024 );
+							setvbuf ( stderr , NULL , _IONBF , 1024 );
+							if (fdpipe[1] != STDOUT_FILENO)
+							{
+							  if (dup2(fdpipe[1], STDOUT_FILENO) != STDOUT_FILENO)
+							  {
+								  return -1;
+							  }
+							  if (dup2(fdpipe[1], STDERR_FILENO) != STDERR_FILENO)
+							  {
+								  return -1;
+							  }
+							  close(fdpipe[1]);
+							}				
+							do_service(fd);
+							/* restore original standard output
+							  handle */
+						   close(fdpipe[1]);
+						   /* close duplicate handle for STDOUT */
+						   // close(oldstdout); 			
+						   exit(EXIT_SUCCESS);
+							
+						}
+						else
+						{
+							close(fdpipe[1]);	  /* close write end */
+							count = 0;
+							memset(printbuf,0 ,sizeof(printbuf));
+							printlen = sizeof(printbuf);
+							const int wpos = 8;
+							
+							while ((n = read(fdpipe[0], printbuf + wpos, printlen)) > 0)
+							{
+								count += n;
+								// printf("n :%d\n", n);
+								// printf("in get child out printbuf:%s\n", printbuf + wpos);
+								unsigned long long writelen = n;
+								unsigned int sendsum = n + 8;
+								writelen = convert64word(n);
+								memcpy(printbuf, &writelen, sizeof(writelen));
+								// write(accept_fdpipe, printbuf,sendsum);
+								sendmsg(fd, printbuf,sendsum);
+								// usleep(20);
+								//clear buf
+								memset(printbuf,0 ,sizeof(printbuf));					
+							  // write(accept_fdpipe, printbuf + count,n);
+							}
+							close(fdpipe[0]);
+							printf("get child out msg len :%d\n", count);
+							// printf("get child out printbuf:%s\n", printbuf);
+							close(fd); //父进程
+							FD_CLR(fd, &readfds); //去掉关闭的fd
+
+						}
+							#endif
+						
+                    } 
+                } 
+            } 
+        } 
+    } 
+
+#else
+
+
+
+	int   fdpipe[2] = {0};
+	int   n = 0, count = 0; 
 
 	memset(printbuf,0,MAXSIZE);  
 
-	pid_t pid;
+	pid_t pid = 0;
 	while( 1 ) 
 	{  
 
 			socklen_t sin_size = sizeof(struct sockaddr_in);  
-			if(( accept_fd = accept(socket_fd,(struct sockaddr*) &remote_addr,&sin_size)) == -1 )  
+			if(( accept_fdpipe = accept(socket_fdpipe,(struct sockaddr*) &remote_addr,&sin_size)) == -1 )  
 			{  
 					throw "Accept error!";  
 					continue;  
@@ -234,7 +424,7 @@ int tcp_server::recv_msg()
 			printf("Received a connection from %s\n",(char*) inet_ntoa(remote_addr.sin_addr));  
 #if 1
 
-			if (pipe(fd) < 0)
+			if (pipe(fdpipe) < 0)
 			  return -1;  
 		  
 			pid = fork();
@@ -246,26 +436,26 @@ int tcp_server::recv_msg()
 			if (pid == 0)
 			{
 				// 子进程
-				close(socket_fd);
-				close(fd[0]);     /* close read end */
+				close(socket_fdpipe);
+				close(fdpipe[0]);     /* close read end */
 				setvbuf ( stdout , NULL , _IONBF , 1024 );
 				setvbuf ( stderr , NULL , _IONBF , 1024 );
-				if (fd[1] != STDOUT_FILENO)
+				if (fdpipe[1] != STDOUT_FILENO)
 				{
-				  if (dup2(fd[1], STDOUT_FILENO) != STDOUT_FILENO)
+				  if (dup2(fdpipe[1], STDOUT_FILENO) != STDOUT_FILENO)
 				  {
 					  return -1;
 				  }
-				  if (dup2(fd[1], STDERR_FILENO) != STDERR_FILENO)
+				  if (dup2(fdpipe[1], STDERR_FILENO) != STDERR_FILENO)
 				  {
 					  return -1;
 				  }
-				  close(fd[1]);
+				  close(fdpipe[1]);
 				} 				
-				do_service(accept_fd);
+				do_service(accept_fdpipe);
 				/* restore original standard output
 				  handle */
-			   close(fd[1]);
+			   close(fdpipe[1]);
 			   /* close duplicate handle for STDOUT */
 			   // close(oldstdout);				
 			   exit(EXIT_SUCCESS);
@@ -273,13 +463,13 @@ int tcp_server::recv_msg()
 			}
 			else
 			{
-				close(fd[1]);     /* close write end */
+				close(fdpipe[1]);     /* close write end */
 				count = 0;
 				memset(printbuf,0 ,sizeof(printbuf));
 				printlen = sizeof(printbuf);
 				const int wpos = 8;
 				
-				while ((n = read(fd[0], printbuf + wpos, printlen)) > 0)
+				while ((n = read(fdpipe[0], printbuf + wpos, printlen)) > 0)
 				{
 					count += n;
 					// printf("n :%d\n", n);
@@ -288,22 +478,26 @@ int tcp_server::recv_msg()
 					unsigned int sendsum = n + 8;
 					writelen = convert64word(n);
 					memcpy(printbuf, &writelen, sizeof(writelen));
-					// write(accept_fd, printbuf,sendsum);
-					sendmsg(accept_fd, printbuf,sendsum);
+					// write(accept_fdpipe, printbuf,sendsum);
+					sendmsg(accept_fdpipe, printbuf,sendsum);
 					// usleep(20);
 					//clear buf
 					memset(printbuf,0 ,sizeof(printbuf));					
-				  // write(accept_fd, printbuf + count,n);
+				  // write(accept_fdpipe, printbuf + count,n);
 				}
-				close(fd[0]);
+				close(fdpipe[0]);
 				printf("get child out msg len :%d\n", count);
 				// printf("get child out printbuf:%s\n", printbuf);
-				close(accept_fd); //父进程
+				close(accept_fdpipe); //父进程
 			}
+
 #else
 			mysystem();
 #endif	
 	}  
+
+#endif
+	
 	return 0;  
 }  
 

@@ -9,10 +9,18 @@
 class tcp_server  
 {  
 private:  
-        int socket_fd,accept_fd;  
-        sockaddr_in myserver;  
-        sockaddr_in remote_addr;  
-  
+//        int socket_fd,accept_fd;  
+//        sockaddr_in myserver;  
+//        sockaddr_in remote_addr;  
+
+
+		int server_sockfd, client_sockfd; 
+		int server_len, client_len; 
+		struct sockaddr_in server_address; 
+		struct sockaddr_in client_address; 
+		int result; 
+		fd_set readfds, testfds; 
+		
 public:  
         tcp_server(long long listen_port);  
 		~tcp_server();
