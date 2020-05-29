@@ -360,7 +360,6 @@ int tcp_server::procclt(int fd)
 	/** 回传数据 **/
 	int   fdpipe[2] = {0};
 	int   n = 0, count = 0; 
-	memset(uacPrintBuf,0,MAXSIZE);  
 	pid_t pid = 0;
 	int nread = 0;
 	
