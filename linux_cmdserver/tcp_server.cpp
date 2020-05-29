@@ -22,6 +22,8 @@ int printlen = 0;
 
 char tmpbuf[MAXSIZE];
 int tmplen = 0;
+char recvbuf[MAXSIZE] = {0};  
+char execcmd[MAXSIZE] = {0};  
 
 
 typedef struct {  
@@ -61,63 +63,7 @@ unsigned long long convert64word(unsigned long long writelen)
 	return u64_net;
 }
 
-tcp_server::tcp_server(long long listen_port) 
-{  
 
-	printf("server startup! listen max:%u\n", SOMAXCONN);
-	server_sockfd = socket(AF_INET, SOCK_STREAM, 0);//½¨Á¢·þÎñÆ÷¶Ësocket 
-	memset(&server_address,0,sizeof(server_address));  
-	server_address.sin_family = AF_INET; 
-	server_address.sin_addr.s_addr = htonl(INADDR_ANY); 
-	server_address.sin_port = htons(listen_port); 
-	server_len = sizeof(server_address); 
-
-	int on = 1;
-    if (setsockopt(server_sockfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
-   	{
-        perror("setsockopt\n");
-		exit(0);
-	}
-
-	if( bind(server_sockfd,(sockaddr*) &server_address,sizeof(server_address)) < 0 ) 
-	{  
-        perror("bind\n");
-	}  
-
-	if( listen(server_sockfd,SOMAXCONN) < 0 ) 
-	{  
-        perror("bind\n");
-	}  
-
-
-	FD_ZERO(&readfds); 
-	FD_SET(server_sockfd, &readfds);//½«·þÎñÆ÷¶Ësocket¼ÓÈëµ½¼¯ºÏÖÐ
-
-	
-//	if(( socket_fd = socket(PF_INET,SOCK_STREAM,IPPROTO_TCP)) < 0 ){  
-//			throw "socket() failed";  
-//	}  
-
-//	memset(&myserver,0,sizeof(myserver));  
-//	myserver.sin_family = AF_INET;  
-//	myserver.sin_addr.s_addr = htonl(INADDR_ANY);  
-//	myserver.sin_port = htons(listen_port);  
-
-//	int on = 1;
-//    if (setsockopt(socket_fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
-//        throw ("setsockopt error");
-//	
-//	// bool bDontLinger = false;
-//	// setsockopt (socket_fd,SOL_SOCKET,SO_DONTLINGER,(const char*)&bDontLinger,sizeof(bool));
-
-//	if( bind(socket_fd,(sockaddr*) &myserver,sizeof(myserver)) < 0 ) {  
-//			throw "bind() failed";  
-//	}  
-
-//	if( listen(socket_fd,SOMAXCONN) < 0 ) {  
-//			throw "listen() failed";  
-//	}  
-}  
 
 void showmsg(char *str, int len)
 {
@@ -132,13 +78,13 @@ void showmsg(char *str, int len)
 	printf("\n");
 }
 /**
-   * ÔöÇ¿µÄsystemº¯Êý£¬ÄÜ¹»·µ»Øsystemµ÷ÓÃµÄÊä³ö
+   * å¢žå¼ºçš„systemå‡½æ•°ï¼Œèƒ½å¤Ÿè¿”å›žsystemè°ƒç”¨çš„è¾“å‡º
    *
-   * @param[in] cmdstring µ÷ÓÃÍâ²¿³ÌÐò»ò½Å±¾µÄÃüÁî´®
-   * @param[out] buf ·µ»ØÍâ²¿ÃüÁîµÄ½á¹ûµÄ»º³åÇø
-   * @param[in] len »º³åÇøbufµÄ³¤¶È
+   * @param[in] cmdstring è°ƒç”¨å¤–éƒ¨ç¨‹åºæˆ–è„šæœ¬çš„å‘½ä»¤ä¸²
+   * @param[out] buf è¿”å›žå¤–éƒ¨å‘½ä»¤çš„ç»“æžœçš„ç¼“å†²åŒº
+   * @param[in] len ç¼“å†²åŒºbufçš„é•¿åº¦
    *
-   * @return 0: ³É¹¦; -1: Ê§°Ü 
+   * @return 0: æˆåŠŸ; -1: å¤±è´¥ 
    */
 int mysystem(char* cmdstring, char* buf, int len)
 {
@@ -177,7 +123,7 @@ int mysystem(char* cmdstring, char* buf, int len)
       return 0;
 }
 
-// ÉèÖÃÒ»¸öÎÄ¼þÃèÊö·ûÎªnonblock  
+// è®¾ç½®ä¸€ä¸ªæ–‡ä»¶æè¿°ç¬¦ä¸ºnonblock  
 int set_nonblocking(int fd)  
 {  
     int flags;  
@@ -249,21 +195,72 @@ int sendmsg(int &sock,char *buf, int length)
 }
 
   
+
+
+tcp_server::tcp_server(long long listen_port) 
+{  
+
+	printf("server startup! listen max:%u\n", SOMAXCONN);
+	server_sockfd = socket(AF_INET, SOCK_STREAM, 0);//å»ºç«‹æœåŠ¡å™¨ç«¯socket 
+	memset(&server_address,0,sizeof(server_address));  
+	server_address.sin_family = AF_INET; 
+	server_address.sin_addr.s_addr = htonl(INADDR_ANY); 
+	server_address.sin_port = htons(listen_port); 
+	server_len = sizeof(server_address); 
+
+	int on = 1;
+    if (setsockopt(server_sockfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
+   	{
+        perror("setsockopt\n");
+		exit(0);
+	}
+
+	if( bind(server_sockfd,(sockaddr*) &server_address,sizeof(server_address)) < 0 ) 
+	{  
+        perror("bind\n");
+	}  
+
+	if( listen(server_sockfd,SOMAXCONN) < 0 ) 
+	{  
+        perror("bind\n");
+	}  
+
+
+	FD_ZERO(&readfds); 
+	FD_SET(server_sockfd, &readfds);//å°†æœåŠ¡å™¨ç«¯socketåŠ å…¥åˆ°é›†åˆä¸­
+
+}  
+
+tcp_server::~tcp_server()
+{
+	// printf("here is socket closed\n");
+	// shutdown(accept_fd, SHUT_RDWR);
+	// close(accept_fd); 
+	// shutdown(socket_fd, SHUT_RDWR);
+	// close(socket_fd); 
+}
+
+/**
+** 
+**  æŽ¥å£æ¶ˆæ¯å…¥å£
+** 
+** 
+**/
 int tcp_server::recv_msg() 
 {  
 #if 1
-printf("server waiting\n"); 
-//printf("FD_SETSIZE:%u\n", FD_SETSIZE); 
+	printf("server waiting\n"); 
+	//printf("FD_SETSIZE:%u\n", FD_SETSIZE); 
 
 
-while(1) 
+	while(1) 
     {
         char ch; 
         int fd; 
         int nread; 
-        testfds = readfds;//½«ÐèÒª¼àÊÓµÄÃèÊö·û¼¯copyµ½select²éÑ¯¶ÓÁÐÖÐ£¬select»á¶ÔÆäÐÞ¸Ä£¬ËùÒÔÒ»¶¨Òª·Ö¿ªÊ¹ÓÃ±äÁ¿ 
+        testfds = readfds;//å°†éœ€è¦ç›‘è§†çš„æè¿°ç¬¦é›†copyåˆ°selectæŸ¥è¯¢é˜Ÿåˆ—ä¸­ï¼Œselectä¼šå¯¹å…¶ä¿®æ”¹ï¼Œæ‰€ä»¥ä¸€å®šè¦åˆ†å¼€ä½¿ç”¨å˜é‡ 
 
-		/** »Ø´«Êý¾Ý **/
+		/** å›žä¼ æ•°æ® **/
 		int   fdpipe[2] = {0};
 		int   n = 0, count = 0; 
 		memset(printbuf,0,MAXSIZE);  
@@ -273,9 +270,8 @@ while(1)
 		struct stat tStat;
 
 
-        /*ÎÞÏÞÆÚ×èÈû£¬²¢²âÊÔÎÄ¼þÃèÊö·û±ä¶¯ */
-        result
- = select(FD_SETSIZE, &testfds, (fd_set *)0,(fd_set *)0, (struct timeval *) 0); //FD_SETSIZE£ºÏµÍ³Ä¬ÈÏµÄ×î´óÎÄ¼þÃèÊö·û
+        /*æ— é™æœŸé˜»å¡žï¼Œå¹¶æµ‹è¯•æ–‡ä»¶æè¿°ç¬¦å˜åŠ¨ */
+        result = select(FD_SETSIZE + 1, &testfds, (fd_set *)0,(fd_set *)0, (struct timeval *) 0); //FD_SETSIZEï¼šç³»ç»Ÿé»˜è®¤çš„æœ€å¤§æ–‡ä»¶æè¿°ç¬¦
 		if (-1 == fstat(result, &tStat))
 		{
 			printf("fstat %d error:%s", result, strerror(errno));		
@@ -288,34 +284,34 @@ while(1)
 //			continue;
         } 
 
-        /*É¨ÃèËùÓÐµÄÎÄ¼þÃèÊö·û*/
+        /*æ‰«ææ‰€æœ‰çš„æ–‡ä»¶æè¿°ç¬¦*/
         for(fd = 0; fd < FD_SETSIZE; fd++) 
         {
-            /*ÕÒµ½Ïà¹ØÎÄ¼þÃèÊö·û*/
+            /*æ‰¾åˆ°ç›¸å…³æ–‡ä»¶æè¿°ç¬¦*/
             if(FD_ISSET(fd,&testfds)) 
             { 
-              /*ÅÐ¶ÏÊÇ·ñÎª·þÎñÆ÷Ì×½Ó×Ö£¬ÊÇÔò±íÊ¾Îª¿Í»§ÇëÇóÁ¬½Ó¡£*/
+              /*åˆ¤æ–­æ˜¯å¦ä¸ºæœåŠ¡å™¨å¥—æŽ¥å­—ï¼Œæ˜¯åˆ™è¡¨ç¤ºä¸ºå®¢æˆ·è¯·æ±‚è¿žæŽ¥ã€‚*/
                 if(fd == server_sockfd) 
                 { 
                     client_len = sizeof(client_address); 
                     client_sockfd = accept(server_sockfd, (struct sockaddr *)&client_address, (socklen_t*)&client_len); 
-                    FD_SET(client_sockfd, &readfds);//½«¿Í»§¶Ësocket¼ÓÈëµ½¼¯ºÏÖÐ
+                    FD_SET(client_sockfd, &readfds);//å°†å®¢æˆ·ç«¯socketåŠ å…¥åˆ°é›†åˆä¸­
 //                    printf("adding client on fd %d\n", client_sockfd); 
 					printf("Received a connection from %s[%u]\n",(char*) inet_ntoa(client_address.sin_addr), client_address.sin_port);  
                 } 
-                /*¿Í»§¶ËsocketÖÐÓÐÊý¾ÝÇëÇóÊ±*/
+                /*å®¢æˆ·ç«¯socketä¸­æœ‰æ•°æ®è¯·æ±‚æ—¶*/
                 else 
                 { 
-                    ioctl(fd, FIONREAD, &nread);//È¡µÃÊý¾ÝÁ¿½»¸ønread
+                    ioctl(fd, FIONREAD, &nread);//å–å¾—æ•°æ®é‡äº¤ç»™nread
                     
-                    /*¿Í»§Êý¾ÝÇëÇóÍê±Ï£¬¹Ø±ÕÌ×½Ó×Ö£¬´Ó¼¯ºÏÖÐÇå³ýÏàÓ¦ÃèÊö·û */
+                    /*å®¢æˆ·æ•°æ®è¯·æ±‚å®Œæ¯•ï¼Œå…³é—­å¥—æŽ¥å­—ï¼Œä»Žé›†åˆä¸­æ¸…é™¤ç›¸åº”æè¿°ç¬¦ */
                     if(nread == 0) 
                     { 
                         close(fd); 
-                        FD_CLR(fd, &readfds); //È¥µô¹Ø±ÕµÄfd
+                        FD_CLR(fd, &readfds); //åŽ»æŽ‰å…³é—­çš„fd
                         printf("removing client on fd %d\n", fd); 
                     } 
-                    /*´¦Àí¿Í»§Êý¾ÝÇëÇó*/
+                    /*å¤„ç†å®¢æˆ·æ•°æ®è¯·æ±‚*/
                     else 
                     { 
 #if 0
@@ -337,7 +333,7 @@ while(1)
 						}
 						if (pid == 0)
 						{
-							// ×Ó½ø³Ì
+							// å­è¿›ç¨‹
 							close(server_sockfd);
 							close(fdpipe[0]);	  /* close read end */
 							setvbuf ( stdout , NULL , _IONBF , 1024 );
@@ -390,8 +386,8 @@ while(1)
 							close(fdpipe[0]);
 							printf("get child out msg len :%d\n", count);
 							// printf("get child out printbuf:%s\n", printbuf);
-							close(fd); //¸¸½ø³Ì
-							FD_CLR(fd, &readfds); //È¥µô¹Ø±ÕµÄfd
+							close(fd); //çˆ¶è¿›ç¨‹
+							FD_CLR(fd, &readfds); //åŽ»æŽ‰å…³é—­çš„fd
 
 						}
 							#endif
@@ -435,7 +431,7 @@ while(1)
 			}
 			if (pid == 0)
 			{
-				// ×Ó½ø³Ì
+				// å­è¿›ç¨‹
 				close(socket_fdpipe);
 				close(fdpipe[0]);     /* close read end */
 				setvbuf ( stdout , NULL , _IONBF , 1024 );
@@ -488,7 +484,7 @@ while(1)
 				close(fdpipe[0]);
 				printf("get child out msg len :%d\n", count);
 				// printf("get child out printbuf:%s\n", printbuf);
-				close(accept_fdpipe); //¸¸½ø³Ì
+				close(accept_fdpipe); //çˆ¶è¿›ç¨‹
 			}
 
 #else
@@ -501,8 +497,6 @@ while(1)
 	return 0;  
 }  
 
-char recvbuf[MAXSIZE] = {0};  
-char execcmd[MAXSIZE] = {0};  
 
 void tcp_server::do_service(int conn)
 {
@@ -515,14 +509,14 @@ void tcp_server::do_service(int conn)
 		memset(recvbuf,0,sizeof(recvbuf));  
 		memset(execcmd,0,sizeof(execcmd));  
         int size = read(conn, recvbuf, sizeof(recvbuf));
-        if (size == 0)   //¿Í»§¶Ë¹Ø±ÕÁË
+        if (size == 0)   //å®¢æˆ·ç«¯å…³é—­äº†
         {
             printf("client close\n");
             break;
         }
         else if (size == -1)
 		{
-            perror("read error");
+            perror("read error\n");
 			break;
 		}
 		// showmsg(recvbuf, size);
@@ -533,21 +527,21 @@ void tcp_server::do_service(int conn)
 		int status = system(execcmd);
 		if(status < 0)
 		{
-			printf("cmd: %s\t error: %s", execcmd, strerror(errno)); // ÕâÀïÎñ±ØÒª°ÑerrnoÐÅÏ¢Êä³ö»ò¼ÇÈëLog
+			printf("cmd: %s\t error: %s", execcmd, strerror(errno)); // è¿™é‡ŒåŠ¡å¿…è¦æŠŠerrnoä¿¡æ¯è¾“å‡ºæˆ–è®°å…¥Log
 			// return -1;
 			exit(0); 
 		}
 		if(WIFEXITED(status))
 		{
-			// printf("normal termination, exit status = %d\n", WEXITSTATUS(status)); //È¡µÃcmdstringÖ´ÐÐ½á¹û 
+			// printf("normal termination, exit status = %d\n", WEXITSTATUS(status)); //å–å¾—cmdstringæ‰§è¡Œç»“æžœ 
 		}
 		else if(WIFSIGNALED(status))
 		{
-			printf("abnormal termination,signal number =%d\n", WTERMSIG(status)); //Èç¹ûcmdstring±»ÐÅºÅÖÐ¶Ï£¬È¡µÃÐÅºÅÖµ
+			printf("abnormal termination,signal number =%d\n", WTERMSIG(status)); //å¦‚æžœcmdstringè¢«ä¿¡å·ä¸­æ–­ï¼Œå–å¾—ä¿¡å·å€¼
 		}
 		else if(WIFSTOPPED(status))
 		{
-			printf("process stopped, signal number =%d\n", WSTOPSIG(status)); //Èç¹ûcmdstring±»ÐÅºÅÔÝÍ£Ö´ÐÐ£¬È¡µÃÐÅºÅÖµ
+			printf("process stopped, signal number =%d\n", WSTOPSIG(status)); //å¦‚æžœcmdstringè¢«ä¿¡å·æš‚åœæ‰§è¡Œï¼Œå–å¾—ä¿¡å·å€¼
 		}							
 		break;
     }
@@ -555,20 +549,6 @@ void tcp_server::do_service(int conn)
 }
 
 
-tcp_server::~tcp_server()
-{
-	// printf("here is socket closed\n");
-	// shutdown(accept_fd, SHUT_RDWR);
-	// close(accept_fd); 
-	// shutdown(socket_fd, SHUT_RDWR);
-	// close(socket_fd); 
-}
-
-
-extern "C" void testabc(void)
-{
-	printf("testabc\n");
-}
 
 
 
