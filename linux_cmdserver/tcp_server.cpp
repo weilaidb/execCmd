@@ -247,12 +247,7 @@ tcp_server::~tcp_server()
 ** 
 **/
 int tcp_server::recv_msg() 
-{  
-#if 1
-	printf("server waiting\n"); 
-	//printf("FD_SETSIZE:%u\n", FD_SETSIZE); 
-
-
+{
 	while(1) 
     {
         char ch; 
@@ -279,7 +274,7 @@ int tcp_server::recv_msg()
 
         if(result < 1) 
         { 
-            perror("server5"); 
+            perror("select failed"); 
             exit(1); 
 //			continue;
         } 
@@ -314,14 +309,6 @@ int tcp_server::recv_msg()
                     /*处理客户数据请求*/
                     else 
                     { 
-#if 0
-                        read(fd, &ch, 1); 
-                        sleep(1); 
-                        printf("serving client on fd %d\n", fd); 
-                        ch++; 
-                        write(fd, &ch, 1); 
-
-#else
 						if (pipe(fdpipe) < 0)
 						  return -1;  
 						
@@ -388,111 +375,12 @@ int tcp_server::recv_msg()
 							// printf("get child out printbuf:%s\n", printbuf);
 							close(fd); //父进程
 							FD_CLR(fd, &readfds); //去掉关闭的fd
-
 						}
-							#endif
-						
                     } 
                 } 
             } 
         } 
     } 
-
-#else
-
-
-
-	int   fdpipe[2] = {0};
-	int   n = 0, count = 0; 
-
-	memset(printbuf,0,MAXSIZE);  
-
-	pid_t pid = 0;
-	while( 1 ) 
-	{  
-
-			socklen_t sin_size = sizeof(struct sockaddr_in);  
-			if(( accept_fdpipe = accept(socket_fdpipe,(struct sockaddr*) &remote_addr,&sin_size)) == -1 )  
-			{  
-					throw "Accept error!";  
-					continue;  
-			}  
-			printf("Received a connection from %s\n",(char*) inet_ntoa(remote_addr.sin_addr));  
-#if 1
-
-			if (pipe(fdpipe) < 0)
-			  return -1;  
-		  
-			pid = fork();
-			if (pid == -1)
-			{
-				perror("fork error");
-				exit(0);
-			}
-			if (pid == 0)
-			{
-				// 子进程
-				close(socket_fdpipe);
-				close(fdpipe[0]);     /* close read end */
-				setvbuf ( stdout , NULL , _IONBF , 1024 );
-				setvbuf ( stderr , NULL , _IONBF , 1024 );
-				if (fdpipe[1] != STDOUT_FILENO)
-				{
-				  if (dup2(fdpipe[1], STDOUT_FILENO) != STDOUT_FILENO)
-				  {
-					  return -1;
-				  }
-				  if (dup2(fdpipe[1], STDERR_FILENO) != STDERR_FILENO)
-				  {
-					  return -1;
-				  }
-				  close(fdpipe[1]);
-				} 				
-				do_service(accept_fdpipe);
-				/* restore original standard output
-				  handle */
-			   close(fdpipe[1]);
-			   /* close duplicate handle for STDOUT */
-			   // close(oldstdout);				
-			   exit(EXIT_SUCCESS);
-				
-			}
-			else
-			{
-				close(fdpipe[1]);     /* close write end */
-				count = 0;
-				memset(printbuf,0 ,sizeof(printbuf));
-				printlen = sizeof(printbuf);
-				const int wpos = 8;
-				
-				while ((n = read(fdpipe[0], printbuf + wpos, printlen)) > 0)
-				{
-					count += n;
-					// printf("n :%d\n", n);
-					// printf("in get child out printbuf:%s\n", printbuf + wpos);
-					unsigned long long writelen = n;
-					unsigned int sendsum = n + 8;
-					writelen = convert64word(n);
-					memcpy(printbuf, &writelen, sizeof(writelen));
-					// write(accept_fdpipe, printbuf,sendsum);
-					sendmsg(accept_fdpipe, printbuf,sendsum);
-					// usleep(20);
-					//clear buf
-					memset(printbuf,0 ,sizeof(printbuf));					
-				  // write(accept_fdpipe, printbuf + count,n);
-				}
-				close(fdpipe[0]);
-				printf("get child out msg len :%d\n", count);
-				// printf("get child out printbuf:%s\n", printbuf);
-				close(accept_fdpipe); //父进程
-			}
-
-#else
-			mysystem();
-#endif	
-	}  
-
-#endif
 	
 	return 0;  
 }  
