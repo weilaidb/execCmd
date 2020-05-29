@@ -17,13 +17,11 @@
 #include "procmsg.h"
 
 
-char printbuf[MAXSIZE];
-int printlen = 0;
+CHAR uacPrintBuf[MAXSIZE];
+WORD32 dwPrintlen = 0;
 
-char tmpbuf[MAXSIZE];
-int tmplen = 0;
-char recvbuf[MAXSIZE] = {0};  
-char execcmd[MAXSIZE] = {0};  
+char uacRecvBuf[MAXSIZE] = {0};  
+char uacExecCmd[MAXSIZE] = {0};  
 
 
 typedef struct {  
@@ -201,33 +199,35 @@ tcp_server::tcp_server(long long listen_port)
 {  
 
 	printf("server startup! listen max:%u\n", SOMAXCONN);
-	server_sockfd = socket(AF_INET, SOCK_STREAM, 0);//建立服务器端socket 
-	memset(&server_address,0,sizeof(server_address));  
-	server_address.sin_family = AF_INET; 
-	server_address.sin_addr.s_addr = htonl(INADDR_ANY); 
-	server_address.sin_port = htons(listen_port); 
-	server_len = sizeof(server_address); 
+	m_server_sockfd = socket(AF_INET, SOCK_STREAM, 0);//建立服务器端socket 
+	memset(&m_server_address,0,sizeof(m_server_address));  
+	m_server_address.sin_family = AF_INET; 
+	m_server_address.sin_addr.s_addr = htonl(INADDR_ANY); 
+	m_server_address.sin_port = htons(listen_port); 
+	m_server_len = sizeof(m_server_address); 
 
 	int on = 1;
-    if (setsockopt(server_sockfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
+    if (setsockopt(m_server_sockfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
    	{
         perror("setsockopt\n");
 		exit(0);
 	}
 
-	if( bind(server_sockfd,(sockaddr*) &server_address,sizeof(server_address)) < 0 ) 
+	if( bind(m_server_sockfd,(sockaddr*) &m_server_address,sizeof(m_server_address)) < 0 ) 
 	{  
         perror("bind\n");
 	}  
 
-	if( listen(server_sockfd,SOMAXCONN) < 0 ) 
+	if( listen(m_server_sockfd,SOMAXCONN) < 0 ) 
 	{  
         perror("bind\n");
 	}  
 
 
-	FD_ZERO(&readfds); 
-	FD_SET(server_sockfd, &readfds);//将服务器端socket加入到集合中
+	FD_ZERO(&m_readfds); 
+	FD_SET(m_server_sockfd, &m_readfds);//将服务器端socket加入到集合中
+
+	m_cltnum = 0;
 
 }  
 
@@ -250,29 +250,21 @@ int tcp_server::recv_msg()
 {
 	while(1) 
     {
-        char ch; 
         int fd; 
-        int nread; 
-        testfds = readfds;//将需要监视的描述符集copy到select查询队列中，select会对其修改，所以一定要分开使用变量 
-
-		/** 回传数据 **/
-		int   fdpipe[2] = {0};
-		int   n = 0, count = 0; 
-		memset(printbuf,0,MAXSIZE);  
-		pid_t pid = 0;
+        m_testfds = m_readfds;//将需要监视的描述符集copy到select查询队列中，select会对其修改，所以一定要分开使用变量 
 
 
 		struct stat tStat;
 
 
         /*无限期阻塞，并测试文件描述符变动 */
-        result = select(FD_SETSIZE + 1, &testfds, (fd_set *)0,(fd_set *)0, (struct timeval *) 0); //FD_SETSIZE：系统默认的最大文件描述符
-		if (-1 == fstat(result, &tStat))
+        m_result = select(FD_SETSIZE + 1, &m_testfds, (fd_set *)0,(fd_set *)0, (struct timeval *) 0); //FD_SETSIZE：系统默认的最大文件描述符
+		if (-1 == fstat(m_result, &tStat))
 		{
-			printf("fstat %d error:%s", result, strerror(errno));		
+			printf("fstat %d error:%s", m_result, strerror(errno));		
 		}
 
-        if(result < 1) 
+        if(m_result < 1) 
         { 
             perror("select failed"); 
             exit(1); 
@@ -283,100 +275,22 @@ int tcp_server::recv_msg()
         for(fd = 0; fd < FD_SETSIZE; fd++) 
         {
             /*找到相关文件描述符*/
-            if(FD_ISSET(fd,&testfds)) 
+            if(FD_ISSET(fd,&m_testfds)) 
             { 
               /*判断是否为服务器套接字，是则表示为客户请求连接。*/
-                if(fd == server_sockfd) 
+                if(fd == m_server_sockfd) 
                 { 
-                    client_len = sizeof(client_address); 
-                    client_sockfd = accept(server_sockfd, (struct sockaddr *)&client_address, (socklen_t*)&client_len); 
-                    FD_SET(client_sockfd, &readfds);//将客户端socket加入到集合中
-//                    printf("adding client on fd %d\n", client_sockfd); 
-					printf("Received a connection from %s[%u]\n",(char*) inet_ntoa(client_address.sin_addr), client_address.sin_port);  
+                    m_client_len = sizeof(m_client_address); 
+                    m_client_sockfd = accept(m_server_sockfd, (struct sockaddr *)&m_client_address, (socklen_t*)&m_client_len); 
+                    FD_SET(m_client_sockfd, &m_readfds);//将客户端socket加入到集合中
+//                    printf("adding client on fd %d\n", m_client_sockfd); 
+					printf("[%04u] Received a connection from %s[%u]  ", ++m_cltnum, (char*) inet_ntoa(m_client_address.sin_addr), m_client_address.sin_port);  
+					fflush(stdout);
                 } 
                 /*客户端socket中有数据请求时*/
                 else 
                 { 
-                    ioctl(fd, FIONREAD, &nread);//取得数据量交给nread
-                    
-                    /*客户数据请求完毕，关闭套接字，从集合中清除相应描述符 */
-                    if(nread == 0) 
-                    { 
-                        close(fd); 
-                        FD_CLR(fd, &readfds); //去掉关闭的fd
-                        printf("removing client on fd %d\n", fd); 
-                    } 
-                    /*处理客户数据请求*/
-                    else 
-                    { 
-						if (pipe(fdpipe) < 0)
-						  return -1;  
-						
-						pid = fork();
-						if (pid == -1)
-						{
-							perror("fork error");
-							exit(0);
-						}
-						if (pid == 0)
-						{
-							// 子进程
-							close(server_sockfd);
-							close(fdpipe[0]);	  /* close read end */
-							setvbuf ( stdout , NULL , _IONBF , 1024 );
-							setvbuf ( stderr , NULL , _IONBF , 1024 );
-							if (fdpipe[1] != STDOUT_FILENO)
-							{
-							  if (dup2(fdpipe[1], STDOUT_FILENO) != STDOUT_FILENO)
-							  {
-								  return -1;
-							  }
-							  if (dup2(fdpipe[1], STDERR_FILENO) != STDERR_FILENO)
-							  {
-								  return -1;
-							  }
-							  close(fdpipe[1]);
-							}				
-							do_service(fd);
-							/* restore original standard output
-							  handle */
-						   close(fdpipe[1]);
-						   /* close duplicate handle for STDOUT */
-						   // close(oldstdout); 			
-						   exit(EXIT_SUCCESS);
-							
-						}
-						else
-						{
-							close(fdpipe[1]);	  /* close write end */
-							count = 0;
-							memset(printbuf,0 ,sizeof(printbuf));
-							printlen = sizeof(printbuf);
-							const int wpos = 8;
-							
-							while ((n = read(fdpipe[0], printbuf + wpos, printlen)) > 0)
-							{
-								count += n;
-								// printf("n :%d\n", n);
-								// printf("in get child out printbuf:%s\n", printbuf + wpos);
-								unsigned long long writelen = n;
-								unsigned int sendsum = n + 8;
-								writelen = convert64word(n);
-								memcpy(printbuf, &writelen, sizeof(writelen));
-								// write(accept_fdpipe, printbuf,sendsum);
-								sendmsg(fd, printbuf,sendsum);
-								// usleep(20);
-								//clear buf
-								memset(printbuf,0 ,sizeof(printbuf));					
-							  // write(accept_fdpipe, printbuf + count,n);
-							}
-							close(fdpipe[0]);
-							printf("get child out msg len :%d\n", count);
-							// printf("get child out printbuf:%s\n", printbuf);
-							close(fd); //父进程
-							FD_CLR(fd, &readfds); //去掉关闭的fd
-						}
-                    } 
+					procclt(fd);
                 } 
             } 
         } 
@@ -394,9 +308,9 @@ void tcp_server::do_service(int conn)
 
     while (1)
     {
-		memset(recvbuf,0,sizeof(recvbuf));  
-		memset(execcmd,0,sizeof(execcmd));  
-        int size = read(conn, recvbuf, sizeof(recvbuf));
+		memset(uacRecvBuf,0,sizeof(uacRecvBuf));  
+		memset(uacExecCmd,0,sizeof(uacExecCmd));  
+        int size = read(conn, uacRecvBuf, sizeof(uacRecvBuf));
         if (size == 0)   //客户端关闭了
         {
             printf("client close\n");
@@ -407,15 +321,15 @@ void tcp_server::do_service(int conn)
             perror("read error\n");
 			break;
 		}
-		// showmsg(recvbuf, size);
-		memcpy(execcmd, recvbuf + offset, size - offset);
-		fprintf(stdout, "execcmd  : %s\n",execcmd);
+		// showmsg(uacRecvBuf, size);
+		memcpy(uacExecCmd, uacRecvBuf + offset, size - offset);
+		fprintf(stdout, "uacExecCmd  : %s\n",uacExecCmd);
 		fprintf(stdout, "-------------cmd list--------------\n");
-		procmsgfromgui(execcmd);
-		int status = system(execcmd);
+		procmsgfromgui(uacExecCmd);
+		int status = system(uacExecCmd);
 		if(status < 0)
 		{
-			printf("cmd: %s\t error: %s", execcmd, strerror(errno)); // 这里务必要把errno信息输出或记入Log
+			printf("cmd: %s\t error: %s", uacExecCmd, strerror(errno)); // 这里务必要把errno信息输出或记入Log
 			// return -1;
 			exit(0); 
 		}
@@ -436,7 +350,99 @@ void tcp_server::do_service(int conn)
 
 }
 
+/**
+**  处理客户socket fd
+**  接收数据等
+**/
+int tcp_server::procclt(int fd) 
+{
+	
+	/** 回传数据 **/
+	int   fdpipe[2] = {0};
+	int   n = 0, count = 0; 
+	memset(uacPrintBuf,0,MAXSIZE);  
+	pid_t pid = 0;
+	int nread = 0;
+	
+	ioctl(fd, FIONREAD, &nread);//取得数据量交给nread
 
+	/*客户数据请求完毕，关闭套接字，从集合中清除相应描述符 */
+	if(nread == 0) 
+	{ 
+		close(fd); 
+		FD_CLR(fd, &m_readfds); //去掉关闭的fd
+		printf("removing client on fd %d\n", fd); 
+	} 
+	/*处理客户数据请求*/
+	else 
+	{ 
+		if (pipe(fdpipe) < 0)
+		  return -1;  
+		
+		pid = fork();
+		if (pid == -1)
+		{
+			perror("fork error");
+			exit(0);
+		}
+		if (pid == 0)
+		{
+			// 子进程
+			close(m_server_sockfd);
+			close(fdpipe[0]);	  /* close read end */
+//			setvbuf ( stdout , NULL , _IONBF , 1024 );
+//			setvbuf ( stderr , NULL , _IONBF , 1024 );
+			if (fdpipe[1] != STDOUT_FILENO)
+			{
+			  if (dup2(fdpipe[1], STDOUT_FILENO) != STDOUT_FILENO)
+			  {
+				  return -1;
+			  }
+			  if (dup2(fdpipe[1], STDERR_FILENO) != STDERR_FILENO)
+			  {
+				  return -1;
+			  }
+			  close(fdpipe[1]);
+			}				
+			do_service(fd);
+			/* restore original standard output
+			  handle */
+		   close(fdpipe[1]);
+		   /* close duplicate handle for STDOUT */
+		   // close(oldstdout); 			
+		   exit(EXIT_SUCCESS);
+			
+		}
+		else
+		{
+			close(fdpipe[1]);	  /* close write end */
+			count = 0;
+			memset(uacPrintBuf,0 ,sizeof(uacPrintBuf));
+			dwPrintlen = sizeof(uacPrintBuf);
+			const int wpos = 8;
+			
+			while ((n = read(fdpipe[0], uacPrintBuf + wpos, dwPrintlen)) > 0)
+			{
+				count += n;
+				WORD64 writelen = n;
+				WORD32 sendsum = n + 8;
+				writelen = convert64word(n);
+				memcpy(uacPrintBuf, &writelen, sizeof(writelen));
+				sendmsg(fd, uacPrintBuf,sendsum);
+				//clear buf
+//				memset(uacPrintBuf,0 ,sizeof(uacPrintBuf));					
+			}
+			close(fdpipe[0]);
+			printf("out msg len :%d %0.1fK %0.1fM\n", count, (float)(count/1024), (float)(count/1024.0/1024.0));
+			close(fd); //父进程
+			FD_CLR(fd, &m_readfds); //去掉关闭的fd
+		}
+	} 
+
+
+
+	return 0;
+}
 
 
 
