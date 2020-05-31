@@ -15,15 +15,15 @@
 
 using namespace std;
 #define DEFAULT_BIND_PORT 9999
-#define DEFAULT_MAXEVENTS 20
+#define DEFAULT_MAXEVENTS 60
 #define DEFAULT_TIMEOUT   500
 #define OFFSET_HEAD  12
-#define MAXSIZE 1 * 1024 * 1024
-
+#define MAXSIZE 1 * 512 * 1024
 
 #define MAXLINE 2 * 1024
 #define OPEN_MAX 100
-#define LISTENQ 20
+//#define LISTENQ 20
+#define LISTENQ SOMAXCONN
 #define SERV_PORT 5000
 #define INFTIM 1000
 
