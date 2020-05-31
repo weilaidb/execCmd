@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <ctype.h>
 
 using namespace std;
 #define DEFAULT_BIND_PORT 9999
@@ -16,7 +17,7 @@ using namespace std;
 #define DEFAULT_TIMEOUT   500
 
 
-#define MAXLINE 1024
+#define MAXLINE 2 * 1024
 #define OPEN_MAX 100
 #define LISTENQ 20
 #define SERV_PORT 5000
@@ -57,6 +58,60 @@ int usage(int argc, char* argv[])
         fprintf(stderr,"Using default portnumber:%d\n",portnumber);
     }
 	return portnumber;
+}
+
+
+int skipspace(char *buf, int len)
+{
+	int n = 0;
+	int k = 0;
+	int i = 0;
+	#if 0
+	for(n = 0; n <len; n++)
+	{
+/**
+** 0 空字符
+** 6 收到通知
+** 8 退格
+** 22 同步空闲
+** 31 单元分隔符
+** 32 space
+** 37 %
+**/
+		
+		if((0 == (buf[n]))
+		|| (6 == (buf[n]))
+		|| (8 == (buf[n]))
+		|| (22 == (buf[n]))
+		|| (31 == (buf[n]))
+		|| (32 == (buf[n]))
+//		|| (37 == (buf[n]))
+		) 
+		{
+			continue;
+		}
+		else
+		{
+			break;
+		}
+	}
+	#else
+	for(n = 0; n <len; n++)
+	{
+
+		if(!isalpha(buf[n])) 
+		{
+			continue;
+		}
+		else
+		{
+			break;
+		}
+	}
+	#endif
+	
+    fprintf(stderr,"find space pos:%d %d\n",n, buf[n]);
+	return n;
 }
 
 int main(int argc, char* argv[])
@@ -163,8 +218,9 @@ int main(int argc, char* argv[])
                     close(sockfd);
                     events[i].data.fd = -1;
                 }
-                line[n] = '/0';
-                cout << "read " << line << endl;
+                line[n] = '\0';
+
+                cout << "read[" << n << "]" << line + skipspace(line,n) <<endl;
                 //设置用于写操作的文件描述符
 
                 ev.data.fd=sockfd;
@@ -180,6 +236,7 @@ int main(int argc, char* argv[])
                 sockfd = events[i].data.fd;
                 write(sockfd, line, n);
                 //设置用于读操作的文件描述符
+                cout << "write " << line << ", n:" << n <<endl;
 
                 ev.data.fd=sockfd;
                 //设置用于注测的读操作事件
