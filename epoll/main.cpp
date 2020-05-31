@@ -10,6 +10,7 @@
 #include <string.h>
 #include <errno.h>
 #include <ctype.h>
+#include <pthread.h>
 
 using namespace std;
 #define DEFAULT_BIND_PORT 9999
@@ -22,6 +23,30 @@ using namespace std;
 #define LISTENQ 20
 #define SERV_PORT 5000
 #define INFTIM 1000
+
+#define CHECKPOINTER(para, retval)  \
+	if(NULL == para)\
+	{\
+		return retval;\
+	}
+
+#define CHECKPOINTERNULL(para)  \
+	if(NULL == para)\
+	{\
+		return;\
+	}
+
+
+
+
+#pragma pack(1)
+typedef struct{
+	char *pcmd;
+	int sockfd;
+}T_threadpara, *P_threadpara;
+#pragma pack(0)
+
+
 
 void setnonblocking(int sock)
 {
@@ -114,11 +139,67 @@ int skipspace(char *buf, int len)
 	return n;
 }
 
-
-
-int execcmd(char *buf)
+void cmdentry(void *para)
 {
-	printf("exec cmd:%s\n", buf);
+    int i = 0;
+	T_threadpara *pInPara = (T_threadpara *)para;
+	CHECKPOINTERNULL(pInPara);
+
+	char *buf = pInPara->pcmd;
+	int execlen = strlen(buf);
+	printf("in task[%u] cmd:%s[%d]\n", pthread_self(), buf, execlen);
+    while (i < 10) {
+        i+=1;
+        sleep(1);
+		printf("exec cmd:%s[%d]\n", buf, execlen);
+    }
+	printf("in task[%u] cmd:%s[%d] end!!\n", pthread_self(), buf, execlen);
+
+/**
+**  释放资源
+** 
+**/
+    free(pInPara->pcmd);
+    free(pInPara);
+    pthread_detach(pthread_self());
+}
+
+
+int execcmd(char *buf, int sockfd)
+{
+	int execlen = strlen(buf);
+
+	if(0 == execlen)
+	{
+		printf("!!cmd empty, no deal!!\n");
+		return -2;
+	}
+
+	printf("exec cmd:%s[%d] for fd:%d\n", buf, execlen, sockfd);
+	T_threadpara *para = (T_threadpara *)malloc(sizeof(*para));
+	CHECKPOINTER(para, -1);
+	memset(para, 0, sizeof(*para));
+	
+	char *pcmd = (char *)malloc(execlen + 1);
+	CHECKPOINTER(pcmd, -1);
+	memset(pcmd, 0, execlen + 1);
+	memcpy(pcmd, buf, execlen);
+
+	para->pcmd = pcmd;
+	para->sockfd = sockfd;
+
+/**
+** 
+** 创建任务
+** 
+**/
+	//线程开始的地址	
+	int ret;
+	pthread_t star_location;
+	ret = pthread_create(&star_location, NULL,(void* (*)(void*))cmdentry, para);
+	if (ret == !0) {
+		perror("creat task\n");
+	}
    
 	return 0;
 }
@@ -231,8 +312,8 @@ int main(int argc, char* argv[])
                 }
                 line[n] = '\0';
 
-                cout << "read[" << n << "]" << line + skipspace(line,n) <<endl;
-                execcmd(line + skipspace(line,n));
+//                cout << "read[" << n << "]" << line + skipspace(line,n) <<endl;
+                execcmd(line + skipspace(line,n), sockfd);
                 
                 //设置用于写操作的文件描述符
 
