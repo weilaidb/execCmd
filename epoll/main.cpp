@@ -11,11 +11,14 @@
 #include <errno.h>
 #include <ctype.h>
 #include <pthread.h>
+#include "stdtype.h"  
 
 using namespace std;
 #define DEFAULT_BIND_PORT 9999
 #define DEFAULT_MAXEVENTS 20
 #define DEFAULT_TIMEOUT   500
+#define OFFSET_HEAD  12
+#define MAXSIZE 1 * 1024 * 1024
 
 
 #define MAXLINE 2 * 1024
@@ -44,7 +47,29 @@ typedef struct{
 	char *pcmd;
 	int sockfd;
 }T_threadpara, *P_threadpara;
+
+
+typedef struct {  
+    unsigned int u32_h;  
+    unsigned int u32_l;  
+}Int64_t;  
+  
+typedef union {  
+    unsigned long long u64;  
+    Int64_t st64;  
+}Convert64_t;  
+  
+  
+
 #pragma pack(0)
+
+
+
+CHAR uacPrintBuf[MAXSIZE] = {0};
+WORD32 dwPrintlen = 0;
+
+char uacRecvBuf[MAXSIZE] = {0};  
+char uacExecCmd[MAXSIZE] = {0};  
 
 
 
@@ -139,20 +164,185 @@ int skipspace(char *buf, int len)
 	return n;
 }
 
+
+
+unsigned long long convert64word(unsigned long long writelen)
+{
+	unsigned long long u64_host, u64_net;  
+	Convert64_t box_in, box_out;  
+
+	box_in.u64 = writelen;  
+	box_out.st64.u32_h = htonl(box_in.st64.u32_l);  
+	box_out.st64.u32_l = htonl(box_in.st64.u32_h);  
+	u64_net = box_out.u64;  
+
+	// printf("htonll : %016llx\n", u64_net);
+	return u64_net;
+}
+
+// 设置一个文件描述符为nonblock  
+int set_nonblocking(int fd)  
+{  
+    int flags;  
+    if ((flags = fcntl(fd, F_GETFL, 0)) == -1)  
+        flags = 0;  
+    return fcntl(fd, F_SETFL, flags | O_NONBLOCK);  
+}  
+
+void do_service(T_threadpara *ptPara)
+{
+	char *pcmd = ptPara->pcmd;
+	int status = system(pcmd);
+	if(status < 0)
+	{
+		printf("cmd: %s\t error: %s", pcmd, strerror(errno)); // 这里务必要把errno信息输出或记入Log
+		// return -1;
+		exit(0); 
+	}
+	if(WIFEXITED(status))
+	{
+		// printf("normal termination, exit status = %d\n", WEXITSTATUS(status)); //取得cmdstring执行结果 
+	}
+	else if(WIFSIGNALED(status))
+	{
+		printf("abnormal termination,signal number =%d\n", WTERMSIG(status)); //如果cmdstring被信号中断，取得信号值
+	}
+	else if(WIFSTOPPED(status))
+	{
+		printf("process stopped, signal number =%d\n", WSTOPSIG(status)); //如果cmdstring被信号暂停执行，取得信号值
+	}							
+
+}
+
+int sendmsg(int &sock,char *buf, int length)
+{
+    // int length;
+    int wlength;
+    int tmpLength;
+    tmpLength=0;
+	set_nonblocking(sock);
+    // length=strlen(buf);
+    while(tmpLength != length)
+    {
+        wlength=write(sock,&buf[tmpLength],length-tmpLength);
+        if(wlength < 0)
+        {
+            if( errno == EINTR )
+            {
+                wlength=0;
+            }
+            else
+            {
+                close(sock);
+                return 1;
+            }
+        }
+        else
+        {
+            tmpLength+=wlength;
+			usleep(500000);
+        }
+    }
+	// sleep(1);
+	// usleep(800000);
+    return 0;
+}
+
+
+int pipedentry(T_threadpara *ptPara)
+{
+	/** 回传数据 **/
+	int   fdpipe[2] = {0};
+	int   n = 0, count = 0; 
+	pid_t pid = 0;
+	int nread = 0;
+
+	int fd = ptPara->sockfd;
+	
+	if (pipe(fdpipe) < 0)
+	  return -1;  
+	
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork error");
+		exit(0);
+	}
+	if (pid == 0)
+	{
+		// 子进程
+//		close(m_server_sockfd);
+		close(fdpipe[0]);	  /* close read end */
+		setvbuf ( stdout , NULL , _IONBF , 1024 );
+		setvbuf ( stderr , NULL , _IONBF , 1024 );
+		if (fdpipe[1] != STDOUT_FILENO)
+		{
+		  if (dup2(fdpipe[1], STDOUT_FILENO) != STDOUT_FILENO)
+		  {
+			  return -1;
+		  }
+		  if (dup2(fdpipe[1], STDERR_FILENO) != STDERR_FILENO)
+		  {
+			  return -1;
+		  }
+		  close(fdpipe[1]);
+		}				
+		do_service(ptPara);
+		/* restore original standard output
+		  handle */
+	   close(fdpipe[1]);
+	   /* close duplicate handle for STDOUT */
+	   // close(oldstdout); 			
+	   exit(EXIT_SUCCESS);
+		
+	}
+	else
+	{
+		close(fdpipe[1]);	  /* close write end */
+		count = 0;
+		memset(uacPrintBuf,0 ,sizeof(uacPrintBuf));
+		dwPrintlen = sizeof(uacPrintBuf);
+		const int wpos = 8;
+		
+		while ((n = read(fdpipe[0], uacPrintBuf + wpos, dwPrintlen)) > 0)
+		{
+			count += n;
+			WORD64 writelen = n;
+			WORD32 sendsum = n + 8;
+			writelen = convert64word(n);
+			memcpy(uacPrintBuf, &writelen, sizeof(writelen));
+			sendmsg(fd, uacPrintBuf,sendsum);
+			//clear buf
+//				memset(uacPrintBuf,0 ,sizeof(uacPrintBuf)); 				
+		}
+		close(fdpipe[0]);
+		printf("out msg len :%d %0.1fK %0.1fM\n", count, (float)(count/1024), (float)(count/1024.0/1024.0));
+		close(fd); //父进程
+	}
+
+	return 0;
+}
+
 void cmdentry(void *para)
 {
     int i = 0;
 	T_threadpara *pInPara = (T_threadpara *)para;
 	CHECKPOINTERNULL(pInPara);
 
-	char *buf = pInPara->pcmd;
+	char *buf  = pInPara->pcmd;
+	int sockfd = pInPara->sockfd;
 	int execlen = strlen(buf);
 	printf("in task[%u] cmd:%s[%d]\n", pthread_self(), buf, execlen);
+#if 0
     while (i < 10) {
         i+=1;
         sleep(1);
 		printf("exec cmd:%s[%d]\n", buf, execlen);
     }
+#else
+	pipedentry(pInPara);
+
+#endif
 	printf("in task[%u] cmd:%s[%d] end!!\n", pthread_self(), buf, execlen);
 
 /**
