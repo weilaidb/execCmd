@@ -192,6 +192,9 @@ int set_nonblocking(int fd)
 void do_service(T_threadpara *ptPara)
 {
 	char *pcmd = ptPara->pcmd;
+	printf("\n");
+	printf("==============proc task: [%s] ==============\n", pcmd);
+	printf("==============proc task: [%s] ==============\n", pcmd);
 	int status = system(pcmd);
 	if(status < 0)
 	{
