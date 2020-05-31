@@ -17,7 +17,7 @@
 using namespace std;
 
 
-#define BIND_PORT 9999
+#define DEFAULT_BIND_PORT 9999
 
 #define PARA_NULL_RETNULL(A) \
 if(NULL == A)\
@@ -319,7 +319,7 @@ void * sendmsg2addr(void* parameter
 	{
 		servaddr.sin_addr.s_addr = inet_addr(destipaddr); //服务器地址
 	}
-	servaddr.sin_port = htons(BIND_PORT); //服务器端口
+	servaddr.sin_port = htons(DEFAULT_BIND_PORT); //服务器端口
 //	printf("addr:%#x, port:%#x\n", servaddr.sin_addr.s_addr, servaddr.sin_port);
 
 	int connResult = connect(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
@@ -438,6 +438,7 @@ void usage()
 
 int main(int argc,char* argv[])
 {
+
 	if(argc < 2 )
 	{
 		usage();
@@ -454,8 +455,23 @@ int main(int argc,char* argv[])
 
 //	printf("hello word\n");
 	//tcp_server ts(atoll(argv[1]));
+	int portnumber;
+    if ( 2 == argc )
+    {
+        if( (portnumber = atoll(argv[1])) < 0 )
+        {
+            fprintf(stderr,"Usage:%s portnumber\n",argv[0]);
+            return 1;
+        }
+    }
+    else
+    {
+    	portnumber = DEFAULT_BIND_PORT;
+        fprintf(stderr,"Usage:%s portnumber\n",argv[0]);
+        fprintf(stderr,"Using default portnumber:%d\n",portnumber);
+    }
 
-	tcp_server ts(BIND_PORT);
+	tcp_server ts(portnumber);
 
 	ts.recv_msg();
 	return 0;
