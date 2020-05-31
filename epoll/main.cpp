@@ -11,6 +11,10 @@
 #include <errno.h>
 
 using namespace std;
+#define DEFAULT_BIND_PORT 9999
+#define DEFAULT_MAXEVENTS 20
+#define DEFAULT_TIMEOUT   500
+
 
 #define MAXLINE 1024
 #define OPEN_MAX 100
@@ -53,15 +57,15 @@ int main(int argc, char* argv[])
     }
     else
     {
+    	portnumber = DEFAULT_BIND_PORT;
         fprintf(stderr,"Usage:%s portnumber\n",argv[0]);
-        return 1;
+        fprintf(stderr,"Using default portnumber:%d\n",portnumber);
     }
-
 
 
     //声明epoll_event结构体的变量,ev用于注册事件,数组用于回传要处理的事件
 
-    struct epoll_event ev,events[20];
+    struct epoll_event ev,events[DEFAULT_MAXEVENTS];
     //生成用于处理accept的epoll专用的文件描述符
 
     epfd=epoll_create(256);
@@ -89,13 +93,28 @@ int main(int argc, char* argv[])
     // inet_aton(local_addr,&(serveraddr.sin_addr));//htons(portnumber);
 	serveraddr.sin_addr.s_addr = htonl(INADDR_ANY); 
     serveraddr.sin_port=htons(portnumber);
-    bind(listenfd,(sockaddr *)&serveraddr, sizeof(serveraddr));
-    listen(listenfd, LISTENQ);
+	int on = 1;
+    if (setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
+   	{
+        perror("setsockopt\n");
+		exit(0);
+	}
+	
+	if( bind(listenfd,(sockaddr *)&serveraddr, sizeof(serveraddr)) < 0 ) 
+	{  
+        perror("bind\n");
+	}  
+
+	if(listen(listenfd, LISTENQ) < 0 ) 
+	{  
+        perror("bind\n");
+	}  
+	
     maxi = 0;
     for ( ; ; ) {
         //等待epoll事件的发生
 
-        nfds=epoll_wait(epfd,events,20,500);
+        nfds=epoll_wait(epfd,events,DEFAULT_MAXEVENTS,DEFAULT_TIMEOUT);
         //处理所发生的所有事件
 
         for(i=0;i<nfds;++i)
@@ -111,7 +130,8 @@ int main(int argc, char* argv[])
                 //setnonblocking(connfd);
 
                 char *str = inet_ntoa(clientaddr.sin_addr);
-                cout << "accapt a connection from " << str << endl;
+                cout << "accapt a connection from " << str << "[" << clientaddr.sin_port << "]"<<endl;
+				
                 //设置用于读操作的文件描述符
 
                 ev.data.fd=connfd;
@@ -125,7 +145,6 @@ int main(int argc, char* argv[])
                 epoll_ctl(epfd,EPOLL_CTL_ADD,connfd,&ev);
             }
             else if(events[i].events&EPOLLIN)//如果是已经连接的用户，并且收到数据，那么进行读入。
-
             {
                 cout << "EPOLLIN" << endl;
                 if ( (sockfd = events[i].data.fd) < 0)
@@ -151,10 +170,8 @@ int main(int argc, char* argv[])
                 //修改sockfd上要处理的事件为EPOLLOUT
 
                 //epoll_ctl(epfd,EPOLL_CTL_MOD,sockfd,&ev);
-
             }
             else if(events[i].events&EPOLLOUT) // 如果有数据发送
-
             {
                 sockfd = events[i].data.fd;
                 write(sockfd, line, n);
