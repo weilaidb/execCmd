@@ -110,9 +110,20 @@ int skipspace(char *buf, int len)
 	}
 	#endif
 	
-    fprintf(stderr,"find space pos:%d %d\n",n, buf[n]);
+//    fprintf(stderr,"find space pos:%d %d\n",n, buf[n]);
 	return n;
 }
+
+
+
+int execcmd(char *buf)
+{
+	printf("exec cmd:%s\n", buf);
+   
+	return 0;
+}
+
+
 
 int main(int argc, char* argv[])
 {
@@ -221,6 +232,8 @@ int main(int argc, char* argv[])
                 line[n] = '\0';
 
                 cout << "read[" << n << "]" << line + skipspace(line,n) <<endl;
+                execcmd(line + skipspace(line,n));
+                
                 //设置用于写操作的文件描述符
 
                 ev.data.fd=sockfd;
