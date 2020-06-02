@@ -16,6 +16,10 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include "stdtype.h"  
+//#ifdef HAVE_SCHED_H
+#include <sched.h>
+//#endif
+
 
 
 
@@ -738,9 +742,47 @@ int pipedentry(T_threadpara *ptPara)
 	return 0;
 }
 
+void setCurrentThreadHighPriority(bool value, int pri) {
+  // Start out with a standard, low-priority setup for the sched params.
+  struct sched_param sp;
+  bzero((void*)&sp, sizeof(sp));
+  int policy = SCHED_OTHER;
+ 
+  // If desired, set up high-priority sched params structure.
+  if (value) {
+    // FIFO scheduler, ranked above default SCHED_OTHER queue
+    policy = SCHED_FIFO;
+    // The priority only compares us to other SCHED_FIFO threads, so we
+    // just pick a random priority halfway between min & max.
+//    const int priority = (sched_get_priority_max(policy) + sched_get_priority_min(policy)) / 2;
+    int priority = pri;
+    if(pri > sched_get_priority_max(policy))
+    {
+		priority = sched_get_priority_max(policy);
+    }
+	else if(pri < sched_get_priority_min(policy))
+    {
+		priority = sched_get_priority_min(policy);
+	}	
+    
+//	printf("IO Thread #%d using high-priority scheduler!priority:%d\n", pthread_self(), priority);
+//	printf("sched_get_priority_max(policy):%d\n", sched_get_priority_max(policy));
+//	printf("sched_get_priority_min(policy):%d\n", sched_get_priority_min(policy));
+    sp.sched_priority = priority;
+  }
+ 
+  // Actually set the sched params for the current thread.
+  if (0 == pthread_setschedparam(pthread_self(), policy, &sp)) {
+    printf("IO Thread #%d using high-priority scheduler!", pthread_self());
+  }
+}
+
+
 void cmdentry(void *para)
 {
-    int i = 0;
+	setCurrentThreadHighPriority(1, 99);
+
+	int i = 0;
 	T_threadpara *pInPara = (T_threadpara *)para;
 	CHECKPOINTERNULL(pInPara);
 
