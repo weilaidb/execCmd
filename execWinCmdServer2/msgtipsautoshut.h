@@ -1,4 +1,4 @@
-#ifndef MSGTIPSAUTOSHUT_H
+﻿#ifndef MSGTIPSAUTOSHUT_H
 #define MSGTIPSAUTOSHUT_H
 
 #include <QWidget>

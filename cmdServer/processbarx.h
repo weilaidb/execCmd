@@ -1,4 +1,4 @@
-#ifndef PROCESSBARX_H
+﻿#ifndef PROCESSBARX_H
 #define PROCESSBARX_H
 #include <QString>
 #include <QProgressBar>

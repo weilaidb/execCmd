@@ -1,4 +1,4 @@
-#ifndef CGETFILECHECKXXSUM_H
+﻿#ifndef CGETFILECHECKXXSUM_H
 #define CGETFILECHECKXXSUM_H
 #include <QString>
 #include <QByteArray>

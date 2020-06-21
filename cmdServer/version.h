@@ -1,8 +1,8 @@
-#ifndef VERSION_H
+ï»¿#ifndef VERSION_H
 #define VERSION_H
 
 
-//const char *version = "v4.0 Ctrl+F ²éÕÒ Ctrl+S ·¢ËÍ ¹Ø¼ü×Ö delete it É¾³ı¹Ø¼ü×Ö";
-const char *version = "v7.2 Ctrl+F ²éÕÒ Ctrl+S ·¢ËÍ ¹Ø¼ü×Ö";
+//const char *version = "v4.0 Ctrl+F æŸ¥æ‰¾ Ctrl+S å‘é€ å…³é”®å­— delete it åˆ é™¤å…³é”®å­—";
+const char *version = "v7.2 Ctrl+F æŸ¥æ‰¾ Ctrl+S å‘é€ å…³é”®å­—";
 
 #endif // VERSION_H

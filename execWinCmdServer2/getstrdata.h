@@ -1,4 +1,4 @@
-#ifndef GETSTRDATA_H
+﻿#ifndef GETSTRDATA_H
 #define GETSTRDATA_H
 
 #include <stdio.h>

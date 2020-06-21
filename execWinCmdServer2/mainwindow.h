@@ -1,4 +1,4 @@
-#ifndef MAINWINDOW_H
+ï»¿#ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
 #include <QMainWindow>
@@ -51,12 +51,12 @@ private:
 
     QList<sockthread *> socklist;
     QList<sockthread *>::iterator it_sklst;
-    //Ğ´Êı¾İÍ³¼Æ
+    //å†™æ•°æ®ç»Ÿè®¡
     qint64 TotalBytes;
     qint64 byteWritten;
     qint64 bytesToWrite;
 
-    QByteArray outBlock; //ÓÃÓÚÔİ´æÎÒÃÇÒª·¢ËÍµÄÊı¾İ
+    QByteArray outBlock; //ç”¨äºæš‚å­˜æˆ‘ä»¬è¦å‘é€çš„æ•°æ®
 
     QTcpSocket *clientConnection;
 

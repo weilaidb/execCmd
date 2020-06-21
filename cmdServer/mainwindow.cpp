@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+ï»¿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QSettings>
 #include <QDebug>
@@ -51,11 +51,11 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //splitte·Ö¸î±ÈÀı
+    //splitteåˆ†å‰²æ¯”ä¾‹
     ui->splitter->setStretchFactor(0,2);
     ui->splitter->setStretchFactor(1,8);
 
-    //splitte·Ö¸î±ÈÀı
+    //splitteåˆ†å‰²æ¯”ä¾‹
     ui->splitter_2->setStretchFactor(0,5);
     ui->splitter_2->setStretchFactor(1,5);
 
@@ -75,7 +75,7 @@ MainWindow::MainWindow(QWidget *parent) :
     PopMenu();
     autosendstr.clear();
     ui->lineEdit_sendnum->setValidator(new QIntValidator(0, 1000, this)); ;
-    ui->lineEdit_sendnum->setPlaceholderText(QString::fromLocal8Bit("´ÎÊı"));
+    ui->lineEdit_sendnum->setPlaceholderText(QString::fromLocal8Bit("æ¬¡æ•°"));
     ui->lineEdit_sendnum->hide();
     ui->statusBar->showMessage(QString::fromLocal8Bit(version));
 
@@ -122,15 +122,15 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(exectimer, SIGNAL(timeout()), this, SLOT(CheckTodoListTimerOut()));
 
 
-    //     setPlaceholderText()ÉèÖÃÌáÊ¾ÎÄ×Ö
+    //     setPlaceholderText()è®¾ç½®æç¤ºæ–‡å­—
     //     QLineEdit *edit;
     //     edit->setPlaceholderText("niahoma");
 
-    //Ç¿ÖÆIP±êÖ¾
+    //å¼ºåˆ¶IPæ ‡å¿—
     forceipaddrflag = false;
 
 
-    // ½«¼àÊÓÆ÷µÄĞÅºÅºÍ×Ô¶¨ÒåµÄ²Û½øĞĞ¹ØÁª
+    // å°†ç›‘è§†å™¨çš„ä¿¡å·å’Œè‡ªå®šä¹‰çš„æ§½è¿›è¡Œå…³è”
     //     connect(&myWatcher, SIGNAL(directoryChanged(QString)), this, SLOT(procDirChanged(QString)));
     connect(&myWatcher, SIGNAL(fileChanged(QString)), this, SLOT(procDirChanged(QString)));
 
@@ -287,7 +287,7 @@ int MainWindow::CheckIPAddr(QString ipaddr)
     QRegExp regExp("\\b(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\b");
     if(!regExp.exactMatch(ipaddr))
     {
-        ShowTipsInfo(str_china("ÌáÊ¾, ipµØÖ·´íÎó"));
+        ShowTipsInfo(str_china("æç¤º, ipåœ°å€é”™è¯¯"));
         //        logsappendShow(QString("ip %1  invalid!!!").arg(ipaddr));
         return -1;
     }
@@ -384,11 +384,11 @@ void MainWindow::newConnect(QString ipaddr)
             pthreadsock = NULL;
         }
     }
-    ShowTipsInfoWithShowTime(str_china("ÕıÔÚÁ¬½ÓÖĞ..."), 2000);
+    ShowTipsInfoWithShowTime(str_china("æ­£åœ¨è¿æ¥ä¸­..."), 2000);
     qApp->processEvents();
 
     socket = new QTcpSocket;
-    socket->setSocketOption(QAbstractSocket::LowDelayOption, 1);//ÓÅ»¯Îª×îµÍÑÓ³Ù£¬ºóÃæµÄ1´úÂëÆôÓÃ¸ÃÓÅ»¯¡£
+    socket->setSocketOption(QAbstractSocket::LowDelayOption, 1);//ä¼˜åŒ–ä¸ºæœ€ä½å»¶è¿Ÿï¼Œåé¢çš„1ä»£ç å¯ç”¨è¯¥ä¼˜åŒ–ã€‚
     socket->connectToHost(ipaddr, BINDPORT);
     connect(socket, SIGNAL(connected()), this, SLOT(hellosocket()));
 
@@ -399,12 +399,12 @@ void MainWindow::newConnect(QString ipaddr)
     qDebug() <<"remote ip addr:" << ipaddr;
 
 
-    //µ±·µ»ØfalseÊ±¿ÉÒÔµ÷ÓÃerrorÀ´È·¶¨ÎŞ·¨Á¬½ÓµÄÔ­Òò
+    //å½“è¿”å›falseæ—¶å¯ä»¥è°ƒç”¨erroræ¥ç¡®å®šæ— æ³•è¿æ¥çš„åŸå› 
     if(!socket->waitForConnected(3000))
     {
-        ShowTipsInfoWithShowTime(str_china("Á¬½Ó³¬Ê±£¬Çë¼ì²é·şÎñÆ÷µØÖ·ÊÇ·ñÕıÈ·"), 2000);
+        ShowTipsInfoWithShowTime(str_china("è¿æ¥è¶…æ—¶ï¼Œè¯·æ£€æŸ¥æœåŠ¡å™¨åœ°å€æ˜¯å¦æ­£ç¡®"), 2000);
         ui->pushButton_connect->setEnabled(true);
-        //        ³ö´íºó£¬¹ã²¥²éÕÒsever
+        //        å‡ºé”™åï¼Œå¹¿æ’­æŸ¥æ‰¾sever
         //        BroadcastGetIpCommand();
         return;
     }
@@ -422,7 +422,7 @@ void MainWindow::newConnect(QString ipaddr)
 ============================================*/
 void MainWindow::hellosocket()
 {
-    ShowTipsInfo(QString::fromLocal8Bit("Á¬½Ó·şÎñÆ÷³É¹¦£¡£¡"));
+    ShowTipsInfo(QString::fromLocal8Bit("è¿æ¥æœåŠ¡å™¨æˆåŠŸï¼ï¼"));
 
     if(pthreadsock == NULL)
     {
@@ -537,7 +537,7 @@ void MainWindow::on_pushButton_collect_clicked()
 
     procFindList(ui->comboBox_findlist->currentText());
 
-    ui->textEdit->setText(oldstring); //»Ö¸´Ô­À´ÎÄ±¾µÄÏÔÊ¾
+    ui->textEdit->setText(oldstring); //æ¢å¤åŸæ¥æ–‡æœ¬çš„æ˜¾ç¤º
 
 }
 
@@ -648,7 +648,7 @@ void MainWindow::procActivatedFindList(QString findstr)
 }
 
 
-/* ÓÒ¼ü²Ëµ¥ */
+/* å³é”®èœå• */
 /*============================================
 * FuncName    : autoCCode::contextMenuEvent
 * Description :
@@ -660,14 +660,14 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 {
     QCursor cur=this->cursor();
     QMenu *menu=new QMenu(this);
-    menu->addAction(Act_DelItem); //Ìí¼Ó²Ëµ¥Ïî1
-    menu->addAction(Act_Explorer); //Ìí¼Ó²Ëµ¥Ïî1
-    menu->addAction(Act_LoadDirTree); //Ìí¼Ó²Ëµ¥Ïî1
-    menu->addAction(Act_Mkdir); //Ìí¼Ó²Ëµ¥Ïî1
-//    menu->addAction(Act_Mkfile); //Ìí¼Ó²Ëµ¥Ïî1
-    menu->addAction(Act_Rmdir); //Ìí¼Ó²Ëµ¥Ïî1
-    //    menu->addAction(Act_Normal); //Ìí¼Ó²Ëµ¥Ïî2
-    menu->exec(cur.pos()); //¹ØÁªµ½¹â±ê
+    menu->addAction(Act_DelItem); //æ·»åŠ èœå•é¡¹1
+    menu->addAction(Act_Explorer); //æ·»åŠ èœå•é¡¹1
+    menu->addAction(Act_LoadDirTree); //æ·»åŠ èœå•é¡¹1
+    menu->addAction(Act_Mkdir); //æ·»åŠ èœå•é¡¹1
+//    menu->addAction(Act_Mkfile); //æ·»åŠ èœå•é¡¹1
+    menu->addAction(Act_Rmdir); //æ·»åŠ èœå•é¡¹1
+    //    menu->addAction(Act_Normal); //æ·»åŠ èœå•é¡¹2
+    menu->exec(cur.pos()); //å…³è”åˆ°å…‰æ ‡
 
 
 
@@ -675,24 +675,24 @@ void MainWindow::contextMenuEvent(QContextMenuEvent *event)
 
 void MainWindow::PopMenu()
 {
-    /* ÓÒ¼ü²Ëµ¥ */
+    /* å³é”®èœå• */
     Act_DelItem = new QAction(tr("DelItem( for text)"), this);
     connect(Act_DelItem, SIGNAL(triggered()), this, SLOT(DelItem()));
-    /* ¼ÓÔØÏÔÊ¾Ê÷ĞÎµÄÂ·¾¶ */
+    /* åŠ è½½æ˜¾ç¤ºæ ‘å½¢çš„è·¯å¾„ */
     Act_LoadDirTree = new QAction(tr("LoadTree"), this);
     connect(Act_LoadDirTree, SIGNAL(triggered()), this, SLOT(LoadDirTree()));
-    /* ´´½¨Ä¿Â¼ */
+    /* åˆ›å»ºç›®å½• */
     Act_Mkdir = new QAction(tr("Make Directory..."), this);
     connect(Act_Mkdir, SIGNAL(triggered()), this, SLOT(TreeMkdir()));
-//    /* ´´½¨ÎÄ¼ş */
+//    /* åˆ›å»ºæ–‡ä»¶ */
 //    Act_Mkfile = new QAction(tr("Make File..."), this);
 //    connect(Act_Mkfile, SIGNAL(triggered()), this, SLOT(TreeMkfile()));
 
-    /* É¾³ıÄ¿Â¼ */
+    /* åˆ é™¤ç›®å½• */
     Act_Rmdir = new QAction(tr("Remove"), this);
     connect(Act_Rmdir, SIGNAL(triggered()), this, SLOT(TreeRm()));
 
-    /* ´ò¿ªÄ¿Â¼ */
+    /* æ‰“å¼€ç›®å½• */
     Act_Explorer = new QAction(tr("Open Directory"), this);
     connect(Act_Explorer, SIGNAL(triggered()), this, SLOT(TreeOpenDir()));
 
@@ -706,45 +706,45 @@ void MainWindow::SearchMenu()
 #define GBKSELF(A) QString::fromLocal8Bit(#A)
 
 
-    /* µ¯³ö²Ëµ¥ */
-    Act_searchbaidu = new QAction(GBKSELF(°Ù¶È), this);
+    /* å¼¹å‡ºèœå• */
+    Act_searchbaidu = new QAction(GBKSELF(ç™¾åº¦), this);
     connect(Act_searchbaidu, SIGNAL(triggered()), this, SLOT(on_pushButton_baidu_clicked()));
-    Act_searchbiying = new QAction(GBKSELF(±ØÓ¦), this);
+    Act_searchbiying = new QAction(GBKSELF(å¿…åº”), this);
     connect(Act_searchbiying, SIGNAL(triggered()), this, SLOT(on_pushButton_biying_clicked()));
-    Act_search360so = new QAction(GBKSELF(360ËÑ), this);
+    Act_search360so = new QAction(GBKSELF(360æœ), this);
     connect(Act_search360so, SIGNAL(triggered()), this, SLOT(on_pushButton_360so_clicked()));
-    Act_searchciba = new QAction(GBKSELF(½ğÉ½´Ê°Ô), this);
+    Act_searchciba = new QAction(GBKSELF(é‡‘å±±è¯éœ¸), this);
     connect(Act_searchciba, SIGNAL(triggered()), this, SLOT(on_pushButton_ciba_clicked()));
-    Act_searchyoudao = new QAction(GBKSELF(ÓĞµÀ), this);
+    Act_searchyoudao = new QAction(GBKSELF(æœ‰é“), this);
     connect(Act_searchyoudao, SIGNAL(triggered()), this, SLOT(on_pushButton_youdao_clicked()));
 
     Act_notepadpp = new QAction(GBKSELF(notepad++), this);
     connect(Act_notepadpp, SIGNAL(triggered()), this, SLOT(on_pushButton_notepadpp_clicked()));
 
-    Act_saveresult = new QAction(GBKSELF(±£´æ), this);
+    Act_saveresult = new QAction(GBKSELF(ä¿å­˜), this);
     connect(Act_saveresult, SIGNAL(triggered()), this, SLOT(on_pushButton_saveresult_clicked()));
 
-    Act_saveresult_2another = new QAction(GBKSELF(Áí´æÎª), this);
+    Act_saveresult_2another = new QAction(GBKSELF(å¦å­˜ä¸º), this);
     connect(Act_saveresult_2another, SIGNAL(triggered()), this, SLOT(on_pushButton_saveresult2_another_clicked()));
 
 
-//    Act_openfile2result = new QAction(GBKSELF(´ò¿ª), this);
+//    Act_openfile2result = new QAction(GBKSELF(æ‰“å¼€), this);
 //    connect(Act_openfile2result, SIGNAL(triggered()), this, SLOT(on_pushButton_openfile2result_clicked()));
 
 
 
 
-    /* µ¯³ö²Ëµ¥ **/
+    /* å¼¹å‡ºèœå• **/
     QMenu *menu=new QMenu(this);
-    menu->addAction(Act_notepadpp); //Ìí¼Ó²Ëµ¥Ïî1
-    menu->addAction(Act_searchbaidu); //Ìí¼Ó²Ëµ¥Ïî1
-    menu->addAction(Act_searchbiying); //Ìí¼Ó²Ëµ¥Ïî1
-    menu->addAction(Act_search360so); //Ìí¼Ó²Ëµ¥Ïî1
-    menu->addAction(Act_searchciba); //Ìí¼Ó²Ëµ¥Ïî1
-    menu->addAction(Act_searchyoudao); //Ìí¼Ó²Ëµ¥Ïî1
-//    menu->addAction(Act_openfile2result); //Ìí¼Ó²Ëµ¥Ïî1
-    menu->addAction(Act_saveresult); //Ìí¼Ó²Ëµ¥Ïî1
-    menu->addAction(Act_saveresult_2another); //Ìí¼Ó²Ëµ¥Ïî1
+    menu->addAction(Act_notepadpp); //æ·»åŠ èœå•é¡¹1
+    menu->addAction(Act_searchbaidu); //æ·»åŠ èœå•é¡¹1
+    menu->addAction(Act_searchbiying); //æ·»åŠ èœå•é¡¹1
+    menu->addAction(Act_search360so); //æ·»åŠ èœå•é¡¹1
+    menu->addAction(Act_searchciba); //æ·»åŠ èœå•é¡¹1
+    menu->addAction(Act_searchyoudao); //æ·»åŠ èœå•é¡¹1
+//    menu->addAction(Act_openfile2result); //æ·»åŠ èœå•é¡¹1
+    menu->addAction(Act_saveresult); //æ·»åŠ èœå•é¡¹1
+    menu->addAction(Act_saveresult_2another); //æ·»åŠ èœå•é¡¹1
     ui->pushButton_baidu->setMenu(menu);
 
 }
@@ -861,7 +861,7 @@ void MainWindow::filterText(QString text)
 
 QString MainWindow::filterInvalidText(QString orgt)
 {
-    //¹ıÂËÈç¡¾,[,# ¿ªÊ¼µÄÄÚÈİ
+    //è¿‡æ»¤å¦‚ã€,[,# å¼€å§‹çš„å†…å®¹
     QStringList list = orgt.split("\n");
     QString result = "";
     int lastline = 0;
@@ -875,7 +875,7 @@ QString MainWindow::filterInvalidText(QString orgt)
         }
 
 
-#define BREAKSIGN  0x3010  // Ìø¹ı´Ë·ûºÅ ¡¾  unicode±àÂë
+#define BREAKSIGN  0x3010  // è·³è¿‡æ­¤ç¬¦å· ã€  unicodeç¼–ç 
         ushort uni = 0;
         int nCount = dealline.count();
         for(int i = 0 ; i < nCount ; i++)
@@ -883,19 +883,19 @@ QString MainWindow::filterInvalidText(QString orgt)
             QChar cha = dealline.at(i);
             uni = cha.unicode();
             //            qDebug() << "uni:" << uni;
-            //²é±àÂëÍøÖ· http://www.qqxiuzi.cn/bianma/zifuji.php
-            if(uni == BREAKSIGN) // unicode±àÂë
+            //æŸ¥ç¼–ç ç½‘å€ http://www.qqxiuzi.cn/bianma/zifuji.php
+            if(uni == BREAKSIGN) // unicodeç¼–ç 
             {
                 qDebug() << "break uni:" << uni;
                 break;
             }
             if(uni >= 0x4E00 && uni <= 0x9FA5)
             {
-                //Õâ¸ö×Ö·ûÊÇÖĞÎÄ
+                //è¿™ä¸ªå­—ç¬¦æ˜¯ä¸­æ–‡
             }
         }
         //        qDebug() << "uni last:" << uni;
-        if(uni == BREAKSIGN)// unicode±àÂë
+        if(uni == BREAKSIGN)// unicodeç¼–ç 
         {
             continue;
         }
@@ -922,7 +922,7 @@ void MainWindow::wheelEvent(QWheelEvent *event)
     int numberDegrees = event->delta() / 8;
     int numberSteps = numberDegrees / 15;
     if(event->orientation() == Qt::Vertical)
-    {   //ÊµÏÖµÄÊÇºáÅÅÒÆ¶¯£¬ËùÒÔÕâÀï°Ñ¹öÂÖµÄÉÏÏÂÒÆ¶¯ÊµÏÖÎª
+    {   //å®ç°çš„æ˜¯æ¨ªæ’ç§»åŠ¨ï¼Œæ‰€ä»¥è¿™é‡ŒæŠŠæ»šè½®çš„ä¸Šä¸‹ç§»åŠ¨å®ç°ä¸º
         //        ui->listWidge `Q1SW23t->horizontalScrollBar()->setValue(ui->listWidget->horizontalScrollBar()->value() + numberSteps);
     }
     qDebug() << "numberSteps :"<<numberSteps;
@@ -1155,7 +1155,7 @@ End:
             continue;
         }
         qApp->processEvents();
-        ui->statusBar->showMessage(QString::fromLocal8Bit("´ı´¦ÀíµÄÃüÁîÊıÁ¿:%1").arg(TodoCmdExecList.size()));
+        ui->statusBar->showMessage(QString::fromLocal8Bit("å¾…å¤„ç†çš„å‘½ä»¤æ•°é‡:%1").arg(TodoCmdExecList.size()));
         checkoneitem_execcmd(str);
         qApp->processEvents();
         TodoCmdExecList.removeAt(0);
@@ -1197,7 +1197,7 @@ QStringList MainWindow::getcomuselistbycurkeys()
             break;
         }
     }
-    //    //Ã»ÓĞÊı¾İÊ±²åÈëÊı¾İ
+    //    //æ²¡æœ‰æ•°æ®æ—¶æ’å…¥æ•°æ®
     //    if(found == FALSE)
     //    {
     //        QStringList nulllist;
@@ -1236,7 +1236,7 @@ void MainWindow::insertfindkeys2comuselist(QString findstr)
         }
     }
 
-    //Ã»ÓĞÊı¾İÊ±²åÈëÊı¾İ
+    //æ²¡æœ‰æ•°æ®æ—¶æ’å…¥æ•°æ®
     if(found == FALSE)
     {
         QStringList nulllist;
@@ -1343,16 +1343,16 @@ void MainWindow::on_pushButton_notepadpp_clicked()
 
 QString MainWindow::get_last_open_dir()
 {
-    QSettings setting("./Setting.ini", QSettings::IniFormat);  //QSettingsÄÜ¼ÇÂ¼Ò»Ğ©³ÌĞòÖĞµÄĞÅÏ¢£¬ÏÂ´ÎÔÙ´ò¿ªÊ±¿ÉÒÔ¶ÁÈ¡³öÀ´
-    QString lastPath = setting.value("LastFilePath").toString();  //»ñÈ¡ÉÏ´ÎµÄ´ò¿ªÂ·¾¶
+    QSettings setting("./Setting.ini", QSettings::IniFormat);  //QSettingsèƒ½è®°å½•ä¸€äº›ç¨‹åºä¸­çš„ä¿¡æ¯ï¼Œä¸‹æ¬¡å†æ‰“å¼€æ—¶å¯ä»¥è¯»å–å‡ºæ¥
+    QString lastPath = setting.value("LastFilePath").toString();  //è·å–ä¸Šæ¬¡çš„æ‰“å¼€è·¯å¾„
     return lastPath;
 }
 
 QString MainWindow::set_last_open_dir(QString dir)
 {
-    QSettings setting("./Setting.ini", QSettings::IniFormat);  //QSettingsÄÜ¼ÇÂ¼Ò»Ğ©³ÌĞòÖĞµÄĞÅÏ¢£¬ÏÂ´ÎÔÙ´ò¿ªÊ±¿ÉÒÔ¶ÁÈ¡³öÀ´
-    QString lastPath = setting.value("LastFilePath").toString();  //»ñÈ¡ÉÏ´ÎµÄ´ò¿ªÂ·¾¶
-    setting.setValue("LastFilePath",dir);  //¼ÇÂ¼Â·¾¶µ½QSettingÖĞ±£´æ
+    QSettings setting("./Setting.ini", QSettings::IniFormat);  //QSettingsèƒ½è®°å½•ä¸€äº›ç¨‹åºä¸­çš„ä¿¡æ¯ï¼Œä¸‹æ¬¡å†æ‰“å¼€æ—¶å¯ä»¥è¯»å–å‡ºæ¥
+    QString lastPath = setting.value("LastFilePath").toString();  //è·å–ä¸Šæ¬¡çš„æ‰“å¼€è·¯å¾„
+    setting.setValue("LastFilePath",dir);  //è®°å½•è·¯å¾„åˆ°QSettingä¸­ä¿å­˜
     return lastPath;
 }
 
@@ -1402,7 +1402,7 @@ void MainWindow::on_pushButton_openfile2result_clicked()
                                                     0);
     if(!fileName.isEmpty())
     {
-        set_last_open_dir(fileName);  //¼ÇÂ¼Â·¾¶µ½QSettingÖĞ±£´æ
+        set_last_open_dir(fileName);  //è®°å½•è·¯å¾„åˆ°QSettingä¸­ä¿å­˜
         myWatcher.removePath(get_last_open_dir());
         myWatcher.addPath(fileName);
         qDebug() << "fileName:" << fileName;
@@ -1442,7 +1442,7 @@ void MainWindow::setrdowntext(QString text)
 
 
 /**
-  ** ÅĞ¶ÏÎÄ¼şÊÇ·ñÎªUTF8±àÂë
+  ** åˆ¤æ–­æ–‡ä»¶æ˜¯å¦ä¸ºUTF8ç¼–ç 
   **/
 bool MainWindow::IsUTF8(const void* pBuffer, long size)
 {
@@ -1451,16 +1451,16 @@ bool MainWindow::IsUTF8(const void* pBuffer, long size)
     unsigned char* end = (unsigned char*)pBuffer + size;
     while (start < end)
     {
-        if (*start < 0x80) // (10000000): ÖµĞ¡ÓÚ0x80µÄÎªASCII×Ö·û
+        if (*start < 0x80) // (10000000): å€¼å°äº0x80çš„ä¸ºASCIIå­—ç¬¦
         {
             start++;
         }
-        else if (*start < (0xC0)) // (11000000): Öµ½éÓÚ0x80Óë0xC0Ö®¼äµÄÎªÎŞĞ§UTF-8×Ö·û
+        else if (*start < (0xC0)) // (11000000): å€¼ä»‹äº0x80ä¸0xC0ä¹‹é—´çš„ä¸ºæ— æ•ˆUTF-8å­—ç¬¦
         {
             IsUTF8 = false;
             break;
         }
-        else if (*start < (0xE0)) // (11100000): ´Ë·¶Î§ÄÚÎª2×Ö½ÚUTF-8×Ö·û
+        else if (*start < (0xE0)) // (11100000): æ­¤èŒƒå›´å†…ä¸º2å­—èŠ‚UTF-8å­—ç¬¦
         {
             if (start >= end - 1)
             {
@@ -1475,7 +1475,7 @@ bool MainWindow::IsUTF8(const void* pBuffer, long size)
 
             start += 2;
         }
-        else if (*start < (0xF0)) // (11110000): ´Ë·¶Î§ÄÚÎª3×Ö½ÚUTF-8×Ö·û
+        else if (*start < (0xF0)) // (11110000): æ­¤èŒƒå›´å†…ä¸º3å­—èŠ‚UTF-8å­—ç¬¦
         {
             if (start >= end - 2)
             {
@@ -1510,7 +1510,7 @@ bool MainWindow::IsUTF8File(const char* pFileName)
 
     fseek(f, 0, SEEK_END);
     long lSize = ftell(f);
-    fseek(f, 0, SEEK_SET);  //»òrewind(f);
+    fseek(f, 0, SEEK_SET);  //æˆ–rewind(f);
 
     char *pBuff = new char[lSize + 1];
     memset(pBuff, 0, lSize + 1);
@@ -1551,7 +1551,7 @@ void MainWindow::procDirChanged(const QString &path)
 
     update_selectedfile(path);
     //    ShowTipsInfo(str_china(""));
-    ShowTipsInfoWithShowTime(str_china("¸üĞÂÎÄ¼ş:") + path, 1000);
+    ShowTipsInfoWithShowTime(str_china("æ›´æ–°æ–‡ä»¶:") + path, 1000);
 
 //    oldpath = path;
 
@@ -1663,7 +1663,7 @@ void MainWindow::initDirTree(QString directory = DEFAULT_LOADTREE_DIR)
     curmodeldir = directory;
     ui->statusBar->showMessage(QString("Loading ") + QString::fromLocal8Bit(directory.toLocal8Bit()));
 
-    //    Èç¹û×ĞÏ¸²é¿´¾Í»á·¢ÏÖ£¬ÎÒÃÇµÄÊÓÍ¼²»ÄÜÅÅĞò²»ÄÜµã»÷ÁĞÍ·¡£Îª´Ë£¬ÎÒÃÇ¿ÉÒÔÊ¹ÓÃÏÂÃæ´úÂë£º
+    //    å¦‚æœä»”ç»†æŸ¥çœ‹å°±ä¼šå‘ç°ï¼Œæˆ‘ä»¬çš„è§†å›¾ä¸èƒ½æ’åºä¸èƒ½ç‚¹å‡»åˆ—å¤´ã€‚ä¸ºæ­¤ï¼Œæˆ‘ä»¬å¯ä»¥ä½¿ç”¨ä¸‹é¢ä»£ç ï¼š
     ui->treeView_ut->header()->setStretchLastSection(true);
     ui->treeView_ut->header()->setSortIndicator(0, Qt::AscendingOrder);
     ui->treeView_ut->header()->setSortIndicatorShown(true);
@@ -1685,7 +1685,7 @@ void MainWindow::procDoubleClickTree(QModelIndex currentIndex)
     if(!QFileSystemModel().isDir(currentIndex))
     {
         myWatcher.removePath(get_last_open_dir());
-        set_last_open_dir(fileName);  //¼ÇÂ¼Â·¾¶µ½QSettingÖĞ±£´æ
+        set_last_open_dir(fileName);  //è®°å½•è·¯å¾„åˆ°QSettingä¸­ä¿å­˜
         myWatcher.addPath(fileName);
         qDebug() << "fileName:" << fileName;
         update_selectedfile(fileName);

@@ -1,4 +1,4 @@
-#include "msgtips.h"
+ï»¿#include "msgtips.h"
 #include <QtGui>
 #include "msgtipsautoshut.h"
 
@@ -10,7 +10,7 @@ void ShowTipsInfo(QString s)
 {
     MsgTipsAutoShut *tipsinfo = new MsgTipsAutoShut(NULL);
     tipsinfo->SetTipsInfo(s);
-    //ÎÞÈÎÎñÀ¸Í¼±ê£¬ÎÞ¹¤¾ßÀ¸£¬ÖÃ¶¥ÏÔÊ¾
+    //æ— ä»»åŠ¡æ å›¾æ ‡ï¼Œæ— å·¥å…·æ ï¼Œç½®é¡¶æ˜¾ç¤º
     tipsinfo->setWindowFlags( Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
     tipsinfo->show();
 
@@ -20,7 +20,7 @@ void ShowTipsInfoWithShowTime(QString s, quint32 ultimeout)
 {
     MsgTipsAutoShut *tipsinfo = new MsgTipsAutoShut(NULL, ultimeout);
     tipsinfo->SetTipsInfo(s);
-    //ÎÞÈÎÎñÀ¸Í¼±ê£¬ÎÞ¹¤¾ßÀ¸£¬ÖÃ¶¥ÏÔÊ¾
+    //æ— ä»»åŠ¡æ å›¾æ ‡ï¼Œæ— å·¥å…·æ ï¼Œç½®é¡¶æ˜¾ç¤º
     tipsinfo->setWindowFlags( Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
     tipsinfo->show();
 

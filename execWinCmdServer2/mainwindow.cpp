@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+ï»¿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QDebug>
 #include <QProcess>
@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    //Ğ´Êı¾İÍ³¼Æ
+    //å†™æ•°æ®ç»Ÿè®¡
     TotalBytes   = 0;
     byteWritten  = 0;
     bytesToWrite = 0;
@@ -28,7 +28,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    InitServer("192.168.59.12", BINDPORT);
     InitServer("0", BINDPORT);
 
-    //qt ×îĞ¡»¯µ½ÍĞÅÌ
+    //qt æœ€å°åŒ–åˆ°æ‰˜ç›˜
 #if 1
     //fileexist("images/good1.ico");
     QIcon icon3 = QIcon(":/app1.ico");
@@ -69,7 +69,7 @@ int MainWindow::InitServer( QString ipaddr, quint16 listenport)
     //    if(!tcpServer->listen(QHostAddress("192.168.1.100"),6666))
     if(!tcpServer->listen(QHostAddress(ipaddr),listenport))
 //    if(!tcpServer->listen(QHostAddress::Any,listenport))
-    {  //¼àÌı±¾µØÖ÷»úµÄ6666¶Ë¿Ú£¬Èç¹û³ö´í¾ÍÊä³ö´íÎóĞÅÏ¢£¬²¢¹Ø±Õ
+    {  //ç›‘å¬æœ¬åœ°ä¸»æœºçš„6666ç«¯å£ï¼Œå¦‚æœå‡ºé”™å°±è¾“å‡ºé”™è¯¯ä¿¡æ¯ï¼Œå¹¶å…³é—­
 
         qDebug() << tcpServer->errorString();
         //        close();
@@ -126,31 +126,10 @@ void MainWindow::dealclienterror(QString cltmsg, void * pthread)
 
 void MainWindow::readfromremote(QString cltmsg, void * pthread)
 {
-//    QTextCodec *codec = QTextCodec::codecForName("UTF-8");
-    QTextCodec *codec = QTextCodec::codecForName("GB2312");
-    QTextCodec::setCodecForTr(codec);
-//    QTextCodec::setCodecForLocale(QTextCodec::codecForLocale()); //ÉèÖÃGBKµ½±¾µØ
-//    QTextCodec::setCodecForCStrings(QTextCodec::codecForLocale());
-
     qDebug() << "clt msg size:" << cltmsg.size();
-//    qDebug() << "clt         :" << cltmsg;
-//    qDebug() << "clt         :" << tr(cltmsg.toUtf8());
-    qDebug() << "clt         :" << tr(cltmsg.toAscii()); //ok
-//    qDebug() << "clt         :" << tr(cltmsg.toLocal8Bit());
-    qDebug() << "clt         :" << tr(cltmsg.toLatin1()); //ok
-//    qDebug() << (QString::fromUtf8("read clt msg:%1").arg(cltmsg.toUtf8().data()));
-//    qDebug() << (QString::fromLocal8Bit("read clt msg:%1").arg(cltmsg.toAscii().data()));
-//    qDebug() << (QString::fromAscii("read clt msg:%1").arg(cltmsg.toLocal8Bit().data()));
-//    qDebug() << (QString::fromLatin1("read clt msg:%1").arg(cltmsg.toUtf8().data()));
-//    qDebug() << (QString::fromUtf8("read clt msg:%1").arg(cltmsg.toAscii().data()));
-//    qDebug() << (QString::fromUtf8("read clt msg:%1").arg(cltmsg.toLocal8Bit().data()));
-////    qDebug() << (QString::fromUtf8("read clt msg:%1").arg(cltmsg.toAscii().data()));
-
-
-    //python.exe
-    //    LPCSTR exepath = "explorer.exe";
-    LPCSTR exepath = "";
-//    LPCSTR filepath = cltmsg.toAscii().data();
+//    qDebug() << "clt toAscii :" << tr(cltmsg.toAscii()); //ok
+//    qDebug() << "clt toLatin1:" << tr(cltmsg.toLatin1()); //ng
+    qDebug() << "clt org     :" << cltmsg; //ok
 
     QStringList splitdata = cltmsg.split('\n');
     QString showtext;
@@ -159,12 +138,13 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
         if(single.simplified().length() == 0)
             continue;
         bool isCmd = FALSE;
+        //å»é™¤å¼€å¤´å’Œç»“å°¾ç©ºç™½
+        single = single.trimmed();
         if(single.contains("cmd") && single.simplified() != "cmd")
         {
             isCmd = TRUE;
         }
-        single = tr(single.toAscii().data());
-        qDebug() << "single         :" << single;
+        qDebug() << "single trimmed     :" << single;
         LPCSTR filepath = (single.toAscii().data());
         HINSTANCE ret;
         quint32 cret = 0;
@@ -176,37 +156,17 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
         showtext += QString("ret:%1[%2] %3 \n")
                             .arg(cret)
                             .arg(showshellexecuteresult(cret))
-                            .arg(QString::fromLocal8Bit(resstring))
+                            .arg(single)
                             ;
     }
     ui->statusBar->showMessage((showtext));
-    ui->textEdit_receive->setText(tr(cltmsg.toLatin1()));
-
-
-//    LPCSTR filepath2 = QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
-//    qDebug() << "filepath2:" << QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
-//    if(isCmd)
-//    {
-//        cltmsg = "/c " + cltmsg.replace("cmd", "");
-//        filepath = cltmsg.toAscii().data();
-//        filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
-//        ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_SHOWNORMAL | SW_NORMAL | SW_SHOW);
-//    }
-//    else
-//    {
-//        //    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
-//        ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWMAXIMIZED);
-//    }
-
-
-
+    ui->textEdit_receive->setText(cltmsg);
 
     sockthread *threadsock = (sockthread *)pthread;
-    //²»Ğ´
+    //ä¸å†™
 //    threadsock->getSocketConnect()->write((showtext.toLatin1()));
 //    threadsock->emitMsgDoneSignal();
     threadsock->closeSocketConnect();
-
 
 }
 
@@ -259,7 +219,7 @@ void MainWindow::createTrayIcon()
 
 
 
-//×îĞ¡»¯µ½ÍĞÅÌ----
+//æœ€å°åŒ–åˆ°æ‰˜ç›˜----
 void MainWindow::changeEvent(QEvent *e)
 {
 #if 1
@@ -299,10 +259,11 @@ char*  MainWindow::convertQString2buf(QString single)
     LPCSTR filepath2 = NULL;
 
     memset(szLogin, 0, MAX_LENGTH);
-    QByteArray ba111 = single.toLocal8Bit(); // strUserÊÇQString£¬Íâ²¿´«À´µÄÊı¾İ¡£
+//    QByteArray ba111 = single.toLocal8Bit(); // strUseræ˜¯QStringï¼Œå¤–éƒ¨ä¼ æ¥çš„æ•°æ®ã€‚
+    QByteArray ba111 = single.toAscii(); // strUseræ˜¯QStringï¼Œå¤–éƒ¨ä¼ æ¥çš„æ•°æ®ã€‚
     char* temp111 = ba111.data();
     strcpy(szLogin, temp111);
-    //    È»ºóÇ¿ĞĞ×ª»»char*µ½LPCWSTR£º
+    //    ç„¶åå¼ºè¡Œè½¬æ¢char*åˆ°LPCWSTRï¼š
     filepath2 = (LPCSTR)szLogin;
     fprintf(stdout, "temp111  :%s\n", temp111);
     fprintf(stdout, "szLogin  :%s\n", szLogin);
@@ -313,71 +274,26 @@ char*  MainWindow::convertQString2buf(QString single)
 
 LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single, HINSTANCE &ret)
 {
-    LPCSTR filepath = LPCSTR(org);
     LPCSTR filepath2 = NULL;
 
     if(szLogin == NULL)
         return filepath2;
-
-    filepath2 = convertQString2buf(single);
-
-
-////    LPCSTR filepath2 = QString::fromAscii(filepath).toAscii().simplified().data();
-////    qDebug() <<"iscmd:" << isCmd << "filepath2:" << QString::fromUtf8(filepath).toLocal8Bit().simplified().data();
-//    qDebug() <<"iscmd:" << isCmd ;
-//    qDebug() << "filepath2:" << QString::fromAscii(filepath).toAscii().simplified().data();
-//    qDebug() << "filepath2:" << QString::fromUtf8(filepath).toAscii().simplified().data();
-//    qDebug() << "filepath2:" << QString::fromUtf8(filepath).toAscii().simplified().data();
-//    qDebug() << "filepath2:" << QString::fromAscii(filepath);
-//    qDebug() << "filepath2:" << QString::fromUtf8(filepath);
-//    qDebug() << "filepath2:" << QString::fromLatin1(filepath);
-//    qDebug() << "filepath2:" << QString::fromLocal8Bit(filepath);
-    qDebug() << "filepath2:" << (filepath);
-    qDebug() << "single   :" << (single);
-
+    qDebug() << "singstep single   :" << (single);
 
     try
     {
-        // ÕâÀïµÄ³ÌĞò´úÂëÍê³ÉÕæÕı¸´ÔÓµÄ¼ÆËã¹¤×÷£¬ÕâĞ©´úÂëÔÚÖ´ĞĞ¹ı³ÌÖĞ
-        // ÓĞ¿ÉÄÜÅ×³öDataType1¡¢DataType2ºÍDataType3ÀàĞÍµÄÒì³£¶ÔÏó¡£
-
+        // è¿™é‡Œçš„ç¨‹åºä»£ç å®ŒæˆçœŸæ­£å¤æ‚çš„è®¡ç®—å·¥ä½œï¼Œè¿™äº›ä»£ç åœ¨æ‰§è¡Œè¿‡ç¨‹ä¸­
+        // æœ‰å¯èƒ½æŠ›å‡ºDataType1ã€DataType2å’ŒDataType3ç±»å‹çš„å¼‚å¸¸å¯¹è±¡ã€‚
         if(isCmd)
         {
-    //        single = "/c "/* + single.replace("cmd", 3, "", 3)*/;
             QString strTmp = "";
-//            int idx = 0;
-
             strTmp = single;
             //only replace the first find cmd
             strTmp.replace(QRegExp("^cmd\\s+"), "");
-//            idx = strTmp.indexOf("cmd ", 0);
-//            if (-1 != idx)
-//            {
-//                strTmp.replace(idx, 4, "");
-//    //            m_Button->setText(strTmp);
-//            }
             single = QString("/C %1").arg(strTmp);
-    //        single = strTmp;
             qDebug() << "cmd order:" << single;
             qDebug() << "strTmp   :" << strTmp;
-
-
-            filepath = single.toAscii().data();
-            qDebug() << "filepath :" << filepath;
-//            qDebug() << "filepath[0] :" << filepath[0];
-//            qDebug() << "filepath[1] :" << filepath[1];
-//            //Ìø¹ıÇ°µ¼¿Õ¸ñ
-//            while(*filepath == ' ')
-//                filepath++;
-
-//            filepath2 = QString::fromUtf8(filepath).toLocal8Bit().data();
-//            filepath2 = QString::fromUtf8(filepath).toUtf8().data();
             filepath2 = convertQString2buf(single);
-//            //Ìø¹ıÇ°µ¼¿Õ¸ñ
-//            while(*filepath2 == ' ')
-//                filepath2++;
-
-            qDebug() << "filepath2 last:" << filepath2;
             if(ui->checkBox_hidecmdblack->isChecked())
             {
                 ret = ShellExecuteA(NULL, "open", "cmd", filepath2, NULL, SW_HIDE);
@@ -413,18 +329,18 @@ LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single, HINSTANCE
 
 char * MainWindow::showshellexecuteresult(quint32 ret)
 {
-//    ·µ»ØÖµ´óÓÚ32±íÊ¾Ö´ĞĞ³É¹¦
-//    ·µ»ØÖµĞ¡ÓÚ32±íÊ¾Ö´ĞĞ´íÎó
-//    ·µ»ØÖµ¿ÉÄÜµÄ´íÎóÓĞ: = 0 {ÄÚ´æ²»×ã}
-//    ERROR_FILE_NOT_FOUND = 2; {ÎÄ¼şÃû´íÎó}
-//    ERROR_PATH_NOT_FOUND = 3; {Â·¾¶Ãû´íÎó}
-//    ERROR_BAD_FORMAT = 11; {EXE ÎÄ¼şÎŞĞ§}
-//    SE_ERR_SHARE = 26; {·¢Éú¹²Ïí´íÎó}
-//    SE_ERR_ASSOCINCOMPLETE = 27; {ÎÄ¼şÃû²»ÍêÈ«»òÎŞĞ§}
-//    SE_ERR_DDETIMEOUT = 28; {³¬Ê±}
-//    SE_ERR_DDEFAIL = 29; {DDE ÊÂÎñÊ§°Ü}
-//    SE_ERR_DDEBUSY = 30; {ÕıÔÚ´¦ÀíÆäËû DDE ÊÂÎñ¶ø²»ÄÜÍê³É¸Ã DDE ÊÂÎñ}
-//    SE_ERR_NOASSOC = 31; {Ã»ÓĞÏà¹ØÁªµÄÓ¦ÓÃ³ÌĞò}
+//    è¿”å›å€¼å¤§äº32è¡¨ç¤ºæ‰§è¡ŒæˆåŠŸ
+//    è¿”å›å€¼å°äº32è¡¨ç¤ºæ‰§è¡Œé”™è¯¯
+//    è¿”å›å€¼å¯èƒ½çš„é”™è¯¯æœ‰: = 0 {å†…å­˜ä¸è¶³}
+//    ERROR_FILE_NOT_FOUND = 2; {æ–‡ä»¶åé”™è¯¯}
+//    ERROR_PATH_NOT_FOUND = 3; {è·¯å¾„åé”™è¯¯}
+//    ERROR_BAD_FORMAT = 11; {EXE æ–‡ä»¶æ— æ•ˆ}
+//    SE_ERR_SHARE = 26; {å‘ç”Ÿå…±äº«é”™è¯¯}
+//    SE_ERR_ASSOCINCOMPLETE = 27; {æ–‡ä»¶åä¸å®Œå…¨æˆ–æ— æ•ˆ}
+//    SE_ERR_DDETIMEOUT = 28; {è¶…æ—¶}
+//    SE_ERR_DDEFAIL = 29; {DDE äº‹åŠ¡å¤±è´¥}
+//    SE_ERR_DDEBUSY = 30; {æ­£åœ¨å¤„ç†å…¶ä»– DDE äº‹åŠ¡è€Œä¸èƒ½å®Œæˆè¯¥ DDE äº‹åŠ¡}
+//    SE_ERR_NOASSOC = 31; {æ²¡æœ‰ç›¸å…³è”çš„åº”ç”¨ç¨‹åº}
 
 
 //    #define SHELLEXECUTEA_RET_2STR(num)\

@@ -74,14 +74,14 @@ private:
 //    QMutex fileLock;
 
 private:
-    QMap<QString, QStringList> map_showcmd; //IPµØÖ· -> IPµØÖ·´æ´¢µÄÄÚÈİ
+    QMap<QString, QStringList> map_showcmd; //IPåœ°å€ -> IPåœ°å€å­˜å‚¨çš„å†…å®¹
     QStringList show_cmdlist;
     QStringList searchlist;
 //    QMap<QString, QStringList> searchlist;
     QString oneshowres;
     QString autosendstr;
-    QMap<QString, QStringList> map_commonuselist; //IPµØÖ· -> ¹Ø¼ü´Ê±í
-    QStringList comuseitemlist; //¹Ø¼ü´Ê±í
+    QMap<QString, QStringList> map_commonuselist; //IPåœ°å€ -> å…³é”®è¯è¡¨
+    QStringList comuseitemlist; //å…³é”®è¯è¡¨
     QTimer *uselistTimer;
     QTimer *savetimer;
 private slots:
@@ -224,7 +224,7 @@ private slots:
 
 private:
     QTcpSocket *socket;
-    QString message;  //´æ·Å´Ó·şÎñÆ÷½ÓÊÕµ½µÄ×Ö·û´®
+    QString message;  //å­˜æ”¾ä»æœåŠ¡å™¨æ¥æ”¶åˆ°çš„å­—ç¬¦ä¸²
 
     sockthread *pthreadsock;
 
@@ -241,7 +241,7 @@ private:
     QMap<QString, QStringList> mapIpAndContent;
 
 private:
-    QStringList TodoCmdExecList;//´ı´¦ÀíµÄÃüÁî¸öÊı
+    QStringList TodoCmdExecList;//å¾…å¤„ç†çš„å‘½ä»¤ä¸ªæ•°
     QTimer *exectimer;
 
     QFileSystemWatcher myWatcher;
@@ -255,7 +255,7 @@ private:
     void dropEvent(QDropEvent *event);
 
 private:
-    int isDropFileEnd; //ÍÏÒ·ÅúÁ¿ÎÄ¼şÊÇ·ñ½áÊø
+    int isDropFileEnd; //æ‹–æ›³æ‰¹é‡æ–‡ä»¶æ˜¯å¦ç»“æŸ
     QList<QUrl> urls;
     QString result;
 

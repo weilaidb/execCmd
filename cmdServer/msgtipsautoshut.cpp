@@ -1,7 +1,7 @@
-#include "msgtipsautoshut.h"
+ï»¿#include "msgtipsautoshut.h"
 
 #if 1
-//±àÂëºº×Ö
+//ç¼–ç æ±‰å­—
 #define str_china(A)     QString::fromLocal8Bit(#A)
 //#define str_china(A)     QString::fromUtf8(#A)
 #else
@@ -49,7 +49,7 @@ void MsgTipsAutoShut::SetTipsInfo(QString s)
     label->setText(QString::fromLocal8Bit(str.toLocal8Bit()));
     label->setStyleSheet("QLabel{font: bold italic large \"Times New Roman\";font-size:25px;color:rgb(55,100,255);height:50px;border:4px solid rgb(155,200,33);background-color: rgba(0,0,0,30);border-radius:15px;selection-color:pink}");
     label->setWordWrap(false);
-    label->adjustSize(); //×Ô¶¯µ÷Õû´óÐ¡
+    label->adjustSize(); //è‡ªåŠ¨è°ƒæ•´å¤§å°
     label->setAlignment(Qt::AlignCenter);
     timer->start(m_ultimeout);
 //    setLayoutDirection(Qt::LayoutDirectionAuto);
@@ -61,15 +61,15 @@ void MsgTipsAutoShut::closeEvent(QCloseEvent *event)
 {
     event = event;
 //    QMessageBox::StandardButton button;
-//    button = QMessageBox::question(this, str_china("ÍË³ö³ÌÐò"),
-//        QString(str_china("¾¯¸æ£º³ÌÐòÓÐÒ»¸öÈÎÎñÕýÔÚÔËÐÐÖÐ£¬ÊÇ·ñ½áÊø²Ù×÷ÍË³ö?")),
+//    button = QMessageBox::question(this, str_china("é€€å‡ºç¨‹åº"),
+//        QString(str_china("è­¦å‘Šï¼šç¨‹åºæœ‰ä¸€ä¸ªä»»åŠ¡æ­£åœ¨è¿è¡Œä¸­ï¼Œæ˜¯å¦ç»“æŸæ“ä½œé€€å‡º?")),
 //        QMessageBox::Yes | QMessageBox::No);
 
 //    if (button == QMessageBox::No) {
-//        event->ignore();  //ºöÂÔÍË³öÐÅºÅ£¬³ÌÐò¼ÌÐøÔËÐÐ
+//        event->ignore();  //å¿½ç•¥é€€å‡ºä¿¡å·ï¼Œç¨‹åºç»§ç»­è¿è¡Œ
 //    }
 //    else if (button == QMessageBox::Yes) {
-//        event->accept();  //½ÓÊÜÍË³öÐÅºÅ£¬³ÌÐòÍË³ö
+//        event->accept();  //æŽ¥å—é€€å‡ºä¿¡å·ï¼Œç¨‹åºé€€å‡º
 //    }
 }
 

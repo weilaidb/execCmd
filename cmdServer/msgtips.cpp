@@ -10,7 +10,7 @@ void ShowTipsInfo(QString s)
 {
     MsgTipsAutoShut *tipsinfo = new MsgTipsAutoShut(NULL);
     tipsinfo->SetTipsInfo(s);
-    //无任务栏图标，无工具栏，置顶显示
+    //鏃犱换鍔℃爮鍥炬爣锛屾棤宸ュ叿鏍忥紝缃《鏄剧ず
     tipsinfo->setWindowFlags( Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
     tipsinfo->show();
 
@@ -20,7 +20,7 @@ void ShowTipsInfoWithShowTime(QString s, quint32 ultimeout)
 {
     MsgTipsAutoShut *tipsinfo = new MsgTipsAutoShut(NULL, ultimeout);
     tipsinfo->SetTipsInfo(s);
-    //无任务栏图标，无工具栏，置顶显示
+    //鏃犱换鍔℃爮鍥炬爣锛屾棤宸ュ叿鏍忥紝缃《鏄剧ず
     tipsinfo->setWindowFlags( Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
     tipsinfo->show();
 

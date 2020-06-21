@@ -1,4 +1,4 @@
-#include "processbarx.h"
+Ôªø#include "processbarx.h"
 #include <QMessageBox>
 
 QProgressDialog *Cprocessbarx::pInstance = NULL;
@@ -6,7 +6,7 @@ Cprocessbarx::Cprocessbarx()
 {
 //    if(NULL == pInstance)
 //    {
-//        new QProgressDialog( QString::fromUtf8("’˝‘⁄±£¥Ê......"), QString::fromUtf8("»°œ˚"),0,100,this);
+//        new QProgressDialog( QString::fromUtf8("Ê≠£Âú®‰øùÂ≠ò......"), QString::fromUtf8("ÂèñÊ∂à"),0,100,this);
 //    }
 }
 
@@ -24,7 +24,7 @@ int Cprocessbarx::wascanceld(QString tips)
 {
     if(pInstance->wasCanceled())
     {
-        QMessageBox::warning(NULL,QString::fromUtf8("Ã· æ"), (tips));
+        QMessageBox::warning(NULL,QString::fromUtf8("ÊèêÁ§∫"), (tips));
         return 0;
     }
     return -1;
@@ -40,7 +40,7 @@ void Cprocessbarx::getInstance()
 {
     if(NULL == pInstance)
     {
-        new QProgressDialog( QString::fromUtf8("’˝‘⁄......"), QString::fromUtf8("»°œ˚"),0,100,NULL);
+        new QProgressDialog( QString::fromUtf8("Ê≠£Âú®......"), QString::fromUtf8("ÂèñÊ∂à"),0,100,NULL);
         show();
     }
 }

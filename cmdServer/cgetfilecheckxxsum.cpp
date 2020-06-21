@@ -1,4 +1,4 @@
-#include "cgetfilecheckxxsum.h"
+﻿#include "cgetfilecheckxxsum.h"
 #include <QProgressBar>
 #include <QProgressDialog>
 #include "processbarx.h"

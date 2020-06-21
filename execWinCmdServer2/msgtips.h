@@ -1,4 +1,4 @@
-#ifndef MSGTIPS_H
+﻿#ifndef MSGTIPS_H
 #define MSGTIPS_H
 
 #include <QString>

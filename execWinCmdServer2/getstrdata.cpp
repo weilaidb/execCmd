@@ -1,4 +1,4 @@
-#include "getstrdata.h"
+﻿#include "getstrdata.h"
 #include <stdio.h>
 
 GetStrData::GetStrData()

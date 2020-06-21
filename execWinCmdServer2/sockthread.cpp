@@ -1,4 +1,4 @@
-#include "sockthread.h"
+ï»¿#include "sockthread.h"
 #include <QDebug>
 #include <QMessageBox>
 #include <QString>
@@ -7,7 +7,7 @@
 #include "getstrdata.h"
 
 #if 1
-//±àÂëºº×Ö
+//ç¼–ç æ±‰å­—
 #define str_china(A)     QString::fromLocal8Bit(#A)
 //#define str_china(A)     QString::fromUtf8(#A)
 #else
@@ -38,12 +38,12 @@ sockthread::sockthread(QObject *parent) :
 
 void sockthread::initData()
 {
-    //¶ÁÊı¾İÍ³¼Æ
+    //è¯»æ•°æ®ç»Ÿè®¡
     TotalReadBytes = 0;
     bytesReceived  = 0;
     bytesNeedRecv  = 0;
 
-    //Ğ´Êı¾İÍ³¼Æ
+    //å†™æ•°æ®ç»Ÿè®¡
     TotalBytes   = 0;
     byteWritten  = 0;
     bytesToWrite = 0;
@@ -83,8 +83,8 @@ void sockthread::displayErr(QAbstractSocket::SocketError socketError)
     {
         emit emitErrInfo(QString("%1:%2").arg("errinfo").arg(clientConnection->errorString()),
                          (void *)this);
-//        QMessageBox::information(NULL,str_china("ÍøÂç"),
-//                                 str_china("²úÉúÈçÏÂ´íÎó£º %1")
+//        QMessageBox::information(NULL,str_china("ç½‘ç»œ"),
+//                                 str_china("äº§ç”Ÿå¦‚ä¸‹é”™è¯¯ï¼š %1")
 //                                 .arg(clientConnection->errorString()));
     }
 //    tcpserver->close();
@@ -128,7 +128,7 @@ void sockthread::updateReadMsgProgress()
 
 
     if (bytesReceived < TotalReadBytes){
-        /* Êµ¼ÊĞèÒª½ÓÊÕµÄ×Ö½ÚÊı */
+        /* å®é™…éœ€è¦æ¥æ”¶çš„å­—èŠ‚æ•° */
         bytesNeedRecv = TotalReadBytes - bytesReceived;
         bytesReceived += clientConnection->bytesAvailable();
 
@@ -149,7 +149,7 @@ void sockthread::updateReadMsgProgress()
         PrintStrData("afinBlock", (BYTE *)inBlock.data(), inBlock.size());
         if(inBlock.at(0) != '\0')
         {
-            bigmsg = inBlock; //²»ÖªµÀÎªÊ²Ã´£¬Êı¾İÀïÓĞĞí¶àÆäËüÄÚÈİ£¬Ç°4¸ö×Ö½ÚÓĞÊı¾İÎª\0µÄĞÅÏ¢
+            bigmsg = inBlock; //ä¸çŸ¥é“ä¸ºä»€ä¹ˆï¼Œæ•°æ®é‡Œæœ‰è®¸å¤šå…¶å®ƒå†…å®¹ï¼Œå‰4ä¸ªå­—èŠ‚æœ‰æ•°æ®ä¸º\0çš„ä¿¡æ¯
             qDebug() << "get from head";
         }
         else
@@ -157,17 +157,17 @@ void sockthread::updateReadMsgProgress()
             bigmsg = inBlock.mid(4);
             qDebug() << "get from head 4byte";
         }
-        //Èë¿â
+        //å…¥åº“
 //        readfromremote(bigmsg);
         emit emitMsgDoneSignal(bigmsg, (void *)this);
         qDebug() << "read msg size:" << bigmsg.size();
 
         qDebug() << "read msg:" << bigmsg;
-        qDebug() << "read msg:" << bigmsg.toLocal8Bit();
-        qDebug() << "read msg:" << bigmsg.toUtf8();
-        qDebug() << "read msg:" << bigmsg.toAscii();
-        qDebug() << "read msg:" << bigmsg.toLatin1();
-        qDebug() << "read msg:" << bigmsg.toAscii();
+//        qDebug() << "read msg:" << bigmsg.toLocal8Bit();
+//        qDebug() << "read msg:" << bigmsg.toUtf8();
+//        qDebug() << "read msg:" << bigmsg.toAscii();
+//        qDebug() << "read msg:" << bigmsg.toLatin1();
+//        qDebug() << "read msg:" << bigmsg.toAscii();
 
 
         TotalReadBytes = 0;
@@ -218,22 +218,22 @@ void sockthread::sendmsg(QString msgs)
 {
     qDebug() << "write msg:" << msgs;
 
-    outBlock.resize(0); //ÓÃÓÚÔİ´æÎÒÃÇÒª·¢ËÍµÄÊı¾İ
+    outBlock.resize(0); //ç”¨äºæš‚å­˜æˆ‘ä»¬è¦å‘é€çš„æ•°æ®
     QDataStream out(&outBlock, QIODevice::WriteOnly);
     out.resetStatus();
     out.setVersion(QDataStream::Qt_4_6);
 
-    //ÉèÖÃÊı¾İÁ÷µÄ°æ±¾£¬¿Í»§¶ËºÍ·şÎñÆ÷¶ËÊ¹ÓÃµÄ°æ±¾ÒªÏàÍ¬
+    //è®¾ç½®æ•°æ®æµçš„ç‰ˆæœ¬ï¼Œå®¢æˆ·ç«¯å’ŒæœåŠ¡å™¨ç«¯ä½¿ç”¨çš„ç‰ˆæœ¬è¦ç›¸åŒ
     out<<(quint64) 0;
-    //Òª·¢ËÍµÄÊı¾İ·Åµ½out
-    out<< msgs.toUtf8().data(); //±ØĞëÊÇ×ª»»ºóµÄ×Ö·û
+    //è¦å‘é€çš„æ•°æ®æ”¾åˆ°out
+    out<< msgs.toUtf8().data(); //å¿…é¡»æ˜¯è½¬æ¢åçš„å­—ç¬¦
 //    out << "hello world";
     out.device()->seek(0);
-    out<<(quint64)(outBlock.size()-sizeof(quint64));//¼ÆËã·¢ËÍÊı¾İµÄ´óĞ¡
+    out<<(quint64)(outBlock.size()-sizeof(quint64));//è®¡ç®—å‘é€æ•°æ®çš„å¤§å°
 
     TotalBytes = outBlock.size();
 
-    bytesToWrite = TotalBytes - clientConnection->write(outBlock);//½«Ãû³Æ·¢³öºó£¬Ê£ÓàÍ¼Æ¬´óĞ¡
+    bytesToWrite = TotalBytes - clientConnection->write(outBlock);//å°†åç§°å‘å‡ºåï¼Œå‰©ä½™å›¾ç‰‡å¤§å°
     qDebug() << "TotalBytes:" << TotalBytes;
     qDebug() << "bytesToWrite:" << bytesToWrite;
 }

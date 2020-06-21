@@ -1,4 +1,4 @@
-#ifndef SOCKTHREAD_H
+ï»¿#ifndef SOCKTHREAD_H
 #define SOCKTHREAD_H
 
 #include <QThread>
@@ -8,7 +8,7 @@
 
 
 #if 1
-//±àÂëºº×Ö
+//ç¼–ç æ±‰å­—
 #define str_china(A)     QString::fromLocal8Bit(#A)
 //#define str_china(A)     QString::fromUtf8(#A)
 #else
@@ -54,16 +54,16 @@ protected:
 
     QTcpSocket *clientConnection;
 
-    //Ğ´Êı¾İÍ³¼Æ
+    //å†™æ•°æ®ç»Ÿè®¡
     qint64 TotalBytes;
     qint64 byteWritten;
     qint64 bytesToWrite;
 //    QString fileName;
 //    QFile *localFile;
     QByteArray outBlock;
-    QByteArray outBlockFile;//ÎÄ¼ş×Ö½ÚĞòÁĞ
+    QByteArray outBlockFile;//æ–‡ä»¶å­—èŠ‚åºåˆ—
 
-    //¶ÁÊı¾İÍ³¼Æ
+    //è¯»æ•°æ®ç»Ÿè®¡
 //    qint64 TotalReadBytes;
 //    qint64 byteReadden;
 //    qint64 bytesToRead;
