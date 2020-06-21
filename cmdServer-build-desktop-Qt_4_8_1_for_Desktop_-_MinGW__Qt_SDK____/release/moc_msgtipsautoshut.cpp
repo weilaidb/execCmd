@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'msgtipsautoshut.h'
 **
-** Created: Mon Feb 5 23:08:56 2018
+** Created: Sun Jun 21 23:45:10 2020
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!
