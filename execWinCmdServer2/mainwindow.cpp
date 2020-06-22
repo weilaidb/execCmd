@@ -5,6 +5,10 @@
 #include <windows.h>
 #include <version.h>
 #include <QRegExp>
+#include <QProcess>
+#include <QTextCodec>
+#include <iostream>
+#include <string>
 
 #define MAX_LENGTH (20480)
 #define BINDPORT (9999)
@@ -256,12 +260,29 @@ void MainWindow::showversion()
 
 char*  MainWindow::convertQString2buf(QString single)
 {
-    LPCSTR filepath2 = NULL;
+    QTextCodec *textc_gbk = QTextCodec::codecForName("gb18030");
 
+    LPCSTR filepath2 = NULL;
     memset(szLogin, 0, MAX_LENGTH);
-//    QByteArray ba111 = single.toLocal8Bit(); // strUser是QString，外部传来的数据。
-    QByteArray ba111 = single.toAscii(); // strUser是QString，外部传来的数据。
+    qDebug() << "convertQString2buf single:" << single;
+
+#if 0
+    std::string str = single.toStdString();
+    char* temp111 = (char *)str.c_str();
+#else
+    //    QByteArray ba111 = single.toLocal8Bit(); // strUser是QString，外部传来的数据。
+    //    QByteArray ba111 = single.toAscii(); // strUser是QString，外部传来的数据。
+//    QByteArray ba111 = single.toUtf8(); // strUser是QString，外部传来的数据。
+    /**
+      ** QString是Unicode编码，将此
+      ** unicode -> gbk
+      **/
+    QByteArray ba111 = textc_gbk->fromUnicode(single); // strUser是QString，外部传来的数据。
+//    QByteArray ba111 = single.toLatin1(); // strUser是QString，外部传来的数据。
+
     char* temp111 = ba111.data();
+#endif
+
     strcpy(szLogin, temp111);
     //    然后强行转换char*到LPCWSTR：
     filepath2 = (LPCSTR)szLogin;
@@ -270,6 +291,18 @@ char*  MainWindow::convertQString2buf(QString single)
     fprintf(stdout, "filepath2:%s\n", filepath2);
     fflush(stdout);
     return szLogin;
+}
+
+void MainWindow::executecmd(QString arg)
+{
+    QProcess p(0);
+    QString command = "explorer ";
+    QStringList args;
+    args.clear();
+    args.append(arg);
+    qDebug() << "prepare exec command:" << command << ", args:" << arg;
+    p.execute(command,args);//command是要执行的命令,args是参数
+    p.waitForFinished();
 }
 
 LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single, HINSTANCE &ret)
@@ -310,8 +343,11 @@ LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single, HINSTANCE
         }
         else
         {
-            //    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
+            filepath2 = convertQString2buf(single);
+
+//            //    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
             ret = ShellExecuteA(NULL,"open", filepath2,NULL,NULL,SW_SHOWMAXIMIZED);
+//            executecmd(single);
         }
         qDebug() << "ret:" << ret << ", " << showshellexecuteresult((quint32)ret);
 

@@ -24,7 +24,8 @@ HEADERS  += mainwindow.h \
     msgtipsautoshut.h \
     msgtips.h \
     version.h \
-    getstrdata.h
+    getstrdata.h \
+    gbkcode.h
 
 FORMS    += mainwindow.ui
 

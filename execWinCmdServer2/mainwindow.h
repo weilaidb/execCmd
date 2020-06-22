@@ -39,7 +39,7 @@ private slots:
     LPCSTR singstep(const char *org, bool isCmd, QString single, HINSTANCE &ret);
     char *convertQString2buf(QString str);
     char *showshellexecuteresult(quint32 ret);
-
+    void executecmd(QString cmd);
 private:
     Ui::MainWindow *ui;
 
