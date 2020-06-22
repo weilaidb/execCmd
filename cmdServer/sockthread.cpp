@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QMessageBox>
 #include <QString>
+#include <QTextCodec>
 #include <windows.h>
 
 
@@ -181,6 +182,14 @@ void sockthread::updateWriteClientProgress(qint64 numBytes)
 
 void sockthread::sendmsg(QString msgs)
 {
+    QTextCodec *textc_gbk = QTextCodec::codecForName("gb18030");
+    /**
+      ** 统一使用默认使用的字符编码为utf-8
+      ** 发送的数据也是utf-8
+      **/
+    QTextCodec *textc_utf8 = QTextCodec::codecForName("UTF-8");
+
+
     qDebug() << "write msg:" << msgs;
 
     outBlock.resize(0); //用于暂存我们要发送的数据
@@ -191,7 +200,10 @@ void sockthread::sendmsg(QString msgs)
     //设置数据流的版本，客户端和服务器端使用的版本要相同
     out<<(quint64) 0;
     //要发送的数据放到out
-    out<< msgs.toLocal8Bit().data(); //必须是转换后的字符
+//    out<< msgs.toLocal8Bit().data(); //必须是转换后的字符
+    out<< msgs.toUtf8().data(); //必须是转换后的字符
+
+//    out<< ;
 //    out << "hello world";
     out.device()->seek(0);
     out<<(quint64)(outBlock.size()-sizeof(quint64));//计算发送数据的大小

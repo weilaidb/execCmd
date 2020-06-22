@@ -4,6 +4,7 @@
 #include <QString>
 #include <windows.h>
 #include <QHostAddress>
+#include <QTextCodec>
 #include "getstrdata.h"
 
 #if 1
@@ -105,10 +106,19 @@ void sockthread::displayErr(QAbstractSocket::SocketError socketError)
 * Description :
 * @           :
 * Author      :
+统一规定:发送侧使用UTF-8字符编码
+接收侧使用gb18030解码，解析出来才是汉字
 * Time        : 2017-05-28
 ============================================*/
 void sockthread::updateReadMsgProgress()
 {
+    QTextCodec *textc_gbk = QTextCodec::codecForName("gb18030");
+    /**
+      ** 统一使用默认使用的字符编码为utf-8
+      ** 发送的数据也是utf-8
+      **/
+    QTextCodec *textc_utf8 = QTextCodec::codecForName("UTF-8");
+
     QDataStream in(clientConnection);
     in.setVersion(QDataStream::Qt_4_6);
 
@@ -149,12 +159,15 @@ void sockthread::updateReadMsgProgress()
         PrintStrData("afinBlock", (BYTE *)inBlock.data(), inBlock.size());
         if(inBlock.at(0) != '\0')
         {
-            bigmsg = inBlock; //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
+//            bigmsg = QString::fromUtf8(inBlock); //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
+//            bigmsg = textc_utf8->toUnicode(inBlock); //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
+            bigmsg = textc_gbk->toUnicode(inBlock); //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
             qDebug() << "get from head";
         }
         else
         {
-            bigmsg = inBlock.mid(4);
+//            bigmsg = textc_gbk->toUnicode(inBlock.mid(4));
+            bigmsg = textc_utf8->toUnicode(inBlock.mid(4));
             qDebug() << "get from head 4byte";
         }
         //入库
