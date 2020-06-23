@@ -5,6 +5,7 @@ INPUT(
 ./debug\msgtips.o
 ./debug\mainwindow.o
 ./debug\getstrdata.o
+./debug\wlog.o
 ./debug\moc_mainwindow.o
 ./debug\moc_sockthread.o
 ./debug\moc_msgtipsautoshut.o

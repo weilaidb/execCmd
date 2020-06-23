@@ -17,7 +17,8 @@ SOURCES += main.cpp\
     msgtipsautoshut.cpp \
     msgtips.cpp \
     mainwindow.cpp \
-    getstrdata.cpp
+    getstrdata.cpp \
+    wlog.cpp
 
 HEADERS  += mainwindow.h \
     sockthread.h \
@@ -25,7 +26,8 @@ HEADERS  += mainwindow.h \
     msgtips.h \
     version.h \
     getstrdata.h \
-    gbkcode.h
+    gbkcode.h \
+    wlog.h
 
 FORMS    += mainwindow.ui
 
