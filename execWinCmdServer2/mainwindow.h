@@ -14,6 +14,7 @@
 #include <QSystemTrayIcon>
 #include <QCloseEvent>
 #include <windows.h>
+#include "wlog.h"
 
 namespace Ui {
 class MainWindow;
@@ -38,7 +39,7 @@ private slots:
     void dealclienterror(QString cltmsg, void * pthread);
     LPCSTR singstep(const char *org, bool isCmd, QString single, HINSTANCE &ret);
     char *convertQString2buf(QString str);
-    char *showshellexecuteresult(quint32 ret);
+    const char *showshellexecuteresult(quint32 ret);
     void executecmd(QString cmd);
 private:
     Ui::MainWindow *ui;
@@ -66,6 +67,8 @@ private:
     void createTrayIcon();
     void changeEvent(QEvent *e);
     void closeEvent(QCloseEvent *event);
+    void setQTextCodecGBK();
+    void setQTextCodecUTF8();
 private:
 #if 1
     QSystemTrayIcon *trayIcon;
@@ -81,6 +84,9 @@ private:
     QMenu *trayIconMenu;
 #endif
 
+
+    //for log
+    wlog *plog;
 };
 
 #endif // MAINWINDOW_H

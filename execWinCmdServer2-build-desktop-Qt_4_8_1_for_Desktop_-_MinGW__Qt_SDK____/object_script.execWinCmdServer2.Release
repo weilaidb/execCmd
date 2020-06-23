@@ -1,0 +1,12 @@
+INPUT(
+./release\main.o
+./release\sockthread.o
+./release\msgtipsautoshut.o
+./release\msgtips.o
+./release\mainwindow.o
+./release\getstrdata.o
+./release\moc_mainwindow.o
+./release\moc_sockthread.o
+./release\moc_msgtipsautoshut.o
+./release\qrc_imgs.o
+);

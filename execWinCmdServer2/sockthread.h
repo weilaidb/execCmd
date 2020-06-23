@@ -5,6 +5,7 @@
 #include <QString>
 #include <QTcpSocket>
 #include <QAbstractSocket>
+#include "wlog.h"
 
 
 enum
@@ -69,6 +70,10 @@ protected:
 
 
     qint8 printFlag;
+
+
+    //log
+    wlog *plog;
 };
 
 #endif // SOCKTHREAD_H

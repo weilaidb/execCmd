@@ -1,0 +1,12 @@
+INPUT(
+./debug\main.o
+./debug\sockthread.o
+./debug\msgtipsautoshut.o
+./debug\msgtips.o
+./debug\mainwindow.o
+./debug\getstrdata.o
+./debug\moc_mainwindow.o
+./debug\moc_sockthread.o
+./debug\moc_msgtipsautoshut.o
+./debug\qrc_imgs.o
+);

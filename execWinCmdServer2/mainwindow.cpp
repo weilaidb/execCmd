@@ -9,6 +9,7 @@
 #include <QTextCodec>
 #include <iostream>
 #include <string>
+#include "getstrdata.h"
 
 #define MAX_LENGTH (20480)
 #define BINDPORT (9999)
@@ -50,6 +51,8 @@ MainWindow::MainWindow(QWidget *parent) :
 #endif
 
     showversion();
+
+    plog = new wlog();
 }
 
 MainWindow::~MainWindow()
@@ -64,19 +67,14 @@ int MainWindow::InitServer( QString ipaddr, quint16 listenport)
         closeallclientsocket();
         tcpServer->disconnect(this);
         tcpServer->close();
-        //        tcpServer->deleteLater();
         tcpServer = NULL;
     }
 
     tcpServer = new QTcpServer(this);
-    //if(!tcpServer->listen(QHostAddress::LocalHost,6666))
-    //    if(!tcpServer->listen(QHostAddress("192.168.1.100"),6666))
+    //listen will print 使用链式SPI
     if(!tcpServer->listen(QHostAddress(ipaddr),listenport))
-//    if(!tcpServer->listen(QHostAddress::Any,listenport))
-    {  //监听本地主机的6666端口，如果出错就输出错误信息，并关闭
-
+    {
         qDebug() << tcpServer->errorString();
-        //        close();
         return -1;
     }
     connect(tcpServer,SIGNAL(newConnection()),this,SLOT(procClientMessage()));
@@ -135,25 +133,34 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
 //    qDebug() << "clt toLatin1:" << tr(cltmsg.toLatin1()); //ng
     qDebug() << "clt org     :" << cltmsg; //ok
 
+    plog->SaveDefault(QString("clt msg size:%1").arg(cltmsg.size()));
+    plog->SaveDefault(QString("clt msg     :%1").arg(cltmsg));
+
     QStringList splitdata = cltmsg.split('\n');
-    QString showtext;
+    QString showtext("");
+    plog->SaveDefault(QString("splitdata size:%1").arg(splitdata.size()));
 
     foreach (QString single, splitdata) {
         if(single.simplified().length() == 0)
+        {
             continue;
+        }
         bool isCmd = FALSE;
         //去除开头和结尾空白
         single = single.trimmed();
         if(single.contains("cmd") && single.simplified() != "cmd")
         {
+            plog->SaveDefault(QString("isCmd:%1").arg(isCmd));
             isCmd = TRUE;
         }
         qDebug() << "single trimmed     :" << single;
+        plog->SaveDefault(QString("single:%1").arg(single));
         LPCSTR filepath = (single.toAscii().data());
         HINSTANCE ret;
         quint32 cret = 0;
         LPCSTR resstring = singstep(filepath, isCmd, single, ret);
         cret = (quint32)ret;
+
         qDebug() << "ret :" << ret;
         qDebug() << "cret:" << cret;
         qDebug() << "resstring:" << resstring;
@@ -162,6 +169,7 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
                             .arg(showshellexecuteresult(cret))
                             .arg(single)
                             ;
+        plog->SaveDefault(QString("cret:%1,showtext:%2").arg(cret).arg(showtext));
     }
     ui->statusBar->showMessage((showtext));
     ui->textEdit_receive->setText(cltmsg);
@@ -170,6 +178,7 @@ void MainWindow::readfromremote(QString cltmsg, void * pthread)
     //不写
 //    threadsock->getSocketConnect()->write((showtext.toLatin1()));
 //    threadsock->emitMsgDoneSignal();
+    plog->SaveDefault(QString("prepare to close socket!!"));
     threadsock->closeSocketConnect();
 
 }
@@ -261,27 +270,35 @@ void MainWindow::showversion()
 char*  MainWindow::convertQString2buf(QString single)
 {
     QTextCodec *textc_gbk = QTextCodec::codecForName("gb18030");
+    /**
+      ** 统一使用默认使用的字符编码为utf-8
+      ** 发送的数据也是utf-8
+      **/
+    QTextCodec *textc_utf8 = QTextCodec::codecForName("UTF-8");
+
 
     LPCSTR filepath2 = NULL;
     memset(szLogin, 0, MAX_LENGTH);
     qDebug() << "convertQString2buf single:" << single;
 
-#if 0
-    std::string str = single.toStdString();
-    char* temp111 = (char *)str.c_str();
-#else
-    //    QByteArray ba111 = single.toLocal8Bit(); // strUser是QString，外部传来的数据。
-    //    QByteArray ba111 = single.toAscii(); // strUser是QString，外部传来的数据。
-//    QByteArray ba111 = single.toUtf8(); // strUser是QString，外部传来的数据。
     /**
       ** QString是Unicode编码，将此
       ** unicode -> gbk
       **/
-    QByteArray ba111 = textc_gbk->fromUnicode(single); // strUser是QString，外部传来的数据。
-//    QByteArray ba111 = single.toLatin1(); // strUser是QString，外部传来的数据。
+    //此处会导致Release版本异常退出,原来的是textc_gbk解码的
+    //原来的数据是UTF-8数据,需要转换成GBK才能查找到
+    QByteArray ba111 = textc_utf8->fromUnicode(single); // strUser是QString，外部传来的数据。
 
-    char* temp111 = ba111.data();
-#endif
+    //先转换成Unicode
+    QString utf8data = QString::fromUtf8(ba111);
+    //再由Unicode转换成GBK
+    //textc_gbk->fromUnicode接口存在崩溃的问题，因此使用setQTextCodecGBK先变更一下。再回退原来的编码setQTextCodecUTF8
+//    char* temp111 = textc_gbk->fromUnicode(utf8data).data();
+    setQTextCodecGBK();
+    QByteArray ba222 = utf8data.toLocal8Bit();
+    setQTextCodecUTF8();
+    char* temp111 = ba222.data();
+    PrintStrData("temp111", (BYTE *)temp111, strlen(temp111));
 
     strcpy(szLogin, temp111);
     //    然后强行转换char*到LPCWSTR：
@@ -319,6 +336,7 @@ LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single, HINSTANCE
         // 有可能抛出DataType1、DataType2和DataType3类型的异常对象。
         if(isCmd)
         {
+            plog->SaveDefault(QString("isCmd step"));
             QString strTmp = "";
             strTmp = single;
             //only replace the first find cmd
@@ -343,6 +361,7 @@ LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single, HINSTANCE
         }
         else
         {
+            plog->SaveDefault(QString("Not Cmd step"));
             filepath2 = convertQString2buf(single);
 
 //            //    ShellExecuteA(NULL,"open", exepath,filepath2,NULL,SW_SHOWNORMAL);
@@ -363,7 +382,7 @@ LPCSTR MainWindow::singstep(const char *org,bool isCmd,QString single, HINSTANCE
 }
 
 
-char * MainWindow::showshellexecuteresult(quint32 ret)
+const char * MainWindow::showshellexecuteresult(quint32 ret)
 {
 //    返回值大于32表示执行成功
 //    返回值小于32表示执行错误
@@ -424,3 +443,33 @@ char * MainWindow::showshellexecuteresult(quint32 ret)
     }
 
 }
+
+void MainWindow::setQTextCodecGBK()
+{
+    QTextCodec *textc_gbk = QTextCodec::codecForName("gb18030");
+    /**
+      ** 统一使用默认使用的字符编码为utf-8
+      ** 发送的数据也是utf-8
+      **/
+//    QTextCodec *textc_utf8 = QTextCodec::codecForName("UTF-8");
+
+    QTextCodec::setCodecForCStrings(textc_gbk);
+    QTextCodec::setCodecForTr(textc_gbk);
+    QTextCodec::setCodecForLocale(textc_gbk);
+}
+
+void MainWindow::setQTextCodecUTF8()
+{
+//    QTextCodec *textc_gbk = QTextCodec::codecForName("gb18030");
+    /**
+      ** 统一使用默认使用的字符编码为utf-8
+      ** 发送的数据也是utf-8
+      **/
+    QTextCodec *textc_utf8 = QTextCodec::codecForName("UTF-8");
+
+    QTextCodec::setCodecForCStrings(textc_utf8);
+    QTextCodec::setCodecForTr(textc_utf8);
+    QTextCodec::setCodecForLocale(textc_utf8);
+}
+
+

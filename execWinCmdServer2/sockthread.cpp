@@ -1,10 +1,10 @@
-﻿#include "sockthread.h"
-#include <QDebug>
+﻿#include <QDebug>
 #include <QMessageBox>
 #include <QString>
 #include <windows.h>
 #include <QHostAddress>
 #include <QTextCodec>
+#include "sockthread.h"
 #include "getstrdata.h"
 
 #if 1
@@ -28,6 +28,8 @@ sockthread::sockthread(QObject *parent) :
 {
 
     initData();
+
+    plog = new wlog();
 //    clientConnection = /*cltConnection*/;
 }
 
@@ -158,6 +160,7 @@ void sockthread::updateReadMsgProgress()
         QString  bigmsg;
         bigmsg.clear();
         PrintStrData("afinBlock", (BYTE *)inBlock.data(), inBlock.size());
+        plog->SaveDefault(inBlock);
         if(inBlock.at(0) != '\0')
         {
 //            bigmsg = QString::fromUtf8(inBlock); //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
