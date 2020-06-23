@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'sockthread.h'
 **
-** Created: Sun Jun 21 22:55:26 2020
+** Created: Tue Jun 23 23:11:16 2020
 **      by: The Qt Meta Object Compiler version 63 (Qt 4.8.1)
 **
 ** WARNING! All changes made in this file will be lost!

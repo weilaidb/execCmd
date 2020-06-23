@@ -29,7 +29,7 @@ public:
     QTcpSocket* getSocketConnect();
     void sendmsg(QString msgs);
     void closeSocketConnect();
-
+    void printByteArray(const char *pTips, QByteArray bytearray);
 signals:
     void emitMsgDoneSignal(QString, void *);
     void emitErrInfo(QString, void *);
@@ -66,6 +66,9 @@ protected:
 //    qint64  fileNameSize;
     qint64  bytesNeedRecv;
     QByteArray inBlock;
+
+
+    qint8 printFlag;
 };
 
 #endif // SOCKTHREAD_H

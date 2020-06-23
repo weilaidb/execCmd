@@ -49,6 +49,7 @@ void sockthread::initData()
     byteWritten  = 0;
     bytesToWrite = 0;
 
+    printFlag = 0;
 }
 
 /*============================================
@@ -160,8 +161,8 @@ void sockthread::updateReadMsgProgress()
         if(inBlock.at(0) != '\0')
         {
 //            bigmsg = QString::fromUtf8(inBlock); //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
-//            bigmsg = textc_utf8->toUnicode(inBlock); //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
-            bigmsg = textc_gbk->toUnicode(inBlock); //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
+            bigmsg = textc_utf8->toUnicode(inBlock); //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
+//            bigmsg = textc_gbk->toUnicode(inBlock); //不知道为什么，数据里有许多其它内容，前4个字节有数据为\0的信息
             qDebug() << "get from head";
         }
         else
@@ -229,6 +230,13 @@ void sockthread::updateWriteClientProgress(qint64 numBytes)
 
 void sockthread::sendmsg(QString msgs)
 {
+    QTextCodec *textc_gbk = QTextCodec::codecForName("gb18030");
+    /**
+      ** 统一使用默认使用的字符编码为utf-8
+      ** 发送的数据也是utf-8
+      **/
+    QTextCodec *textc_utf8 = QTextCodec::codecForName("UTF-8");
+
     qDebug() << "write msg:" << msgs;
 
     outBlock.resize(0); //用于暂存我们要发送的数据
@@ -237,14 +245,29 @@ void sockthread::sendmsg(QString msgs)
     out.setVersion(QDataStream::Qt_4_6);
 
     //设置数据流的版本，客户端和服务器端使用的版本要相同
+    //先占用8个字节表示发送后面body的长度
     out<<(quint64) 0;
-    //要发送的数据放到out
-    out<< msgs.toUtf8().data(); //必须是转换后的字符
-//    out << "hello world";
+    printByteArray("push header zero", outBlock);
+
+    const char * tempd = msgs.toStdString().c_str();
+//    qDebug() << "tempd:" << tempd << ",len:" << strlen(tempd);
+    //使用writeRawData消除产生的多余4个字节问题
+    out.writeRawData(tempd, strlen(tempd));
+//    out<< textc_utf8->fromUnicode(msgs); //<<QString或 << QByteArray会额外产生4个字节
+    printByteArray("push body", outBlock);
+
+    //从头索引，计算发送数据的长度（BODY），不带HEADER占用的8字节，重新填充HEADER占用的8字节
     out.device()->seek(0);
     out<<(quint64)(outBlock.size()-sizeof(quint64));//计算发送数据的大小
+    //打印outBlock的内容，使用16进制
+    printByteArray("calc header size", outBlock);
+
 
     TotalBytes = outBlock.size();
+
+    //打印outBlock的内容，使用16进制
+    printByteArray("last send msg", outBlock);
+
 
     bytesToWrite = TotalBytes - clientConnection->write(outBlock);//将名称发出后，剩余图片大小
     qDebug() << "TotalBytes:" << TotalBytes;
@@ -294,3 +317,19 @@ void sockthread::closeSocketConnect()
     clientConnection = NULL;
 }
 
+void sockthread::printByteArray(const char *pTips, QByteArray bytearray)
+{
+    if(0 == printFlag)
+    {
+        return;
+    }
+    unsigned int len = bytearray.size();
+    unsigned int dwLp = 0;
+
+    qDebug() << "------Print Byte Array[" << pTips << "], size:" << len;
+
+    for(dwLp = 0; dwLp < len; dwLp++)
+    {
+        qDebug("0x%02x ",(unsigned char *)bytearray.data()[dwLp]);
+    }
+}

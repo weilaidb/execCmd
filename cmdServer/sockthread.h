@@ -36,6 +36,7 @@ public:
     explicit sockthread(QObject *parent = 0);
     void setSocketConnect(QTcpSocket *cltConnet);
     void sendmsg(QString msgs);
+    void printByteArray(const char *pTips, QByteArray bytearray);
 
 signals:
     void emitMsgDoneSignal(QString, void *);
@@ -74,6 +75,9 @@ protected:
 //    qint64  fileNameSize;
     qint64  bytesNeedRecv;
     QByteArray inBlock;
+
+
+    qint8 printFlag;
 };
 
 #endif // SOCKTHREAD_H
