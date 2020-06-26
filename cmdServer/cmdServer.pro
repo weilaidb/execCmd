@@ -4,8 +4,9 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+#QT       += core gui
 QT       += network
+QT       += widgets
 
 TARGET = cmdServer
 TEMPLATE = app

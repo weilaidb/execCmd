@@ -17,7 +17,7 @@ QByteArray CGetFileCheckxxSum::getFileMd5(QString filePath, QString &outstring)
     {
         qDebug() << "file open error." << filePath;
         outstring = filePath + "[file open error.]";
-        return 0;
+        return nullptr;
     }
 
     QCryptographicHash ch(QCryptographicHash::Md5);

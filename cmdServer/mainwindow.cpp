@@ -17,6 +17,7 @@
 #include <QFileSystemModel>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QMimeData>
 #include "cgetfilecheckxxsum.h"
 
 #define BINDPORT (9999)
@@ -39,15 +40,15 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    pthreadsock(NULL),
-    uselistTimer(NULL),
-    savetimer(NULL),
+    pthreadsock(nullptr),
+    uselistTimer(nullptr),
+    savetimer(nullptr),
     bCtrlKeyPressed(FALSE),
-    model(NULL),
+    model(nullptr),
     curmodeldir(""),
     orglabeltext(""),
     cursavefilepath(""),
-    cliptexttimer(NULL)
+    cliptexttimer(nullptr)
 {
     ui->setupUi(this);
 
@@ -300,19 +301,19 @@ void MainWindow::on_connecting_sendstr(QString sendstr)
     on_pushButton_connect_clicked();
     return;
 
-    int times = ui->lineEdit_sendnum->text().toInt();
-    int loop = 0;
-    if(ui->lineEdit_sendnum->text().toInt() == 0 )
-    {
-        on_pushButton_connect_clicked();
-    }
-    else
-    {
-        //        for(loop = 0; loop < times; loop++)
-        //        {
-        //           on_pushButton_connect_clicked();
-        //        }
-    }
+//    int times = ui->lineEdit_sendnum->text().toInt();
+//    int loop = 0;
+//    if(ui->lineEdit_sendnum->text().toInt() == 0 )
+//    {
+//        on_pushButton_connect_clicked();
+//    }
+//    else
+//    {
+//        //        for(loop = 0; loop < times; loop++)
+//        //        {
+//        //           on_pushButton_connect_clicked();
+//        //        }
+//    }
 }
 
 void MainWindow::procComBoxIpList(QString ipaddr)
@@ -467,7 +468,8 @@ void MainWindow::readfromremote(QString msg,void*)
     qDebug() << "read from remote";
     qDebug() << msg;
     //    ui->textEdit_cmdresult->setText(msg);
-    ui->textEdit_cmdresult->append(QString::fromUtf8(msg.toAscii().data()));
+    ui->textEdit_cmdresult->append(QString::fromUtf8(msg.toLatin1().data()));
+//    ui->textEdit_cmdresult->append(QString::fromUtf8(msg.toAscii().data()));
     //    ui->textEdit_cmdresult->append(QString::fromLocal8Bit(msg.toAscii().data()));
 }
 
@@ -1898,7 +1900,8 @@ void MainWindow::WatchHttpTimerOut()
 
 void MainWindow::dragEnterEvent(QDragEnterEvent *event)
 {
-    if(event->mimeData()->hasUrls()){
+    if((const QMimeData *)(event->mimeData())->hasUrls()){
+//    if(event->mimeData()){
         event->acceptProposedAction();
     }
 }
@@ -1920,14 +1923,14 @@ void MainWindow::dropEvent(QDropEvent *event)
         qDebug() << fileName;
         result += fileName;
         arrresult = CGetFileCheckxxSum::getFileMd5(fileName, result);
-        if(0 == arrresult)
+        if(nullptr == arrresult)
         {
             result += "\n\n";
             continue;
         }
         result += "\nmd5sum :\t" + arrresult.toHex();
         arrresult = CGetFileCheckxxSum::getFileSha1(fileName, result);
-        if(0 == arrresult)
+        if(nullptr == arrresult)
         {
             result += "\n\n";
             continue;

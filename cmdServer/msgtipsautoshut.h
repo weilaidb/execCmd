@@ -3,14 +3,15 @@
 
 #include <QWidget>
 #include <QtGui>
-//#include <QtWidgets>
+#include <QtWidgets>
+#include <QLabel>
 
 class MsgTipsAutoShut : public QWidget
 {
     Q_OBJECT
 public:
     MsgTipsAutoShut();
-    explicit MsgTipsAutoShut(QWidget *parent = 0);
+    explicit MsgTipsAutoShut(QWidget *parent = nullptr);
     MsgTipsAutoShut(QWidget *parent,quint32 ultimeout);
     void SetTipsInfo(QString s);
     void WidgetXYsetDesktop_center(QWidget *widget);
